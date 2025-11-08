@@ -50,7 +50,7 @@ class WebhooksClient:
         :rtype: httpx.AsyncClient
         """
         async with self._session_lock:
-            if self._session is None or self._session.closed:
+            if self._session is None or self._session.is_closed:
                 limits = httpx.Limits(
                     max_connections=self.max_concurrency,
                     max_keepalive_connections=self.max_concurrency,

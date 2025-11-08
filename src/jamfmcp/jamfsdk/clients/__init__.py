@@ -125,7 +125,7 @@ class JamfProClient:
         :rtype: httpx.AsyncClient
         """
         async with self._session_semaphore:
-            if self._session is None or self._session.closed:
+            if self._session is None or self._session.is_closed:
                 # Setup SSL context
                 ssl_context = None
                 if self.session_config.ca_cert_bundle is not None:
