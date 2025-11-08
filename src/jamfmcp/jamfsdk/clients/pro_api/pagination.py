@@ -233,7 +233,7 @@ class Paginator:
         resp = await self._api_client.api_request(
             method="get", resource_path=self.resource_path, query_params=query_params
         )
-        response = await resp.json()
+        response = resp.json()
 
         return Page(
             page=page,
