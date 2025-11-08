@@ -33,7 +33,7 @@ jobs:
         run: make install-dev
 
       - name: Lint and format
-        run: make Lint
+        run: make lint
 
       - name: Run Tests
         env:
