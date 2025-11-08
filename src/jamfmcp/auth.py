@@ -40,7 +40,7 @@ class JamfAuth:
         :param client_secret: Client secret for OAuth
         :raises ValueError: If required credentials are missing
         """
-        self.auth_type = (auth_type or os.getenv("JAMF_AUTH_TYPE", "basic")).lower()
+        self.auth_type = (auth_type or os.getenv("JAMF_AUTH_TYPE", "basic")).strip().lower()
 
         raw_server = server or os.getenv("JAMF_URL")
         if not raw_server:
@@ -49,7 +49,7 @@ class JamfAuth:
 
         if self.auth_type == "basic":
             self.username = username or os.getenv("JAMF_USERNAME")
-            self.password = password or os.getenv("JAMF_USERNAME")
+            self.password = password or os.getenv("JAMF_PASSWORD")
         elif self.auth_type == "client_credentials":
             self.client_id = client_id or os.getenv("JAMF_CLIENT_ID")
             self.client_secret = client_secret or os.getenv("JAMF_CLIENT_SECRET")
@@ -103,6 +103,8 @@ class JamfAuth:
         """
         if not url:
             return ""
+
+        url = url.strip()  # Remove leading/trailing whitespace
 
         if not url.startswith(("http://", "https://")):
             # If no protocol, assume it's already just the domain
