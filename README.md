@@ -45,7 +45,7 @@ pip install jamfmcp
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/jamfmcp.git
+git clone https://github.com/liquidz00/jamfmcp.git
 cd jamfmcp
 ```
 
@@ -68,12 +68,11 @@ Add the following to your `~/.cursor/mcp.json` file:
     "jamfmcp": {
       "command": "uv",
       "args": [
-        "--directory",
-        "/path/to/jamfmcp",
         "run",
+        "--directory", "/path/to/jamfmcp",
         "fastmcp",
         "run",
-        "jamfmcp.server:mcp"
+        "src/jamfmcp/server.py:mcp"
       ],
       "env": {
         "JAMF_URL": "your-jamf-server.com",
@@ -98,12 +97,11 @@ Add the following to your Claude Desktop configuration file:
     "jamfmcp": {
       "command": "uv",
       "args": [
-        "--directory",
-        "/path/to/jamfmcp",
         "run",
+        "--directory", "/path/to/jamfmcp",
         "fastmcp",
         "run",
-        "jamfmcp.server:mcp"
+        "src/jamfmcp/server.py:mcp"
       ],
       "env": {
         "JAMF_URL": "your-jamf-server.com",
@@ -168,7 +166,7 @@ For contributors and developers working on JamfMCP:
 
 1. Clone the repository and install with dev dependencies:
 ```bash
-git clone https://github.com/yourusername/jamfmcp.git
+git clone https://github.com/liquidz00/jamfmcp.git
 cd jamfmcp
 make install-dev  # Installs testing, linting, and documentation tools
 ```
@@ -211,12 +209,6 @@ To run the MCP server directly for testing:
 
 ```bash
 uv run fastmcp run jamfmcp.server:mcp
-```
-
-Or for development with auto-reload:
-
-```bash
-uv run fastmcp dev jamfmcp.server:mcp
 ```
 
 ## Architecture
