@@ -49,7 +49,7 @@ class JamfApi:
                 # Check if users list exists and is not empty
                 users = response.get("users", [])
                 if not users:
-                    logger.warning("No user found with email address: %s", email_address)
+                    logger.warning(f"No user found with email address: {email_address}")
                     raise ValueError(f"No user found with email address: {email_address}")
 
                 jss_user = users[0]
@@ -62,11 +62,11 @@ class JamfApi:
                         for c in computers:
                             serial = c.get("name")
                             if serial:
-                                logger.info("Found serial %s for user %s", serial, email_address)
+                                logger.info(f"Found serial {serial} for user {email_address}")
                                 return serial
 
                 # No computers found for user
-                logger.warning("No assigned computers found for user: %s", email_address)
+                logger.warning(f"No assigned computers found for user: {email_address}")
                 return None
 
         except (httpx.HTTPError, ConnectionError, TimeoutError) as e:
@@ -77,7 +77,7 @@ class JamfApi:
             )
             raise ConnectionError(f"Failed to connect to Jamf Pro: {str(e)}") from e
         except (ValueError, KeyError, AttributeError) as e:
-            logger.error("Data processing error for email %s: %s", email_address, str(e))
+            logger.error(f"Data processing error for email {email_address}: {str(e)}")
             raise ValueError(f"Error processing user data for {email_address}: {str(e)}") from e
 
     async def get_computer_inventory(
@@ -149,7 +149,7 @@ class JamfApi:
                 "computer_id": computer_id,
             }
         except (ValueError, KeyError, AttributeError) as e:
-            logger.error("Data processing error for computer_id %s: %s", computer_id, str(e))
+            logger.error(f"Data processing error for computer_id {computer_id}: {str(e)}")
             return {
                 "error": "Data Error",
                 "message": f"Error processing response data: {str(e)}",

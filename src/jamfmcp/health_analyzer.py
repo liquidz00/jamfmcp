@@ -551,7 +551,7 @@ class HealthAnalyzer:
             return analysis_result
 
         except (ValueError, KeyError, AttributeError) as e:
-            logger.warning("Failed to generate CVE analysis for %s: %s", os_version, str(e))
+            logger.warning(f"Failed to generate CVE analysis for {os_version}: {str(e)}")
             return None
 
     def _assess_cve_risk_level(self, total_cves: int, exploited_cves: int) -> str:
@@ -1303,7 +1303,7 @@ class HealthAnalyzer:
                 return max(0.0, 1.0 - (decay_factor - 1) * 0.2)
 
         except (ValueError, AttributeError, TypeError) as e:
-            logger.debug("Failed to parse time string '%s': %s", time_str, str(e))
+            logger.debug(f"Failed to parse time string '{time_str}': {str(e)}")
             return 0.5  # Neutral score if parsing fails
 
     def _parse_uptime_hours(self, uptime_str: str) -> float:
@@ -1348,7 +1348,7 @@ class HealthAnalyzer:
 
             return hours
         except (ValueError, AttributeError, TypeError) as e:
-            logger.debug("Failed to parse uptime string '%s': %s", uptime_str, str(e))
+            logger.debug(f"Failed to parse uptime string '{uptime_str}': {str(e)}")
             return 0.0  # Default if parsing fails
 
     def _is_os_outdated(self, os_version: str) -> bool:
@@ -1391,7 +1391,7 @@ class HealthAnalyzer:
 
             return False
         except (ValueError, IndexError, AttributeError) as e:
-            logger.debug("Failed to parse OS version '%s': %s", os_version, str(e))
+            logger.debug(f"Failed to parse OS version '{os_version}': {str(e)}")
             return False  # Don't penalize if we can't parse
 
     def _is_recent_timestamp(self, epoch_timestamp: int, hours_threshold: float) -> bool:
@@ -1417,7 +1417,7 @@ class HealthAnalyzer:
             hours_ago = (now - event_time).total_seconds() / 3600
             return hours_ago <= hours_threshold
         except (ValueError, OverflowError, OSError) as e:
-            logger.debug("Failed to parse timestamp %d: %s", epoch_timestamp, str(e))
+            logger.debug(f"Failed to parse timestamp {epoch_timestamp}: {str(e)}")
             return False
 
     def _calculate_overall_score(
