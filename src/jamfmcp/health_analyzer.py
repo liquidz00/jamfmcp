@@ -13,12 +13,16 @@ import json
 import logging
 from datetime import UTC, datetime, timezone
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
 
 import httpx
 from pydantic import BaseModel, Field, ValidationError
 
-from .jamfsdk.models.pro.computers import Computer, ComputerExtensionAttribute
+from .jamfsdk.models.pro.computers import (
+    Computer,
+    ComputerExtensionAttribute,
+    ComputerUserAndLocation,
+)
 from .sofa import (
     SOFAFeed,
     get_cves_for_version,
@@ -50,7 +54,7 @@ class HealthStatus(str, Enum):
     CRITICAL = "Critical"
 
 
-def fmt_tmz(time_input: Union[str, datetime]) -> str:
+def fmt_tmz(time_input: str | datetime) -> str:
     """
     Format timestamp string or datetime object to human-readable format.
 
@@ -58,7 +62,7 @@ def fmt_tmz(time_input: Union[str, datetime]) -> str:
     formatted string in "Month DD YYYY HH:MM AM/PM" format.
 
     :param time_input: ISO 8601 timestamp string with timezone or datetime object
-    :type time_input: Union[str, datetime]
+    :type time_input: str | datetime
     :return: Formatted timestamp string
     :rtype: str
     """
@@ -99,9 +103,9 @@ class HealthScore(BaseModel):
     score: float = Field(..., ge=0, le=100, description="Score from 0-100")
     max_score: float = Field(..., ge=0, le=100, description="Maximum possible score")
     weight: float = Field(..., ge=0, le=1, description="Weight in overall calculation")
-    factors: List[str] = Field(default_factory=List, description="Factors affecting this score")
-    recommendations: List[str] = Field(
-        default_factory=List, description="Improvement recommendations"
+    factors: list[str] = Field(default_factory=list, description="Factors affecting this score")
+    recommendations: list[str] = Field(
+        default_factory=list, description="Improvement recommendations"
     )
 
 
@@ -117,11 +121,11 @@ class HealthScorecard(BaseModel):
     compliance_score: HealthScore
     maintenance_score: HealthScore
 
-    device_info: Dict[str, Any] = Field(default_factory=Dict)
+    device_info: dict[str, Any] = Field(default_factory=dict)
     assessment_timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))  # noqa
 
-    critical_issues: List[str] = Field(default_factory=List)
-    recommendations: List[str] = Field(default_factory=List)
+    critical_issues: list[str] = Field(default_factory=list)
+    recommendations: list[str] = Field(default_factory=list)
 
 
 class HealthAnalyzer:
@@ -132,11 +136,11 @@ class HealthAnalyzer:
     to generate detailed health scorecards with actionable recommendations.
 
     :param diagnostic_data: Parsed diagnostic data from Jamf Pro
-    :type diagnostic_data: Dict[str, Any]
+    :type diagnostic_data: dict[str, Any]
     :param computer_history: Computer history data containing usage and policy logs
-    :type computer_history: Optional[Dict[str, Any]]
+    :type computer_history: dict[str, Any] | None
     :param computer_inventory: Full computer inventory data
-    :type computer_inventory: Optional[Dict[str, Any]]
+    :type computer_inventory: dict[str, Any] | None
 
     Example:
         >>> analyzer = HealthAnalyzer(diag_data, history_data, inventory_data)
@@ -159,10 +163,10 @@ class HealthAnalyzer:
 
     def __init__(
         self,
-        diagnostic_data: Optional[Dict[str, Any]] = None,
-        computer_history: Optional[Dict[str, Any]] = None,
-        computer_inventory: Optional[Dict[str, Any]] = None,
-        sofa_feed: Optional[SOFAFeed] = None,
+        diagnostic_data: dict[str, Any] | None = None,
+        computer_history: dict[str, Any] | None = None,
+        computer_inventory: dict[str, Any] | None = None,
+        sofa_feed: SOFAFeed | None = None,
     ) -> None:
         """
         Initialize the health analyzer with optional diagnostic data and SOFA feed.
@@ -171,13 +175,13 @@ class HealthAnalyzer:
         the diagnostic data will be automatically parsed from the inventory.
 
         :param diagnostic_data: Parsed diagnostic data from Jamf Pro (optional)
-        :type diagnostic_data: Optional[Dict[str, Any]]
+        :type diagnostic_data: dict[str, Any] | None
         :param computer_history: Computer history data containing usage and policy logs
-        :type computer_history: Optional[Dict[str, Any]]
+        :type computer_history: dict[str, Any] | None
         :param computer_inventory: Full computer inventory data
-        :type computer_inventory: Optional[Dict[str, Any]]
+        :type computer_inventory: dict[str, Any] | None
         :param sofa_feed: SOFA feed for CVE and OS currency analysis (optional)
-        :type sofa_feed: Optional[SOFAFeed]
+        :type sofa_feed: SOFAFeed | None
         """
         self.computer_history = computer_history or {}
         self.computer_inventory = computer_inventory or {}
@@ -202,14 +206,14 @@ class HealthAnalyzer:
             self.diagnostic_data = {}
 
         # Cache parsed computer for efficiency
-        self._computer_model: Optional[Computer] = None
+        self._computer_model: Computer | None = None
 
-    def _get_computer_model(self) -> Optional[Computer]:
+    def _get_computer_model(self) -> Computer | None:
         """
         Get the parsed Computer model, caching it for efficiency.
 
         :return: Computer model if available
-        :rtype: Optional[Computer]
+        :rtype: Computer | None
         """
         if self._computer_model is None and self.computer_inventory:
             try:
@@ -226,7 +230,7 @@ class HealthAnalyzer:
         points_penalty: int,
         factor_message: str,
         recommendation: str,
-    ) -> Tuple[int, str, str]:
+    ) -> tuple[int, str, str]:
         """
         Apply a security check and return penalty details if condition failed.
 
@@ -238,7 +242,7 @@ class HealthAnalyzer:
         :type factor_message: str
         :param recommendation: Recommendation to add if condition failed
         :type recommendation: str
-        :return: Tuple of (points_lost, factor, recommendation) - empty strings if condition passed
+        :return: tuple of (points_lost, factor, recommendation) - empty strings if condition passed
         :rtype: tuple[int, str, str]
         """
         if condition_failed:
@@ -249,8 +253,8 @@ class HealthAnalyzer:
         self,
         category: str,
         score: float,
-        factors: List[str],
-        recommendations: List[str],
+        factors: list[str],
+        recommendations: list[str],
     ) -> HealthScore:
         """
         Create a HealthScore object with proper formatting and validation.
@@ -259,10 +263,10 @@ class HealthAnalyzer:
         :type category: str
         :param score: Calculated score (will be clamped to 0-100)
         :type score: float
-        :param factors: List of factors affecting the score
-        :type factors: List[str]
-        :param recommendations: List of recommendations for improvement
-        :type recommendations: List[str]
+        :param factors: list of factors affecting the score
+        :type factors: list[str]
+        :param recommendations: list of recommendations for improvement
+        :type recommendations: list[str]
         :return: Formatted HealthScore object
         :rtype: HealthScore
         """
@@ -276,15 +280,15 @@ class HealthAnalyzer:
         )
 
     def _aggregate_check_results(
-        self, checks: List[Tuple[int, List[str], List[str]]]
-    ) -> Tuple[float, List[str], List[str]]:
+        self, checks: list[tuple[int, list[str], list[str]]]
+    ) -> tuple[float, list[str], list[str]]:
         """
         Aggregate results from multiple security/health checks.
 
-        :param checks: List of check results as (points_lost, factors, recommendations) tuples
-        :type checks: List[tuple[int, List[str], List[str]]]
-        :return: Tuple of (total_score, all_factors, all_recommendations)
-        :rtype: tuple[float, List[str], List[str]]
+        :param checks: list of check results as (points_lost, factors, recommendations) tuples
+        :type checks: list[tuple[int, list[str], list[str]]]
+        :return: tuple of (total_score, all_factors, all_recommendations)
+        :rtype: tuple[float, list[str], list[str]]
         """
         total_points_lost = 0
         all_factors = []
@@ -334,12 +338,12 @@ class HealthAnalyzer:
         return current
 
     @staticmethod
-    async def load_sofa_feed() -> Optional[SOFAFeed]:
+    async def load_sofa_feed() -> SOFAFeed | None:
         """
         Load the latest SOFA feed data for CVE and OS analysis.
 
         :return: Parsed SOFA feed or None if loading fails
-        :rtype: Optional[SOFAFeed]
+        :rtype: SOFAFeed | None
         """
         try:
             raw_feed = await get_sofa_feed()
@@ -348,14 +352,14 @@ class HealthAnalyzer:
             logger.warning(f"Failed to load SOFA feed: {str(e)}")
             return None
 
-    def _get_os_family_from_version(self, os_version: str) -> Optional[str]:
+    def _get_os_family_from_version(self, os_version: str) -> str | None:
         """
         Determine the OS family from version string for SOFA lookup.
 
         :param os_version: OS version string (e.g., "15.1.0", "14.6.1", "10.15.7")
         :type os_version: str
         :return: OS family for SOFA lookup (e.g., "Sequoia 15", "Sonoma 14") or None
-        :rtype: Optional[str]
+        :rtype: str | None
         """
         if not os_version or os_version == "Unknown":
             return None
@@ -391,12 +395,12 @@ class HealthAnalyzer:
             logger.warning(f"Failed to parse OS version: {os_version}")
             return None
 
-    def _check_cve_vulnerabilities(self) -> Tuple[int, List[str], List[str]]:
+    def _check_cve_vulnerabilities(self) -> tuple[int, list[str], list[str]]:
         """
         Check for CVE vulnerabilities using SOFA feed data.
 
-        :return: Tuple of (points_lost, factors, recommendations)
-        :rtype: Tuple[int, List[str], List[str]]
+        :return: tuple of (points_lost, factors, recommendations)
+        :rtype: tuple[int, list[str], list[str]]
         """
         if not self.sofa_feed:
             return 0, [], []
@@ -448,12 +452,12 @@ class HealthAnalyzer:
             logger.warning(f"Failed to analyze CVEs for {os_version}: {str(e)}")
             return 0, [], []
 
-    def _check_os_currency(self) -> Tuple[int, List[str], List[str]]:
+    def _check_os_currency(self) -> tuple[int, list[str], list[str]]:
         """
         Check OS version currency using SOFA feed data when available.
 
-        :return: Tuple of (points_lost, factors, recommendations)
-        :rtype: Tuple[int, List[str], List[str]]
+        :return: tuple of (points_lost, factors, recommendations)
+        :rtype: tuple[int, list[str], list[str]]
         """
         os_version = self._safe_get_diagnostic_value("OS Version")
         if os_version == "Unknown":
@@ -497,7 +501,15 @@ class HealthAnalyzer:
 
         return 0, [], []
 
-    def get_cve_analysis(self, include_detailed_cves: bool = False) -> Optional[Dict[str, Any]]:
+    def get_cve_analysis(self, include_detailed_cves: bool = False) -> dict[str, Any] | None:
+        """
+        Analyze CVE vulnerabilities affecting the current OS version.
+
+        :param include_detailed_cves: Include detailed CVE information in the analysis
+        :type include_detailed_cves: bool
+        :return: CVE analysis dictionary with vulnerability counts and risk assessment, or None if analysis unavailable
+        :rtype: dict[str, Any] | None
+        """
         if not self.sofa_feed:
             return None
 
@@ -575,7 +587,7 @@ class HealthAnalyzer:
         :param actively_exploited_count: Number of actively exploited CVEs
         :type actively_exploited_count: int
         :return: Detailed risk assessment dictionary with level and recommendations
-        :rtype: Dict[str, Any]
+        :rtype: dict[str, Any]
         """
         # Determine risk level based on CVE metrics
         if actively_exploited_count > 0:
@@ -629,8 +641,8 @@ class HealthAnalyzer:
         :type actively_exploited_cves: set
         :param os_family: OS family name
         :type os_family: str
-        :return: List of detailed CVE information dictionaries
-        :rtype: List[Dict[str, Any]]
+        :return: list of detailed CVE information dictionaries
+        :rtype: list[dict[str, Any]]
         """
         detailed_cves = []
 
@@ -666,7 +678,7 @@ class HealthAnalyzer:
         """
         Check Gatekeeper security status.
 
-        :return: Tuple of (points_lost, factors, recommendations)
+        :return: tuple of (points_lost, factors, recommendations)
         :rtype: tuple[int, list[str], list[str]]
         """
         gatekeeper = self.diagnostic_data.get("Gatekeeper", "").lower()
@@ -685,7 +697,7 @@ class HealthAnalyzer:
         """
         Check System Integrity Protection (SIP) status.
 
-        :return: Tuple of (points_lost, factors, recommendations)
+        :return: tuple of (points_lost, factors, recommendations)
         :rtype: tuple[int, list[str], list[str]]
         """
         sip_status = self.diagnostic_data.get("SIP Status", "").lower()
@@ -704,7 +716,7 @@ class HealthAnalyzer:
         """
         Check XProtect malware protection status.
 
-        :return: Tuple of (points_lost, factors, recommendations)
+        :return: tuple of (points_lost, factors, recommendations)
         :rtype: tuple[int, list[str], list[str]]
         """
         xprotect = self.diagnostic_data.get("XProtect Version", "")
@@ -727,7 +739,7 @@ class HealthAnalyzer:
         """
         Check security certificate compliance.
 
-        :return: Tuple of (points_lost, factors, recommendations)
+        :return: tuple of (points_lost, factors, recommendations)
         :rtype: tuple[int, list[str], list[str]]
         """
         okta_cert = self.diagnostic_data.get("Okta SCEP Cert Present", False)
@@ -752,7 +764,7 @@ class HealthAnalyzer:
         Handles Jamf Pro reporting nuances where fileVault2Enabled can be False
         despite the drive being encrypted as expected.
 
-        :return: Tuple of (points_lost, factors, recommendations)
+        :return: tuple of (points_lost, factors, recommendations)
         :rtype: tuple[int, list[str], list[str]]
         """
         factors = []
@@ -867,8 +879,8 @@ class HealthAnalyzer:
         """
         Check battery health status.
 
-        :return: Tuple of (points_lost, factors, recommendations)
-        :rtype: tuple[int, List[str], List[str]]
+        :return: tuple of (points_lost, factors, recommendations)
+        :rtype: tuple[int, list[str], list[str]]
         """
         battery_health = self._safe_get_diagnostic_value("Battery Health")
 
@@ -894,8 +906,8 @@ class HealthAnalyzer:
         """
         Check device connectivity based on last check-in time.
 
-        :return: Tuple of (points_lost, factors, recommendations)
-        :rtype: tuple[int, List[str], List[str]]
+        :return: tuple of (points_lost, factors, recommendations)
+        :rtype: tuple[int, list[str], list[str]]
         """
         last_checkin = self._safe_get_diagnostic_value("Last Check In")
 
@@ -925,8 +937,8 @@ class HealthAnalyzer:
         """
         Check system uptime for excessive values.
 
-        :return: Tuple of (points_lost, factors, recommendations)
-        :rtype: tuple[int, List[str], List[str]]
+        :return: tuple of (points_lost, factors, recommendations)
+        :rtype: tuple[int, list[str], list[str]]
         """
         uptime = self._safe_get_diagnostic_value("Uptime")
 
@@ -950,8 +962,8 @@ class HealthAnalyzer:
         """
         Check OS version currency.
 
-        :return: Tuple of (points_lost, factors, recommendations)
-        :rtype: tuple[int, List[str], List[str]]
+        :return: tuple of (points_lost, factors, recommendations)
+        :rtype: tuple[int, list[str], list[str]]
         """
         os_version = self._safe_get_diagnostic_value("OS Version")
 
@@ -1000,8 +1012,8 @@ class HealthAnalyzer:
         """
         Check policy execution success rate.
 
-        :return: Tuple of (points_lost, factors, recommendations)
-        :rtype: tuple[int, List[str], List[str]]
+        :return: tuple of (points_lost, factors, recommendations)
+        :rtype: tuple[int, list[str], list[str]]
         """
         if not self.computer_history:
             return 0, [], []
@@ -1030,8 +1042,8 @@ class HealthAnalyzer:
         """
         Check management command success rate and pending commands.
 
-        :return: Tuple of (points_lost, factors, recommendations)
-        :rtype: tuple[int, List[str], List[str]]
+        :return: tuple of (points_lost, factors, recommendations)
+        :rtype: tuple[int, list[str], list[str]]
         """
         if not self.computer_history:
             return 0, [], []
@@ -1072,8 +1084,8 @@ class HealthAnalyzer:
         """
         Check certificate and configuration profile compliance.
 
-        :return: Tuple of (points_lost, factors, recommendations)
-        :rtype: tuple[int, List[str], List[str]]
+        :return: tuple of (points_lost, factors, recommendations)
+        :rtype: tuple[int, list[str], list[str]]
         """
         if not self.computer_inventory:
             return (
@@ -1143,8 +1155,8 @@ class HealthAnalyzer:
         """
         Check recent user activity and login patterns.
 
-        :return: Tuple of (points_lost, factors, recommendations)
-        :rtype: tuple[int, List[str], List[str]]
+        :return: tuple of (points_lost, factors, recommendations)
+        :rtype: tuple[int, list[str], list[str]]
         """
         if not self.computer_history:
             return (
@@ -1176,8 +1188,8 @@ class HealthAnalyzer:
         """
         Check inventory update recency.
 
-        :return: Tuple of (points_lost, factors, recommendations)
-        :rtype: tuple[int, List[str], List[str]]
+        :return: tuple of (points_lost, factors, recommendations)
+        :rtype: tuple[int, list[str], list[str]]
         """
         last_inventory = self._safe_get_diagnostic_value("Last Inventory Update")
 
@@ -1201,8 +1213,8 @@ class HealthAnalyzer:
         """
         Check application management and deployment activity.
 
-        :return: Tuple of (points_lost, factors, recommendations)
-        :rtype: tuple[int, List[str], List[str]]
+        :return: tuple of (points_lost, factors, recommendations)
+        :rtype: tuple[int, list[str], list[str]]
         """
         if not self.computer_history:
             return 0, [], []
@@ -1552,8 +1564,8 @@ class HealthAnalyzer:
 
         :param computer: Computer model containing device information
         :type computer: Computer
-        :return: Dictionary of general device information
-        :rtype: Dict[str, str]
+        :return: dictionary of general device information
+        :rtype: dict[str, str]
         """
         general = computer.general
         hardware = computer.hardware
@@ -1582,8 +1594,8 @@ class HealthAnalyzer:
 
         :param computer: Computer model containing hardware information
         :type computer: Computer
-        :return: Dictionary of hardware information
-        :rtype: Dict[str, str]
+        :return: dictionary of hardware information
+        :rtype: dict[str, str]
         """
         hardware = computer.hardware
 
@@ -1602,8 +1614,8 @@ class HealthAnalyzer:
 
         :param computer: Computer model containing OS and security information
         :type computer: Computer
-        :return: Dictionary of OS and security information
-        :rtype: Dict[str, str]
+        :return: dictionary of OS and security information
+        :rtype: dict[str, str]
         """
         security = computer.security
         operating_system = computer.operatingSystem
@@ -1633,8 +1645,8 @@ class HealthAnalyzer:
 
         :param computer: Computer model containing user assignment information
         :type computer: Computer
-        :return: Dictionary of user assignment information
-        :rtype: Dict[str, str]
+        :return: dictionary of user assignment information
+        :rtype: dict[str, str]
         """
         user_info = self._enrich_user_location(computer.userAndLocation)
 
@@ -1651,9 +1663,9 @@ class HealthAnalyzer:
         Converts lowercase enum values to uppercase as expected by the Computer model.
 
         :param payload: Raw payload from Jamf API
-        :type payload: Dict[str, Any]
+        :type payload: dict[str, Any]
         :return: Normalized payload with corrected enum values
-        :rtype: Dict[str, Any]
+        :rtype: dict[str, Any]
         """
         normalized = payload.copy()
 
@@ -1696,9 +1708,9 @@ class HealthAnalyzer:
         hardware details, security status, user assignment, and security tool status.
 
         :param payload: The Jamf API response payload containing device information
-        :type payload: Dict[str, Any]
+        :type payload: dict[str, Any]
         :return: Complete device diagnostics dictionary with formatted values
-        :rtype: Dict[str, str]
+        :rtype: dict[str, str]
         :raises Exception: If payload parsing fails with detailed error information
         """
         try:
@@ -1750,10 +1762,10 @@ class HealthAnalyzer:
         """
         Extract and format extension attributes from Computer model.
 
-        :param extension_attributes: List of ComputerExtensionAttribute objects
-        :type extension_attributes: List[ComputerExtensionAttribute]
-        :return: Dictionary mapping extension attribute names to values
-        :rtype: Dict[str, str]
+        :param extension_attributes: list of ComputerExtensionAttribute objects
+        :type extension_attributes: list[ComputerExtensionAttribute]
+        :return: dictionary mapping extension attribute names to values
+        :rtype: dict[str, str]
         """
         result = {}
         for ea in extension_attributes:
@@ -1761,14 +1773,16 @@ class HealthAnalyzer:
                 result[ea.name] = ea.values[0]
         return result
 
-    def _enrich_user_location(self, user_location) -> dict[str, Any]:
+    def _enrich_user_location(
+        self, user_location: ComputerUserAndLocation | None
+    ) -> dict[str, Any]:
         """
         Enrich user location information with department name.
 
         :param user_location: ComputerUserAndLocation object
-        :type user_location: Optional[ComputerUserAndLocation]
+        :type user_location: ComputerUserAndLocation | None
         :return: User assignment information with department name resolved
-        :rtype: Dict[str, Any]
+        :rtype: dict[str, Any]
         """
         if not user_location or not user_location.realname:
             return {
@@ -1790,8 +1804,8 @@ class HealthAnalyzer:
 
         :param computer: Computer object containing all device information
         :type computer: Computer
-        :return: Dictionary containing Falcon sensor details and status
-        :rtype: Dict[str, str]
+        :return: dictionary containing Falcon sensor details and status
+        :rtype: dict[str, str]
         """
         falcon_dict = {}
 

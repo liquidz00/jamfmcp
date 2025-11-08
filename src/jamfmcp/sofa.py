@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import logging
 from datetime import UTC, datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import httpx
 from pydantic import BaseModel, Field, ValidationError
@@ -45,22 +45,22 @@ class SecurityRelease(BaseModel):
     :param release_date: Release date in ISO format
     :type release_date: str
     :param cves: Dictionary of CVE IDs to exploitation status
-    :type cves: Dict[str, bool]
+    :type cves: dict[str, bool]
     :param actively_exploited_cves: List of actively exploited CVE IDs
-    :type actively_exploited_cves: List[str]
+    :type actively_exploited_cves: list[str]
     :param unique_cves_count: Number of unique CVEs addressed
     :type unique_cves_count: int
     :param days_since_previous: Days since previous release
-    :type days_since_previous: Optional[int]
+    :type days_since_previous: int | None
     """
 
     update_name: str
     product_version: str
     release_date: str
-    cves: Dict[str, bool] = Field(default_factory=Dict)
-    actively_exploited_cves: List[str] = Field(default_factory=List)
+    cves: dict[str, bool] = Field(default_factory=dict)
+    actively_exploited_cves: list[str] = Field(default_factory=list)
     unique_cves_count: int = 0
-    days_since_previous: Optional[int] = None
+    days_since_previous: int | None = None
 
 
 class OSVersionInfo(BaseModel):
@@ -76,18 +76,18 @@ class OSVersionInfo(BaseModel):
     :param latest_release_date: Latest release date
     :type latest_release_date: str
     :param security_releases: List of security releases for this OS version
-    :type security_releases: List[SecurityRelease]
+    :type security_releases: list[SecurityRelease]
     :param all_cves: Set of all CVEs affecting this OS version
-    :type all_cves: Set[str]
+    :type all_cves: set[str]
     :param actively_exploited_cves: Set of actively exploited CVEs
-    :type actively_exploited_cves: Set[str]
+    :type actively_exploited_cves: set[str]
     """
 
     os_version: str
     latest_version: str
     latest_build: str
     latest_release_date: str
-    security_releases: List[SecurityRelease] = Field(default_factory=List)
+    security_releases: list[SecurityRelease] = Field(default_factory=list)
     all_cves: set[str] = Field(default_factory=set)
     actively_exploited_cves: set[str] = Field(default_factory=set)
 
@@ -99,22 +99,22 @@ class SOFAFeed(BaseModel):
     :param update_hash: Feed update hash
     :type update_hash: str
     :param os_versions: Dictionary of OS versions to their information
-    :type os_versions: Dict[str, OSVersionInfo]
+    :type os_versions: dict[str, OSVersionInfo]
     :param last_updated: When the feed was last processed
     :type last_updated: datetime
     """
 
     update_hash: str
-    os_versions: Dict[str, OSVersionInfo] = Field(default_factory=Dict)
+    os_versions: dict[str, OSVersionInfo] = Field(default_factory=dict)
     last_updated: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
-async def get_sofa_feed() -> Dict[str, Any]:
+async def get_sofa_feed() -> dict[str, Any]:
     """
     Retrieve the SOFA macOS data feed from the official endpoint.
 
     :return: Raw SOFA feed data as dictionary
-    :rtype: Dict[str, Any]
+    :rtype: dict[str, Any]
     :raises aiohttp.ClientError: If there's an error fetching the feed
     :raises ValueError: If the response is not valid JSON
     """
@@ -136,12 +136,12 @@ async def get_sofa_feed() -> Dict[str, Any]:
         raise ValueError(f"Failed to parse SOFA feed response: {str(e)}") from e
 
 
-def parse_sofa_feed(feed_data: Dict[str, Any]) -> SOFAFeed:
+def parse_sofa_feed(feed_data: dict[str, Any]) -> SOFAFeed:
     """
     Parse raw SOFA feed data into structured models.
 
     :param feed_data: Raw SOFA feed data from API
-    :type feed_data: Dict[str, Any]
+    :type feed_data: dict[str, Any]
     :return: Parsed and structured SOFA feed
     :rtype: SOFAFeed
     :raises ValueError: If feed data is invalid or missing required fields
@@ -202,7 +202,7 @@ def parse_sofa_feed(feed_data: Dict[str, Any]) -> SOFAFeed:
 
 def get_cves_for_version(
     sofa_feed: SOFAFeed, current_version: str, os_family: str = "Tahoe 26"
-) -> Tuple[set[str], set[str]]:
+) -> tuple[set[str], set[str]]:
     """
     Get CVEs that affect a specific OS version.
 
@@ -216,7 +216,7 @@ def get_cves_for_version(
     :param os_family: OS family to check (e.g., "Sequoia 15")
     :type os_family: str
     :return: Tuple of (all_affecting_cves, actively_exploited_cves)
-    :rtype: Tuple[Set[str], Set[str]]
+    :rtype: tuple[set[str], set[str]]
     :raises ValueError: If OS family not found in feed
     """
     if os_family not in sofa_feed.os_versions:
@@ -252,7 +252,7 @@ def get_cves_for_version(
 
 def get_version_currency_info(
     sofa_feed: SOFAFeed, current_version: str, os_family: str = "Tahoe 26"
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Determine how current/behind an OS version is compared to latest.
 
@@ -263,7 +263,7 @@ def get_version_currency_info(
     :param os_family: OS family to check (e.g., "Sequoia 15")
     :type os_family: str
     :return: Dictionary with currency information and scoring metrics
-    :rtype: Dict[str, Any]
+    :rtype: dict[str, Any]
     :raises ValueError: If OS family not found in feed
     """
     if os_family not in sofa_feed.os_versions:
@@ -321,14 +321,14 @@ def get_version_currency_info(
     }
 
 
-def _version_is_newer(version_a: List[int], version_b: List[int]) -> bool:
+def _version_is_newer(version_a: list[int], version_b: list[int]) -> bool:
     """
     Compare two version number lists to determine if A is newer than B.
 
     :param version_a: Version A as list of integers
-    :type version_a: List[int]
+    :type version_a: list[int]
     :param version_b: Version B as list of integers
-    :type version_b: List[int]
+    :type version_b: list[int]
     :return: True if version A is newer than version B
     :rtype: bool
     """
@@ -339,14 +339,14 @@ def _version_is_newer(version_a: List[int], version_b: List[int]) -> bool:
     return a_padded > b_padded
 
 
-def _calculate_version_distance(current: List[int], latest: List[int]) -> int:
+def _calculate_version_distance(current: list[int], latest: list[int]) -> int:
     """
     Calculate the 'distance' between two versions.
 
     :param current: Current version as list of integers
-    :type current: List[int]
+    :type current: list[int]
     :param latest: Latest version as list of integers
-    :type latest: List[int]
+    :type latest: list[int]
     :return: Version distance (higher = further behind)
     :rtype: int
     """
