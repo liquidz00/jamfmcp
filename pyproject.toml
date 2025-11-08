@@ -91,3 +91,24 @@ addopts = [
 #    "--cov-fail-under=90",
 ]
 testpaths = [ "./tests" ]
+# Exclude jamfsdk from test discovery
+norecursedirs = ["src/jamfmcp/jamfsdk"]
+
+[tool.coverage.run]
+# Exclude jamfsdk from coverage reporting
+omit = [
+    "src/jamfmcp/jamfsdk/*",
+    "*/tests/*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+# Exclude jamfsdk from coverage reports
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if __name__ == .__main__.:",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+]
