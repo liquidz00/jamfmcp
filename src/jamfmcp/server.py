@@ -19,10 +19,10 @@ from typing import Any
 
 from fastmcp import FastMCP
 
-from .api import JamfApi
-from .auth import JamfAuth
-from .health_analyzer import HealthAnalyzer
-from .jamfsdk.clients.pro_api.pagination import FilterField
+from jamfmcp.api import JamfApi
+from jamfmcp.auth import JamfAuth
+from jamfmcp.health_analyzer import HealthAnalyzer
+from jamfmcp.jamfsdk.clients.pro_api.pagination import FilterField
 
 # Configure logger
 logging.basicConfig(
@@ -160,7 +160,7 @@ async def get_health_scorecard(serial: str, email_address: str | None = None) ->
 
         computer_history = await jamf_api.get_computer_history(int(computer_id))
         logger.info(f"Loading SOFA feed for health scorecard analysis for serial {serial}")
-        sofa_feed = HealthAnalyzer.load_sofa_feed()
+        sofa_feed = await HealthAnalyzer.load_sofa_feed()
         if sofa_feed is None:
             logger.warning(
                 "Failed to load SOFA feed - health scorecard will use fallback security analysis"
