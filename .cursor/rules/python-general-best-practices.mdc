@@ -25,8 +25,9 @@ globs: **/*.py
 
 ## Type Hints
 - Use type hints for all function parameters and returns
-- Import types from `typing` module
-- Use `Optional[Type]` instead of `Type | None`
+- Use modern Python 3.10+ union syntax: `str | None` instead of `Optional[str]`
+- Use built-in generics: `list[str]`, `dict[str, int]`, `tuple[int, ...]`, `set[int]`
+- Import types from `typing` module for types not available as builtins (e.g., `TypedDict`, `TypeVar`, `Literal`, `Callable`, `Protocol`, `Any`)
 - Use `TypeVar` for generic types
 - Define custom types in `types.py`
 - Use `Protocol` for duck typing
