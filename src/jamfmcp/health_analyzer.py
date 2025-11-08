@@ -18,12 +18,12 @@ from typing import Any
 import httpx
 from pydantic import BaseModel, Field, ValidationError
 
-from .jamfsdk.models.pro.computers import (
+from jamfmcp.jamfsdk.models.pro.computers import (
     Computer,
     ComputerExtensionAttribute,
     ComputerUserAndLocation,
 )
-from .sofa import (
+from jamfmcp.sofa import (
     SOFAFeed,
     get_cves_for_version,
     get_sofa_feed,

@@ -1,7 +1,7 @@
 import os
 from urllib.parse import urlparse
 
-from .jamfsdk import ApiClientCredentialsProvider, UserCredentialsProvider
+from jamfmcp.jamfsdk import ApiClientCredentialsProvider, UserCredentialsProvider
 
 
 class JamfAuth:

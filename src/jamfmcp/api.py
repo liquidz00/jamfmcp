@@ -3,9 +3,9 @@ from typing import Any
 
 import httpx
 
-from .auth import JamfAuth
-from .jamfsdk import JamfProClient
-from .jamfsdk.clients.pro_api.pagination import FilterField
+from jamfmcp.auth import JamfAuth
+from jamfmcp.jamfsdk import JamfProClient
+from jamfmcp.jamfsdk.clients.pro_api.pagination import FilterField
 
 logger = logging.getLogger(__name__)
 
