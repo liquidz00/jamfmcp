@@ -1,6 +1,6 @@
 # JamfMCP
 
-> **� ACTIVE DEVELOPMENT - ALPHA SOFTWARE**
+> ** ⚠️ ACTIVE DEVELOPMENT - ALPHA SOFTWARE ⚠️**
 >
 > This project is currently in active development and should be considered **alpha-quality software**.
 > The API, features, and functionality are subject to change without notice. Users should expect:
