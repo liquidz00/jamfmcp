@@ -91,7 +91,7 @@ Get detailed information about a specific webhook.
     "id": 1,
     "name": "Slack Notifications",
     "enabled": True,
-    "url": "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+    "url": "https://hooks.slack.com/services/...",
     "content_type": "application/json",
     "event": "ComputerAdded",
     "connection_timeout": 5000,
