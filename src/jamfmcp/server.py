@@ -15,6 +15,7 @@ When calling these tools:
 """
 
 import logging
+from contextlib import asynccontextmanager
 from typing import Any
 
 from fastmcp import FastMCP
@@ -31,12 +32,19 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Initialize auth and api client
-auth = JamfAuth()
-jamf_api = JamfApi(auth)
+
+@asynccontextmanager
+async def lifespan(app: FastMCP):
+    """Initialize resources on startup, cleanup on shutdown."""
+    auth = JamfAuth()
+    jamf_api = JamfApi(auth)
+    app.jamf_api = jamf_api
+
+    yield
+
 
 # Create server and configurations
-mcp = FastMCP(name="Jamf Pro MCP")
+mcp = FastMCP(name="Jamf Pro MCP", lifespan=lifespan)
 
 
 @mcp.tool
@@ -53,7 +61,7 @@ async def get_computer_inventory(serial: str, sections: list[str] | None = None)
     :rtype: dict[str, Any]
     """
     try:
-        return await jamf_api.get_computer_inventory(serial=serial, sections=sections)
+        return await mcp.jamf_api.get_computer_inventory(serial=serial, sections=sections)
     except Exception as e:
         logger.error(f"Error getting inventory for serial {serial}: {str(e)}")
         return {
@@ -78,7 +86,7 @@ async def get_computer_history(computer_id: int | str) -> dict[str, Any]:
     """
     try:
         computer_id_int = int(computer_id)
-        return await jamf_api.get_computer_history(computer_id_int)
+        return await mcp.jamf_api.get_computer_history(computer_id_int)
     except ValueError:
         logger.error(f"Invalid computer_id format: {computer_id}")
         return {
@@ -118,7 +126,7 @@ async def search_computers(
             "hardware.SerialNumber"
         ).eq(identifier)
 
-    return await jamf_api.search_computers(
+    return await mcp.jamf_api.search_computers(
         filter_expression=filter_expression, page_size=page_size_int, sections=sections
     )
 
@@ -138,14 +146,16 @@ async def get_health_scorecard(serial: str, email_address: str | None = None) ->
     try:
         try:
             if email_address:
-                serial = await jamf_api.get_serial_for_user(email_address)
+                serial = await mcp.jamf_api.get_serial_for_user(email_address)
         except Exception as e:
             return {
                 "error": "No serial found",
                 "message": f"Serial was not found for user {email_address}: {e}",
             }
 
-        computer_inventory = await jamf_api.get_computer_inventory(serial=serial, sections=["ALL"])
+        computer_inventory = await mcp.jamf_api.get_computer_inventory(
+            serial=serial, sections=["ALL"]
+        )
 
         if "error" in computer_inventory:
             return computer_inventory
@@ -158,7 +168,7 @@ async def get_health_scorecard(serial: str, email_address: str | None = None) ->
                 "serial": serial,
             }
 
-        computer_history = await jamf_api.get_computer_history(int(computer_id))
+        computer_history = await mcp.jamf_api.get_computer_history(int(computer_id))
         logger.info(f"Loading SOFA feed for health scorecard analysis for serial {serial}")
         sofa_feed = await HealthAnalyzer.load_sofa_feed()
         if sofa_feed is None:
@@ -191,7 +201,9 @@ async def get_basic_diagnostics(serial: str) -> dict[str, Any]:
     """
     try:
         # Get computer inventory
-        computer_inventory = await jamf_api.get_computer_inventory(serial=serial, sections=["ALL"])
+        computer_inventory = await mcp.jamf_api.get_computer_inventory(
+            serial=serial, sections=["ALL"]
+        )
 
         if "error" in computer_inventory:
             return computer_inventory
@@ -219,7 +231,9 @@ async def get_cves(serial: str, include_descriptions: bool = False) -> dict[str,
     """
     try:
         # Get computer inventory
-        computer_inventory = await jamf_api.get_computer_inventory(serial=serial, sections=["ALL"])
+        computer_inventory = await mcp.jamf_api.get_computer_inventory(
+            serial=serial, sections=["ALL"]
+        )
 
         if "error" in computer_inventory:
             return computer_inventory
@@ -233,7 +247,7 @@ async def get_cves(serial: str, include_descriptions: bool = False) -> dict[str,
             }
 
         # Get computer history for HealthAnalyzer
-        computer_history = await jamf_api.get_computer_history(int(computer_id))
+        computer_history = await mcp.jamf_api.get_computer_history(int(computer_id))
 
         # Load SOFA feed for CVE analysis
         logger.info(f"Loading SOFA feed for CVE analysis for serial {serial}")
@@ -292,7 +306,7 @@ async def get_compliance_status(computer_id: str | int) -> dict[str, Any]:
     """
     try:
         computer_id_int = int(computer_id)
-        return await jamf_api.get_compliance_status(computer_id_int)
+        return await mcp.jamf_api.get_compliance_status(computer_id_int)
     except ValueError:
         logger.error(f"Invalid computer_id format: {computer_id}")
         return {
@@ -317,7 +331,7 @@ async def get_jcds_files() -> dict[str, Any]:
     :rtype: dict[str, Any]
     """
     try:
-        files = await jamf_api.get_jcds_files()
+        files = await mcp.jamf_api.get_jcds_files()
         return {"files": files, "count": len(files)}
     except Exception as e:
         logger.error(f"Error getting JCDS files: {e}")
@@ -333,7 +347,7 @@ async def get_policies() -> dict[str, Any]:
     :rtype: dict[str, Any]
     """
     try:
-        return await jamf_api.get_policies()
+        return await mcp.jamf_api.get_policies()
     except Exception as e:
         logger.error(f"Error getting policies: {e}")
         return [{"error": "Failed to retrieve policies", "message": str(e)}]
@@ -351,7 +365,7 @@ async def get_policy_details(policy_id: str) -> dict[str, Any]:
     """
     try:
         policy_id_int = int(policy_id)
-        return await jamf_api.get_policy_details(policy_id_int)
+        return await mcp.jamf_api.get_policy_details(policy_id_int)
     except ValueError:
         logger.error(f"Invalid policy_id format: {policy_id}")
         return {
@@ -376,7 +390,7 @@ async def get_configuration_profiles() -> dict[str, Any]:
     :rtype: dict[str, Any]
     """
     try:
-        return await jamf_api.get_configuration_profiles()
+        return await mcp.jamf_api.get_configuration_profiles()
     except Exception as e:
         logger.error(f"Error getting configuration profiles: {e}")
         return [{"error": "Failed to retrieve configuration profiles", "message": str(e)}]
@@ -394,7 +408,7 @@ async def get_profile_details(profile_id: str) -> dict[str, Any]:
     """
     try:
         profile_id_int = int(profile_id)
-        return await jamf_api.get_profile_details(profile_id_int)
+        return await mcp.jamf_api.get_profile_details(profile_id_int)
     except ValueError:
         logger.error(f"Invalid profile_id format: {profile_id}")
         return {
@@ -419,7 +433,7 @@ async def get_extension_attributes() -> dict[str, Any]:
     :rtype: dict[str, Any]
     """
     try:
-        return await jamf_api.get_extension_attributes()
+        return await mcp.jamf_api.get_extension_attributes()
     except Exception as e:
         logger.error(f"Error getting extension attributes: {e}")
         return [{"error": "Failed to retrieve extension attributes", "message": str(e)}]
@@ -434,7 +448,7 @@ async def get_smart_groups() -> dict[str, Any]:
     :rtype: dict[str, Any]
     """
     try:
-        return await jamf_api.get_smart_groups()
+        return await mcp.jamf_api.get_smart_groups()
     except Exception as e:
         logger.error(f"Error getting smart groups: {e}")
         return [{"error": "Failed to retrieve smart groups", "message": str(e)}]
@@ -452,7 +466,7 @@ async def get_group_details(group_id: str) -> dict[str, Any]:
     """
     try:
         group_id_int = int(group_id)
-        return await jamf_api.get_group_details(group_id_int)
+        return await mcp.jamf_api.get_group_details(group_id_int)
     except ValueError:
         logger.error(f"Invalid group_id format: {group_id}")
         return {
@@ -477,7 +491,7 @@ async def get_scripts() -> dict[str, Any]:
     :rtype: dict[str, Any]
     """
     try:
-        return await jamf_api.get_scripts()
+        return await mcp.jamf_api.get_scripts()
     except Exception as e:
         logger.error(f"Error getting scripts: {e}")
         return [{"error": "Failed to retrieve scripts", "message": str(e)}]
@@ -495,7 +509,7 @@ async def get_script_details(script_id: str) -> dict[str, Any]:
     """
     try:
         script_id_int = int(script_id)
-        return await jamf_api.get_script_details(script_id_int)
+        return await mcp.jamf_api.get_script_details(script_id_int)
     except ValueError:
         logger.error(f"Invalid script_id format: {script_id}")
         return {
@@ -520,7 +534,7 @@ async def get_packages() -> dict[str, Any]:
     :rtype: dict[str, Any]
     """
     try:
-        return await jamf_api.get_packages()
+        return await mcp.jamf_api.get_packages()
     except Exception as e:
         logger.error(f"Error getting packages: {e}")
         return [{"error": "Failed to retrieve packages", "message": str(e)}]
@@ -538,7 +552,7 @@ async def get_package_details(package_id: str) -> dict[str, Any]:
     """
     try:
         package_id_int = int(package_id)
-        return await jamf_api.get_package_details(package_id_int)
+        return await mcp.jamf_api.get_package_details(package_id_int)
     except ValueError:
         logger.error(f"Invalid package_id format: {package_id}")
         return {
@@ -563,7 +577,7 @@ async def get_users() -> dict[str, Any]:
     :rtype: dict[str, Any]
     """
     try:
-        return await jamf_api.get_users()
+        return await mcp.jamf_api.get_users()
     except Exception as e:
         logger.error(f"Error getting users: {e}")
         return [{"error": "Failed to retrieve users", "message": str(e)}]
@@ -581,7 +595,7 @@ async def get_user_details(user_id: str) -> dict[str, Any]:
     """
     try:
         user_id_int = int(user_id)
-        return await jamf_api.get_user_details(user_id_int)
+        return await mcp.jamf_api.get_user_details(user_id_int)
     except ValueError:
         logger.error(f"Invalid user_id format: {user_id}")
         return {
@@ -609,7 +623,7 @@ async def get_user_group_details(group_id: int | str) -> dict[str, Any]:
     """
     try:
         group_id_int = int(group_id)
-        return await jamf_api.get_user_group_details(group_id_int)
+        return await mcp.jamf_api.get_user_group_details(group_id_int)
     except ValueError:
         logger.error(f"Invalid group_id format: {group_id}")
         return {
@@ -634,7 +648,7 @@ async def get_buildings() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_buildings()
+        return await mcp.jamf_api.get_buildings()
     except Exception as e:
         logger.error(f"Error retrieving buildings: {str(e)}")
         return [{"error": "Failed to retrieve buildings", "message": str(e)}]
@@ -652,7 +666,7 @@ async def get_building_details(building_id: int | str) -> dict[str, Any]:
     """
     try:
         building_id_int = int(building_id)
-        return await jamf_api.get_building_details(building_id_int)
+        return await mcp.jamf_api.get_building_details(building_id_int)
     except ValueError:
         logger.error(f"Invalid building_id format: {building_id}")
         return {
@@ -677,7 +691,7 @@ async def get_departments() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_departments()
+        return await mcp.jamf_api.get_departments()
     except Exception as e:
         logger.error(f"Error getting departments: {str(e)}")
         return [{"error": "Failed to retrieve departments", "message": str(e)}]
@@ -695,7 +709,7 @@ async def get_department_details(department_id: int | str) -> dict[str, Any]:
     """
     try:
         department_id_int = int(department_id)
-        return await jamf_api.get_department_details(department_id_int)
+        return await mcp.jamf_api.get_department_details(department_id_int)
     except ValueError:
         logger.error(f"Invalid department_id format: {department_id}")
         return {
@@ -720,7 +734,7 @@ async def get_network_segments() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_network_segments()
+        return await mcp.jamf_api.get_network_segments()
     except Exception as e:
         logger.error(f"Error getting network segments: {e}")
         return [{"error": "Failed to retrieve network segments", "message": str(e)}]
@@ -740,7 +754,7 @@ async def get_network_segment_details(
     """
     try:
         segment_id_int = int(segment_id)
-        return await jamf_api.get_network_segment_details(segment_id_int)
+        return await mcp.jamf_api.get_network_segment_details(segment_id_int)
     except ValueError:
         logger.error(f"Invalid segment_id format: {segment_id}")
         return {
@@ -765,7 +779,7 @@ async def get_patch_software_titles() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_patch_software_titles()
+        return await mcp.jamf_api.get_patch_software_titles()
     except Exception as e:
         logger.error(f"Error getting patch software titles: {e}")
         return [{"error": "Failed to retrieve patch software titles", "message": str(e)}]
@@ -785,7 +799,7 @@ async def get_patch_software_title_details(
     """
     try:
         title_id_int = int(title_id)
-        return await jamf_api.get_patch_software_title_details(title_id_int)
+        return await mcp.jamf_api.get_patch_software_title_details(title_id_int)
     except ValueError:
         logger.error(f"Invalid title_id format: {title_id}")
         return {
@@ -810,7 +824,7 @@ async def get_patch_policies() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_patch_policies()
+        return await mcp.jamf_api.get_patch_policies()
     except Exception as e:
         logger.error(f"Error getting patch policies: {e}")
         return [{"error": "Failed to retrieve patch policies", "message": str(e)}]
@@ -825,7 +839,7 @@ async def get_categories() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_categories()
+        return await mcp.jamf_api.get_categories()
     except Exception as e:
         logger.error(f"Error getting categories: {e}")
         return [{"error": "Failed to retrieve categories", "message": str(e)}]
@@ -845,7 +859,7 @@ async def get_category_details(
     """
     try:
         category_id_int = int(category_id)
-        return await jamf_api.get_category_details(category_id_int)
+        return await mcp.jamf_api.get_category_details(category_id_int)
     except ValueError:
         logger.error(f"Invalid category_id format: {category_id}")
         return {
@@ -870,7 +884,7 @@ async def get_sites() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_sites()
+        return await mcp.jamf_api.get_sites()
     except Exception as e:
         logger.error(f"Error getting sites: {e}")
         return [{"error": "Failed to retrieve sites", "message": str(e)}]
@@ -890,7 +904,7 @@ async def get_site_details(
     """
     try:
         site_id_int = int(site_id)
-        return await jamf_api.get_site_details(site_id_int)
+        return await mcp.jamf_api.get_site_details(site_id_int)
     except ValueError:
         logger.error(f"Invalid site_id format: {site_id}")
         return {
@@ -915,7 +929,7 @@ async def get_advanced_computer_searches() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_advanced_computer_searches()
+        return await mcp.jamf_api.get_advanced_computer_searches()
     except Exception as e:
         logger.error(f"Error getting advanced computer searches: {e}")
         return [
@@ -940,7 +954,7 @@ async def get_advanced_computer_search_details(
     """
     try:
         search_id_int = int(search_id)
-        return await jamf_api.get_advanced_computer_search_details(search_id_int)
+        return await mcp.jamf_api.get_advanced_computer_search_details(search_id_int)
     except ValueError:
         logger.error(f"Invalid search_id format: {search_id}")
         return {
@@ -965,7 +979,7 @@ async def get_restricted_software() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_restricted_software()
+        return await mcp.jamf_api.get_restricted_software()
     except Exception as e:
         logger.error(f"Error getting restricted software: {e}")
         return [{"error": "Failed to retrieve restricted software", "message": str(e)}]
@@ -985,7 +999,7 @@ async def get_restricted_software_details(
     """
     try:
         software_id_int = int(software_id)
-        return await jamf_api.get_restricted_software_details(software_id_int)
+        return await mcp.jamf_api.get_restricted_software_details(software_id_int)
     except ValueError:
         logger.error(f"Invalid software_id format: {software_id}")
         return {
@@ -1010,7 +1024,7 @@ async def get_licensed_software() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_licensed_software()
+        return await mcp.jamf_api.get_licensed_software()
     except Exception as e:
         logger.error(f"Error getting licensed software: {e}")
         return [{"error": "Failed to retrieve licensed software", "message": str(e)}]
@@ -1030,7 +1044,7 @@ async def get_licensed_software_details(
     """
     try:
         software_id_int = int(software_id)
-        return await jamf_api.get_licensed_software_details(software_id_int)
+        return await mcp.jamf_api.get_licensed_software_details(software_id_int)
     except ValueError:
         logger.error(f"Invalid software_id format: {software_id}")
         return {
@@ -1055,7 +1069,7 @@ async def get_ldap_servers() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_ldap_servers()
+        return await mcp.jamf_api.get_ldap_servers()
     except Exception as e:
         logger.error(f"Error getting LDAP servers: {e}")
         return [{"error": "Failed to retrieve LDAP servers", "message": str(e)}]
@@ -1075,7 +1089,7 @@ async def get_ldap_server_details(
     """
     try:
         server_id_int = int(server_id)
-        return await jamf_api.get_ldap_server_details(server_id_int)
+        return await mcp.jamf_api.get_ldap_server_details(server_id_int)
     except ValueError:
         logger.error(f"Invalid server_id format: {server_id}")
         return {
@@ -1100,7 +1114,7 @@ async def get_directory_bindings() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_directory_bindings()
+        return await mcp.jamf_api.get_directory_bindings()
     except Exception as e:
         logger.error(f"Error getting directory bindings: {e}")
         return [{"error": "Failed to retrieve directory bindings", "message": str(e)}]
@@ -1120,7 +1134,7 @@ async def get_directory_binding_details(
     """
     try:
         binding_id_int = int(binding_id)
-        return await jamf_api.get_directory_binding_details(binding_id_int)
+        return await mcp.jamf_api.get_directory_binding_details(binding_id_int)
     except ValueError:
         logger.error(f"Invalid binding_id format: {binding_id}")
         return {
@@ -1145,7 +1159,7 @@ async def get_webhooks() -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
     """
     try:
-        return await jamf_api.get_webhooks()
+        return await mcp.jamf_api.get_webhooks()
     except Exception as e:
         logger.error(f"Error getting webhooks: {e}")
         return [{"error": "Failed to retrieve webhooks", "message": str(e)}]
@@ -1165,7 +1179,7 @@ async def get_webhook_details(
     """
     try:
         webhook_id_int = int(webhook_id)
-        return await jamf_api.get_webhook_details(webhook_id_int)
+        return await mcp.jamf_api.get_webhook_details(webhook_id_int)
     except ValueError:
         logger.error(f"Invalid webhook_id format: {webhook_id}")
         return {
@@ -1195,7 +1209,7 @@ async def get_device_lock_pin(
     """
     try:
         computer_id_int = int(computer_id)
-        return await jamf_api.get_device_lock_pin(computer_id_int)
+        return await mcp.jamf_api.get_device_lock_pin(computer_id_int)
     except ValueError:
         logger.error(f"Invalid computer_id format: {computer_id}")
         return {
