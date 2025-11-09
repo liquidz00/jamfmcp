@@ -9,6 +9,7 @@ authors = [
     {name = "Andrew Lerman", email = "info@liquidzoo.io"}
 ]
 dependencies = [
+    "asyncclick>=8.3.0.7",
     "defusedxml",
     "dicttoxml>=1.7.16,<2",
     "faker>=37.12.0",
@@ -18,6 +19,9 @@ dependencies = [
     "polyfactory>=2.22.3",
     "pydantic>=2,<3",
 ]
+
+[project.scripts]
+jamfmcp = "jamfmcp.cli:cli"
 
 [project.optional-dependencies]
 dev = [
