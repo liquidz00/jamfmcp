@@ -14,7 +14,6 @@ import shutil
 import subprocess
 import sys
 from datetime import datetime
-from getpass import getpass
 from pathlib import Path
 from typing import Any
 
@@ -75,11 +74,11 @@ async def get_platform_config_path(platform_name: str) -> Path | None:
         return Path(config).expanduser()
 
 
-async def generate_mcp_config(
+async def generate_env_vars(
     auth_type: str, url: str, credentials: dict[str, str]
-) -> dict[str, Any]:
+) -> dict[str, str]:
     """
-    Generate MCP configuration for JamfMCP server.
+    Generate environment variables for JamfMCP server.
 
     :param auth_type: Authentication type ('basic' or 'oauth')
     :type auth_type: str
@@ -87,8 +86,8 @@ async def generate_mcp_config(
     :type url: str
     :param credentials: Authentication credentials
     :type credentials: dict[str, str]
-    :return: MCP server configuration
-    :rtype: dict[str, Any]
+    :return: Environment variables dictionary
+    :rtype: dict[str, str]
     """
     env_vars = {
         "JAMF_URL": url,
@@ -102,6 +101,26 @@ async def generate_mcp_config(
         env_vars["JAMF_CLIENT_ID"] = credentials["client_id"]
         env_vars["JAMF_CLIENT_SECRET"] = credentials["client_secret"]
 
+    return env_vars
+
+
+async def generate_mcp_config(
+    auth_type: str, url: str, credentials: dict[str, str]
+) -> dict[str, Any]:
+    """
+    Generate MCP configuration for JamfMCP server (legacy support).
+
+    :param auth_type: Authentication type ('basic' or 'oauth')
+    :type auth_type: str
+    :param url: Jamf Pro server URL
+    :type url: str
+    :param credentials: Authentication credentials
+    :type credentials: dict[str, str]
+    :return: MCP server configuration
+    :rtype: dict[str, Any]
+    """
+    env_vars = await generate_env_vars(auth_type, url, credentials)
+
     return {
         "mcpServers": {
             SERVER_NAME: {
@@ -113,9 +132,69 @@ async def generate_mcp_config(
     }
 
 
+async def setup_with_fastmcp(
+    platform_name: str,
+    env_vars: dict[str, str],
+    verbose: bool = False,
+    workspace: str | None = None,
+) -> bool:
+    """
+    Setup JamfMCP using FastMCP CLI commands.
+
+    :param platform_name: The AI platform name
+    :type platform_name: str
+    :param env_vars: Environment variables for the server
+    :type env_vars: dict[str, str]
+    :param verbose: Enable verbose output
+    :type verbose: bool
+    :param workspace: Workspace path for Cursor installations
+    :type workspace: str | None
+    :return: True if setup succeeded
+    :rtype: bool
+    """
+    # Build the fastmcp install command
+    cmd = ["fastmcp", "install", platform_name, "jamfmcp.server:mcp"]
+
+    # Add environment variables
+    for key, value in env_vars.items():
+        cmd.extend(["--env", f"{key}={value}"])
+
+    # Add the jamfmcp package as a dependency
+    cmd.extend(["--with", "jamfmcp"])
+
+    # Add workspace option for Cursor
+    if platform_name == "cursor" and workspace:
+        cmd.extend(["--workspace", workspace])
+
+    if verbose:
+        click.echo(f"Running: {' '.join(cmd)}")
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode == 0:
+            click.echo(click.style(f"✓ Successfully configured {platform_name}", fg="green"))
+            return True
+        else:
+            click.echo(
+                click.style(
+                    f"✗ Failed to configure {platform_name}: {result.stderr}",
+                    fg="red",
+                )
+            )
+            return False
+    except FileNotFoundError:
+        click.echo(
+            click.style(
+                "✗ FastMCP CLI not found. Please install it with: pip install fastmcp",
+                fg="red",
+            )
+        )
+        return False
+
+
 async def write_platform_config(platform_name: str, config: dict[str, Any]) -> None:
     """
-    Write configuration to platform-specific location.
+    Write configuration to platform-specific location (legacy method).
 
     :param platform_name: The AI platform name
     :type platform_name: str
@@ -451,6 +530,18 @@ async def cli() -> None:
     is_flag=True,
     help="Enable verbose output",
 )
+@click.option(
+    "--legacy",
+    is_flag=True,
+    help="Use legacy configuration method instead of FastMCP CLI",
+)
+@click.option(
+    "--workspace",
+    "-w",
+    metavar="<path>",
+    type=click.Path(exists=True, file_okay=False, dir_okay=True, path_type=Path),
+    help="Workspace directory for Cursor project-specific installation",
+)
 async def setup(
     platform: str,
     auth_type: str,
@@ -462,6 +553,8 @@ async def setup(
     use_keyring: bool,
     dry_run: bool,
     verbose: bool,
+    legacy: bool,
+    workspace: Path | None,
 ) -> None:
     """
     Configure JamfMCP for your AI platform.
@@ -494,7 +587,7 @@ async def setup(
 
     # Get Jamf URL
     if not url:
-        url = click.prompt("Jamf Pro server URL", type=str)
+        url = await click.prompt("Jamf Pro server URL", type=str)
 
     # Validate URL format
     if not url.startswith(("http://", "https://")):
@@ -504,15 +597,15 @@ async def setup(
     credentials = {}
     if auth_type == "basic":
         if not username:
-            username = click.prompt("Username", type=str)
+            username = await click.prompt("Username", type=str)
         if not password:
-            password = getpass("Password: ")
+            password = await click.prompt("Password", type=str, hide_input=True)
         credentials = {"username": username, "password": password}
     else:  # oauth
         if not client_id:
-            client_id = click.prompt("Client ID", type=str)
+            client_id = await click.prompt("Client ID", type=str)
         if not client_secret:
-            client_secret = getpass("Client Secret: ")
+            client_secret = await click.prompt("Client Secret", type=str, hide_input=True)
         credentials = {"client_id": client_id, "client_secret": client_secret}
 
     # Validate connection (skip in dry-run mode)
@@ -530,17 +623,30 @@ async def setup(
             ):
                 return
 
-    # Generate configuration
-    config = await generate_mcp_config(auth_type, url, credentials)
+    # Generate environment variables
+    env_vars = await generate_env_vars(auth_type, url, credentials)
 
     if dry_run:
         click.echo(click.style("\n--- DRY RUN MODE ---", fg="yellow", bold=True))
         click.echo("Would create the following configuration:\n")
-        click.echo(json.dumps(config, indent=2))
+        # Show what fastmcp command would be run
+        cmd_preview = ["fastmcp", "install", platform, "jamfmcp.server:mcp"]
+        for key, value in env_vars.items():
+            cmd_preview.extend(["--env", f"{key}={value}"])
+        cmd_preview.extend(["--with", "jamfmcp"])
+        click.echo(f"Command: {' '.join(cmd_preview)}")
         click.echo(click.style("\n--- END DRY RUN ---", fg="yellow", bold=True))
     else:
-        # Write configuration
-        await write_platform_config(platform, config)
+        # Use FastMCP CLI for supported platforms (unless legacy mode)
+        if platform in ["claude-desktop", "cursor", "claude-code", "gemini-cli"] and not legacy:
+            workspace_str = str(workspace) if workspace else None
+            success = await setup_with_fastmcp(platform, env_vars, verbose, workspace_str)
+            if not success:
+                return
+        else:
+            # Legacy method for mcp-json or when --legacy is used
+            config = await generate_mcp_config(auth_type, url, credentials)
+            await write_platform_config(platform, config)
 
     # Platform-specific instructions
     if platform == "claude-desktop":
@@ -817,6 +923,156 @@ async def doctor(verbose: bool) -> None:
         click.echo("2. Run 'jamfmcp setup' to configure your AI platform")
         click.echo("3. Verify your Jamf Pro credentials are correct")
         click.echo("4. Check that your Jamf Pro server is accessible")
+
+
+@cli.command("install", short_help="Install JamfMCP to an AI platform using FastMCP.")
+@click.option(
+    "--platform",
+    "-p",
+    metavar="<platform>",
+    type=click.Choice(
+        ["claude-desktop", "cursor", "claude-code", "gemini-cli", "mcp-json"],
+        case_sensitive=False,
+    ),
+    required=True,
+    help="AI platform to install to",
+)
+@click.option(
+    "--auth-type",
+    "-a",
+    metavar="<auth_type>",
+    type=click.Choice(["basic", "oauth"], case_sensitive=False),
+    default="basic",
+    help="Authentication type (default: basic)",
+)
+@click.option(
+    "--url",
+    "-u",
+    metavar="<jamf_url>",
+    type=click.STRING,
+    help="Jamf Pro server URL",
+)
+@click.option(
+    "--username",
+    metavar="<username>",
+    type=click.STRING,
+    help="Username for basic auth",
+)
+@click.option(
+    "--password",
+    metavar="<password>",
+    type=click.STRING,
+    help="Password for basic auth",
+)
+@click.option(
+    "--client-id",
+    metavar="<client_id>",
+    type=click.STRING,
+    help="Client ID for OAuth",
+)
+@click.option(
+    "--client-secret",
+    metavar="<client_secret>",
+    type=click.STRING,
+    help="Client secret for OAuth",
+)
+@click.option(
+    "--workspace",
+    "-w",
+    metavar="<path>",
+    type=click.Path(exists=True, file_okay=False, dir_okay=True),
+    help="Workspace directory for Cursor project-specific installation",
+)
+@click.option(
+    "--verbose",
+    "-v",
+    is_flag=True,
+    help="Enable verbose output",
+)
+async def install(
+    platform: str,
+    auth_type: str,
+    url: str | None,
+    username: str | None,
+    password: str | None,
+    client_id: str | None,
+    client_secret: str | None,
+    workspace: str | None,
+    verbose: bool,
+) -> None:
+    """
+    Install JamfMCP to an AI platform using FastMCP CLI.
+
+    This is a streamlined command that directly uses FastMCP's install
+    functionality. It's the recommended way to set up JamfMCP.
+
+    Examples:
+        jamfmcp install --platform claude-desktop --url https://example.jamfcloud.com
+        jamfmcp install -p cursor --auth-type oauth --workspace .
+    """
+    click.echo(click.style(f"\n🚀 Installing JamfMCP to {platform}\n", fg="cyan", bold=True))
+
+    # Get Jamf URL
+    if not url:
+        url = await click.prompt("Jamf Pro server URL", type=str)
+
+    # Validate URL format
+    if not url.startswith(("http://", "https://")):
+        url = f"https://{url}"
+
+    # Get credentials based on auth type
+    credentials = {}
+    if auth_type == "basic":
+        if not username:
+            username = await click.prompt("Username", type=str)
+        if not password:
+            password = await click.prompt("Password", type=str, hide_input=True)
+        credentials = {"username": username, "password": password}
+    else:  # oauth
+        if not client_id:
+            client_id = await click.prompt("Client ID", type=str)
+        if not client_secret:
+            client_secret = await click.prompt("Client Secret", type=str, hide_input=True)
+        credentials = {"client_id": client_id, "client_secret": client_secret}
+
+    # Generate environment variables
+    env_vars = await generate_env_vars(auth_type, url, credentials)
+
+    # Use FastMCP CLI
+    if platform == "mcp-json":
+        # For mcp-json, just output the command
+        cmd = ["fastmcp", "install", platform, "jamfmcp.server:mcp"]
+        for key, value in env_vars.items():
+            cmd.extend(["--env", f"{key}={value}"])
+        cmd.extend(["--with", "jamfmcp"])
+
+        click.echo("Generated FastMCP command:")
+        click.echo(f"  {' '.join(cmd)}")
+
+        # Also show the JSON output
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode == 0:
+            click.echo("\nGenerated MCP JSON configuration:")
+            click.echo(result.stdout)
+        else:
+            click.echo(click.style(f"\n✗ Failed to generate config: {result.stderr}", fg="red"))
+    else:
+        success = await setup_with_fastmcp(platform, env_vars, verbose, workspace)
+        if success:
+            # Platform-specific instructions
+            if platform == "claude-desktop":
+                click.echo("\n📝 Next steps:")
+                click.echo("1. Restart Claude Desktop completely")
+                click.echo("2. Look for the hammer icon (🔨) in the input box")
+                click.echo("3. Your JamfMCP tools are now available!")
+            elif platform == "cursor":
+                click.echo("\n📝 Next steps:")
+                click.echo("1. Click 'Install' in the Cursor prompt")
+                click.echo("2. Restart Cursor or reload the window")
+                click.echo("3. JamfMCP tools should now be available")
+            elif platform in ["claude-code", "gemini-cli"]:
+                click.echo("\n📝 Configuration complete!")
+                click.echo(f"JamfMCP has been added to {platform}")
 
 
 @cli.command("update", short_help="Update JamfMCP package and configurations.")
