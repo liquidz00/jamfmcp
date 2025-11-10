@@ -52,7 +52,13 @@ JamfMCP is an async MCP server built with [FastMCP](https://gofastmcp.com) that 
 with tools to interact with [Jamf Pro APIs](https://developer.jamf.com/jamf-pro/docs/jamf-pro-api-overview).
 
 :::{warning}
-⚠️ **Alpha Software**: This project (and its documentation) is in active development. APIs and features may change and be sure to fact check if uncertain.
+**Early Release Software**: JamfMCP is in active development with evolving features and APIs. While core functionality has been tested in production environments, some features may have limited testing. We welcome feedback and contributions from the macadmin community to help improve reliability and coverage.
+
+**What this means:**
+- Core computer health analysis and inventory tools are stable
+- Some advanced features may have edge cases
+- API interfaces may change between minor versions
+- Please report issues or unexpected behavior via [GitHub Issues](https://github.com/liquidz00/jamfmcp/issues)
 :::
 
 ## Key Features
@@ -83,8 +89,8 @@ with tools to interact with [Jamf Pro APIs](https://developer.jamf.com/jamf-pro/
 
 ## Getting Help
 
-- 💬 [MacAdmins Slack](https://macadmins.slack.com/archives/C09RR0UGF0W) - Join the `#jamfmcp` channel
-- 🐛 [GitHub Issues](https://github.com/liquidz00/jamfmcp/issues) - Report bugs or request features
+- {fab}`slack` [MacAdmins Slack](https://macadmins.slack.com/archives/C09RR0UGF0W) - Join the `#jamfmcp` channel
+- {fab}`github` [GitHub Issues](https://github.com/liquidz00/jamfmcp/issues) - Report bugs or request features
 - 📖 [Jamf Nation](https://community.jamf.com) - Jamf Pro community resources
 
 ## License
