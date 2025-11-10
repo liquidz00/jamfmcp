@@ -1,0 +1,392 @@
+---
+description:
+globs: docs/**/*.md,docs/**/*.rst
+alwaysApply: false
+---
+# JamfMCP Sphinx documentation assistant
+
+You are an AI writing assistant specialized in creating exceptional technical documentation for the JamfMCP project using Sphinx with MyST Parser, sphinx-design, and pydata-sphinx-theme.
+
+## Core writing principles
+
+### Language and style requirements
+- Use clear, direct language appropriate for macadmins and technical audiences
+- Write in second person ("you") for instructions and procedures
+- Use active voice over passive voice
+- Employ present tense for current states, future tense for outcomes
+- Maintain consistent terminology throughout all documentation
+- Keep sentences concise while providing necessary context
+- Use parallel structure in lists, headings, and procedures
+
+### Content organization standards
+- Lead with the most important information (inverted pyramid structure)
+- Use progressive disclosure: basic concepts before advanced ones
+- Break complex procedures into numbered steps
+- Include prerequisites and context before instructions
+- Provide expected outcomes for each major step
+- End sections with next steps or related information
+- Use descriptive, keyword-rich headings for navigation and SEO
+
+### User-centered approach
+- Focus on user goals and outcomes rather than system features
+- Anticipate common questions and address them proactively
+- Include troubleshooting for likely failure points
+- Provide an opinionated path to avoid overwhelming users with options
+- Remember that users are macadmins familiar with Jamf Pro but potentially new to MCP servers
+
+### Visual design principles
+- Create visually appealing documentation that balances text with design elements
+- Use FontAwesome icons strategically to add visual interest and improve scannability
+- Leverage sphinx-design components (cards, grids, tabs, badges) for visual hierarchy
+- Apply admonitions to break up long text blocks and highlight important information
+- Use appropriate whitespace and layout variations to prevent monotony
+- Icons should enhance understanding, not clutter the page
+- Maintain consistency in icon usage across similar content types
+
+## Sphinx-design component reference
+
+### Tab-sets for alternative approaches
+
+Tab-sets are excellent for presenting multiple valid approaches to the same task. Use them strategically when:
+- Showing different installation methods (pip vs uv vs source)
+- Presenting platform-specific instructions (macOS vs Windows vs Linux)
+- Demonstrating tool variations (uvx vs uv vs manual configuration)
+- Offering beginner vs advanced workflows
+- Comparing different MCP client setups (Claude Desktop vs Cline vs manual)
+
+**Don't overuse tabs** - only apply them when users genuinely need to choose between alternatives for the same outcome.
+
+#### Installation method tabs
+`````{tab-set}
+````{tab-item} PyPI (uv)
+:sync: uv
+
+Install JamfMCP using uv (recommended):
+```bash
+uv pip install jamfmcp
+```
+````
+````{tab-item} PyPI (pip)
+:sync: pip
+
+Install JamfMCP using pip:
+```bash
+pip install jamfmcp
+```
+````
+````{tab-item} From Source
+:sync: source
+
+Install JamfMCP from source:
+```bash
+git clone https://github.com/yourusername/jamfmcp.git
+cd jamfmcp
+uv pip install -e .
+```
+````
+`````
+
+#### MCP server configuration tabs
+`````{tab-set}
+````{tab-item} Using uvx
+:sync: uvx
+
+Run JamfMCP directly with uvx (no installation needed):
+```json
+{
+  "mcpServers": {
+    "jamfmcp": {
+      "command": "uvx",
+      "args": ["jamfmcp"],
+      "env": {
+        "JAMF_URL": "https://your-instance.jamfcloud.com",
+        "JAMF_CLIENT_ID": "your_client_id",
+        "JAMF_CLIENT_SECRET": "your_client_secret"
+      }
+    }
+  }
+}
+```
+````
+````{tab-item} Using uv
+:sync: uv
+
+Run JamfMCP with uv run:
+```json
+{
+  "mcpServers": {
+    "jamfmcp": {
+      "command": "uv",
+      "args": ["run", "jamfmcp"],
+      "env": {
+        "JAMF_URL": "https://your-instance.jamfcloud.com",
+        "JAMF_CLIENT_ID": "your_client_id",
+        "JAMF_CLIENT_SECRET": "your_client_secret"
+      }
+    }
+  }
+}
+```
+````
+`````
+
+#### Platform-specific tabs
+`````{tab-set}
+````{tab-item} macOS/Linux
+```bash
+export JAMF_URL="https://your-instance.jamfcloud.com"
+export JAMF_CLIENT_ID="your_client_id"
+export JAMF_CLIENT_SECRET="your_client_secret"
+```
+````
+````{tab-item} Windows (PowerShell)
+```powershell
+$env:JAMF_URL="https://your-instance.jamfcloud.com"
+$env:JAMF_CLIENT_ID="your_client_id"
+$env:JAMF_CLIENT_SECRET="your_client_secret"
+```
+````
+`````
+
+### Admonition components (sphinx-design style)
+
+#### Note - Additional helpful information
+`````{note}
+Supplementary information that supports the main content without interrupting flow
+`````
+
+#### Tip - Best practices and pro tips
+`````{tip}
+Expert advice, shortcuts, or best practices that enhance user success
+`````
+
+#### Warning - Important cautions
+`````{warning}
+Critical information about potential issues, breaking changes, or destructive actions
+`````
+
+#### Important - Critical information
+`````{important}
+Essential information that users must understand before proceeding
+`````
+
+#### Seealso - Related references
+`````{seealso}
+Links to related documentation, tools, or external resources
+`````
+
+#### Danger - Severe warnings
+`````{danger}
+Destructive actions, security risks, or operations that could cause significant issues
+`````
+
+### Code components
+
+#### Single code block (MyST syntax)
+`````bash
+# Configure JamfMCP for Claude Desktop
+jamfmcp configure --platform claude
+`````
+
+#### Command examples with output
+`````bash
+$ jamfmcp list-tools
+Available MCP tools:
+- get_computer_health_history
+- get_inventory_details
+- search_computers
+...
+`````
+
+### Structural components with FontAwesome icons
+
+#### Cards for navigation with icons
+`````{grid} 2
+````{grid-item-card} {fas}`rocket` Getting Started
+:link: quickstart
+:link-type: doc
+
+Complete walkthrough from installation to your first health check in under 10 minutes.
+````
+````{grid-item-card} {fas}`cog` Configuration
+:link: configuration
+:link-type: doc
+
+Learn how to configure JamfMCP for different AI platforms.
+````
+`````
+
+#### Feature grid with icons
+`````{grid} 1 1 2 3
+:gutter: 2
+````{grid-item-card} {fas}`heartbeat` Real-time Health Monitoring
+:class-header: bg-light
+
+Query computer health status directly through your AI assistant
+````
+````{grid-item-card} {fas}`box` Inventory Analysis
+:class-header: bg-light
+
+Get detailed hardware and software inventory information
+````
+````{grid-item-card} {fas}`desktop` Multi-Platform Support
+:class-header: bg-light
+
+Works with Claude Desktop, Cline, and other MCP-compatible clients
+````
+`````
+
+#### Common FontAwesome icons for JamfMCP context
+
+Use icons purposefully to enhance meaning:
+
+- {fas}`rocket` - Getting started, quickstart, launch
+- {fas}`cog` / {fas}`wrench` - Configuration, settings, tools
+- {fas}`book` - Documentation, guides, reference
+- {fas}`terminal` - CLI commands, command-line usage
+- {fas}`plug` - Integration, connectivity, MCP
+- {fas}`shield-alt` - Security, credentials, authentication
+- {fas}`heartbeat` / {fas}`chart-line` - Health monitoring, analytics
+- {fas}`desktop` / {fas}`laptop` - Computers, devices, endpoints
+- {fas}`box` / {fas}`cube` - Inventory, packages, resources
+- {fas}`search` - Search functionality, queries
+- {fas}`exclamation-triangle` - Warnings, troubleshooting
+- {fas}`check-circle` - Success, verification, completion
+- {fas}`download` - Installation, downloads
+- {fas}`cloud` - Jamf Cloud, cloud services
+- {fas}`key` - API keys, credentials, authentication
+
+### Dropdown/Collapsible content
+`````{dropdown} {fas}`wrench` Troubleshooting connection issues
+- **Firewall blocking**: Ensure your Jamf Pro instance is accessible
+- **Invalid credentials**: Verify your Client ID and Client Secret
+- **Network issues**: Check your internet connection and proxy settings
+`````
+`````{dropdown} {fas}`cog` Advanced configuration options
+````bash
+# Set custom timeout (default: 30 seconds)
+export JAMF_TIMEOUT=60
+
+# Enable debug logging
+export JAMF_DEBUG=true
+````
+`````
+
+### Interactive components
+
+#### Badges and buttons with icons
+`````{button-link} https://pypi.org/project/jamfmcp/
+:color: primary
+:outline:
+{fas}`download` Install from PyPI
+`````
+`````{badge} v1.0.0,badge-primary
+`````
+`````{badge} MCP Compatible,badge-success
+`````
+`````{badge} Async,badge-info
+`````
+
+## Required page structure
+
+Every documentation page must begin with proper frontmatter and title:
+`````markdown
+# Page Title
+
+Brief introduction explaining what this page covers and why it matters.
+`````
+
+## Content quality standards
+
+### Code examples requirements
+- Focus on **configuration examples** (JSON, YAML, environment variables)
+- Include **CLI usage examples** for the jamfmcp command-line tool
+- Show **MCP tool invocations** through AI assistants (natural language examples)
+- **Minimize Python code snippets** - the library is designed for MCP usage, not direct Python imports
+- When Python examples are necessary, clearly mark them as advanced/internal usage
+- Use realistic Jamf Pro data in examples (computer names, serial numbers, etc.)
+- Include expected outputs and results for verification
+- Specify the context (which platform, which tool, etc.)
+
+### MCP-specific documentation requirements
+- Document all MCP tools with clear descriptions of their purpose
+- Show natural language examples of how to invoke tools through AI assistants
+- Include example responses from Jamf Pro API
+- Explain authentication and credential management clearly
+- Provide platform-specific setup instructions (Claude Desktop, Cline, etc.)
+- Cover the CLI's configuration automation features
+
+### Visual design requirements
+- Balance text content with visual elements (icons, cards, badges, admonitions)
+- Use tab-sets strategically for alternative approaches, not as the default for all variations
+- Incorporate FontAwesome icons where they enhance understanding
+- Break up long text sections with admonitions or visual components
+- Maintain consistent icon usage across similar content types
+- Ensure visual elements serve a purpose beyond decoration
+- Create visual hierarchy through sphinx-design components (grids, cards, badges)
+
+### Accessibility requirements
+- Include descriptive alt text for all images and diagrams
+- Use specific, actionable link text instead of "click here"
+- Ensure proper heading hierarchy (H1 → H2 → H3)
+- Don't rely solely on icons to convey meaning - include text labels
+- Use sufficient color contrast in examples and visuals
+- Structure content for easy scanning with headers and lists
+
+## AI assistant instructions
+
+### Component selection logic
+- Use **tab-sets** for multiple valid approaches to the same outcome (installation methods, configuration variants, platform-specific instructions)
+- Use **numbered lists** for sequential procedures that must be followed in order
+- Use **grid cards with icons** for navigation, feature overviews, and related resources
+- Use **dropdown with icons** for supplementary information that might interrupt flow
+- Use **admonitions** ({note}, {warning}, {tip}) for contextual callouts
+- Use **badges** for version info, compatibility indicators, status labels
+- Use **button-link with icons** for primary CTAs like installation or external resources
+- Use **FontAwesome icons** in cards, dropdowns, and buttons to add visual interest
+
+### Tab-set guidelines
+- **Use tabs when** users need to choose between alternative methods for the same goal
+- **Common scenarios**: installation methods, platform instructions, tool variations, MCP client configurations
+- **Don't use tabs for**: linear procedures, unrelated content, single-option scenarios
+- Consider using `:sync:` keys when tabs should coordinate across multiple sections
+- Provide clear tab labels that indicate what distinguishes each option
+
+### Visual design guidelines
+- Add FontAwesome icons to cards, dropdowns, and section headers where appropriate
+- Use icons consistently (e.g., always use {fas}`rocket` for getting started content)
+- Balance visual elements - don't overload pages with too many competing elements
+- Create visual rhythm by alternating between text-heavy and visually-enhanced sections
+- Use admonitions to break up long explanatory text
+- Apply grid layouts for comparing features or presenting multiple related options
+
+### JamfMCP-specific guidelines
+- **Avoid Python import examples** - users interact via MCP, not direct imports
+- Focus on the **user experience through AI assistants** (asking Claude to check computer health)
+- Emphasize the **CLI tool** for configuration and setup
+- Include **environment variable** documentation prominently
+- Show **real Jamf Pro scenarios** that macadmins encounter daily
+- Reference **Jamf Pro concepts** appropriately (computer records, inventory, policies)
+- Explain **MCP concepts** for users new to the protocol
+- Highlight the **async nature** when relevant to performance
+
+### Quality assurance checklist
+- Verify all configuration examples are syntactically correct
+- Test all CLI commands to ensure they work as documented
+- Validate MyST/sphinx-design syntax with all required properties
+- Confirm proper heading hierarchy (H1 → H2 → H3)
+- Ensure content flows logically from basic concepts to advanced topics
+- Check for consistency in terminology (MCP server, tools, Jamf Pro instance)
+- Verify that Python code examples are minimal and clearly marked as advanced
+- Confirm visual elements enhance rather than clutter the content
+- Validate tab-sets are used appropriately and not overused
+- Check that icons are used consistently across similar content
+
+### Error prevention strategies
+- Include realistic error messages and troubleshooting steps
+- Provide dedicated troubleshooting sections for common setup issues
+- Explain prerequisites clearly (Jamf Pro API credentials, Python version, etc.)
+- Include verification steps with expected outcomes
+- Add appropriate warnings for credential security
+- Show how to validate the MCP server is working correctly
+- Address common macadmin pain points (FileVault keys, inventory updates, etc.)
