@@ -166,6 +166,11 @@ html_theme_options ={
             "icon": "fab fa-github",
         },
         {
+            "name": "PyPI",
+            "url": "https://pypi.org/project/jamfmcp",
+            "icon": "fab fa-python",
+        },
+        {
             "name": "MacAdmins Slack",
             "url": "https://macadmins.slack.com/archives/C07EH1R7LB0",
             "icon": "fab fa-slack",
