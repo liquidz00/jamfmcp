@@ -2,6 +2,7 @@ import logging
 from typing import Any
 
 import httpx
+from fastmcp import Context
 
 from jamfmcp.auth import JamfAuth
 from jamfmcp.jamfsdk import JamfProClient
@@ -30,7 +31,9 @@ class JamfApi:
         self.server = auth.server
         self.credentials = auth.get_credentials_provider()
 
-    async def get_serial_for_user(self, email_address: str) -> str | None:
+    async def get_serial_for_user(
+        self, email_address: str, ctx: Context | None = None
+    ) -> str | None:
         """
         Retrieve the serial number of a computer assigned to a user by email address.
 
@@ -41,6 +44,9 @@ class JamfApi:
         :raises ValueError: If email address is invalid or user not found
         :raises ConnectionError: If API request fails
         """
+        if ctx:
+            await ctx.debug(f"Looking up user by email: {email_address}")
+
         try:
             async with JamfProClient(self.server, self.credentials) as client:
                 resp = await client.classic_api_request("get", f"users/email/{email_address}")
@@ -62,10 +68,20 @@ class JamfApi:
                         for c in computers:
                             serial = c.get("name")
                             if serial:
+                                if ctx:
+                                    await ctx.debug(
+                                        f"Found serial {serial} linked to user {email_address}",
+                                        extra={"serial": serial, "email": email_address},
+                                    )
                                 logger.info(f"Found serial {serial} for user {email_address}")
                                 return serial
 
                 # No computers found for user
+                if ctx:
+                    await ctx.warning(
+                        f"No computers assigned to user {email_address}",
+                        extra={"email": email_address},
+                    )
                 logger.warning(f"No assigned computers found for user: {email_address}")
                 return None
 
@@ -85,6 +101,7 @@ class JamfApi:
         serial: str | None = None,
         computer_id: int | None = None,
         sections: list[str] | None = None,
+        ctx: Context | None = None,
     ) -> dict[str, Any]:
         """
         Get detailed computer inventory information.
@@ -100,6 +117,9 @@ class JamfApi:
         :raises ValueError: If neither serial nor computer_id is provided, or if computer not found
         :raises ConnectionError: If API request fails
         """
+        if ctx:
+            await ctx.debug(f"Fetching computer inventory (serial={serial}, id={computer_id})")
+
         async with JamfProClient(self.server, self.credentials) as client:
             if serial:
                 computers = await client.pro_api.get_computer_inventory_v1(
@@ -108,7 +128,16 @@ class JamfApi:
                     return_generator=False,
                 )
                 if not computers:
+                    if ctx:
+                        await ctx.error(
+                            f"No computer found with serial {serial}", extra={"serial": serial}
+                        )
                     raise ValueError(f"No computer found with serial number: {serial}")
+                if ctx:
+                    await ctx.debug(
+                        f"Found computer inventory for serial {serial}",
+                        extra={"serial": serial, "computer_id": computers[0].id},
+                    )
                 return computers[0].model_dump()
             elif computer_id:
                 computer_resp = await client.pro_api_request(
@@ -118,7 +147,9 @@ class JamfApi:
             else:
                 raise ValueError("Either serial or computer_id must be provided")
 
-    async def get_computer_history(self, computer_id: str | int) -> dict[str, Any]:
+    async def get_computer_history(
+        self, computer_id: str | int, ctx: Context | None = None
+    ) -> dict[str, Any]:
         """
         Get computer history including policy logs and management commands.
 
@@ -129,12 +160,27 @@ class JamfApi:
         :raises ConnectionError: If API request fails (handled and returned as error dict)
         :raises ValueError: If data processing fails (handled and returned as error dict)
         """
+        if ctx:
+            await ctx.debug(f"Fetching computer history for ID {computer_id}")
+
         try:
             async with JamfProClient(self.server, self.credentials) as client:
                 history = await client.classic_api_request(
                     "get", f"computerhistory/id/{computer_id}"
                 )
                 response = await client.parse_json_response(history)
+
+                if ctx:
+                    history_data = response.get("computer_history", {})
+                    await ctx.debug(
+                        f"Retrieved history with {len(history_data.get('policies_completed', []))} completed policies",
+                        extra={
+                            "computer_id": computer_id,
+                            "policy_count": len(history_data.get("policies_completed", [])),
+                            "command_count": len(history_data.get("commands_completed", [])),
+                        },
+                    )
+
                 return response.get("computer_history", {})
 
         except (httpx.HTTPError, ConnectionError, TimeoutError) as e:
@@ -156,7 +202,9 @@ class JamfApi:
                 "computer_id": computer_id,
             }
 
-    async def get_compliance_status(self, computer_id: str | int) -> dict[str, Any]:
+    async def get_compliance_status(
+        self, computer_id: str | int, ctx: Context | None = None
+    ) -> dict[str, Any]:
         """
         Get compliance status for a computer.
 
@@ -203,6 +251,7 @@ class JamfApi:
         filter_expression: FilterField | Any | None = None,
         page_size: int = 100,
         sections: list[str] | None = None,
+        ctx: Context | None = None,
     ) -> list[dict[str, Any]]:
         """
         Search for computers with optional filtering.
@@ -218,6 +267,11 @@ class JamfApi:
         :raises ConnectionError: If API request fails
         :raises ValueError: If data processing fails
         """
+        if ctx:
+            await ctx.debug(
+                f"Searching computers with filter={filter_expression is not None}, page_size={page_size}"
+            )
+
         async with JamfProClient(self.server, self.credentials) as client:
             computers = await client.pro_api.get_computer_inventory_v1(
                 sections=sections or ["GENERAL"],
@@ -225,6 +279,13 @@ class JamfApi:
                 page_size=page_size,
                 return_generator=False,
             )
+
+            if ctx:
+                await ctx.debug(
+                    f"Computer search returned {len(computers)} results",
+                    extra={"result_count": len(computers), "page_size": page_size},
+                )
+
             return [computer.model_dump() for computer in computers]
 
     async def get_jcds_files(self) -> list[dict[str, Any]]:

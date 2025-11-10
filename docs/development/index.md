@@ -211,6 +211,7 @@ cd docs/_build && python -m http.server
 
 architecture
 contributing
+fastmcp-logging
 testing
 deployment
 ```
