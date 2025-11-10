@@ -1,6 +1,6 @@
 # JamfMCP
 
-> ** ⚠️ ACTIVE DEVELOPMENT - ALPHA SOFTWARE ⚠️**
+> ⚠️ **Important** ⚠️
 >
 > This project is currently in active development and should be considered **alpha-quality software**.
 > The API, features, and functionality are subject to change without notice. Users should expect:
@@ -25,219 +25,80 @@ An async MCP (Model Context Protocol) server for Jamf Pro integration, providing
 
 ## Installation
 
-### Prerequisites
-
-- Python 3.13+
-- [uv](https://github.com/astral-sh/uv) package manager
-- Access to a Jamf Pro server with API credentials
-
-### Via PyPI (Coming Soon)
-
-JamfMCP will be available on PyPI for easy installation:
-
 ```bash
 pip install jamfmcp
 ```
 
-> **Note**: PyPI distribution is planned but not yet available. For now, please use the installation from source method below.
+## Quick Setup
 
-### From Source (Current Method)
+Use the JamfMCP CLI tool for automated setup:
 
-1. Clone the repository:
 ```bash
-git clone https://github.com/liquidz00/jamfmcp.git
-cd jamfmcp
+# For Claude Desktop
+jamfmcp setup -p claude-desktop
+
+# For Cursor
+jamfmcp setup -p cursor
+
+# For other platforms
+jamfmcp setup -p <platform>
 ```
 
-2. Install dependencies:
-```bash
-make install
-```
+The CLI will guide you through the entire configuration process.
 
-## Configuration
+## Documentation
 
-JamfMCP is configured through AI tool's MCP configuration file. **Do not export environment variables** - instead, add them to the appropriate configuration file for your tool.
+For detailed installation, configuration, and usage instructions, please visit the **[full documentation](https://jamfmcp.readthedocs.io/en/latest)**.
 
-### Cursor
+### Key Documentation Sections:
 
-Add the following to your `~/.cursor/mcp.json` file:
+- **[Getting Started](https://jamfmcp.readthedocs.io/en/latest/getting-started/)** - Installation and prerequisites
+- **[CLI Setup Guide](https://jamfmcp.readthedocs.io/en/latest/getting-started/cli-setup.html)** - Automated configuration tool
+- **[Quickstart Guide](https://jamfmcp.readthedocs.io/en/latest/getting-started/quickstart.html)** - Example queries and workflows
+- **[Configuration](https://jamfmcp.readthedocs.io/en/latest/getting-started/configuration-overview.html)** - Platform-specific setup
+- **[Troubleshooting](https://jamfmcp.readthedocs.io/en/latest/troubleshooting/)** - Common issues and solutions
 
-```json
-{
-  "mcpServers": {
-    "jamfmcp": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--directory", "/path/to/jamfmcp",
-        "fastmcp",
-        "run",
-        "src/jamfmcp/server.py:mcp"
-      ],
-      "env": {
-        "JAMF_URL": "your-jamf-server.com",
-        "JAMF_AUTH_TYPE": "basic",
-        "JAMF_USERNAME": "your-username",
-        "JAMF_PASSWORD": "your-password"
-      }
-    }
-  }
-}
-```
+### Important Notes for Claude Desktop Users
 
-### Claude Desktop (Chat/Code)
+Claude Desktop requires `uv` to be installed via Homebrew on macOS. See the [prerequisites documentation](https://jamfmcp.readthedocs.io/en/latest/getting-started/prerequisites.html) for critical setup requirements.
 
-Add the following to your Claude Desktop configuration file:
+## Basic Usage
 
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+Once configured, you can ask your AI assistant questions like:
 
-```json
-{
-  "mcpServers": {
-    "jamfmcp": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--directory", "/path/to/jamfmcp",
-        "fastmcp",
-        "run",
-        "src/jamfmcp/server.py:mcp"
-      ],
-      "env": {
-        "JAMF_URL": "your-jamf-server.com",
-        "JAMF_AUTH_TYPE": "basic",
-        "JAMF_USERNAME": "your-username",
-        "JAMF_PASSWORD": "your-password"
-      }
-    }
-  }
-}
-```
-
-### ChatGPT Desktop
-
-ChatGPT Desktop's MCP configuration method is currently undocumented. Check OpenAI's official documentation for the latest MCP integration details.
-
-### OAuth Client Credentials
-
-If using OAuth instead of basic authentication, replace the `env` section with:
-
-```json
-"env": {
-  "JAMF_URL": "your-jamf-server.com",
-  "JAMF_AUTH_TYPE": "client_credentials",
-  "JAMF_CLIENT_ID": "your-client-id",
-  "JAMF_CLIENT_SECRET": "your-client-secret"
-}
-```
-
-### Configuration Notes
-
-- Replace `/path/to/jamfmcp` with the absolute path to your cloned repository
-- Replace `your-jamf-server.com` with your actual Jamf Pro server URL (FQDN or full URL)
-- Replace authentication credentials with your actual Jamf Pro credentials
-- After updating the configuration, restart your AI tool to load the MCP server
-
-> **Note**: Once JamfMCP is available on PyPI, the configuration will be simplified. You'll be able to use `uvx --from jamfmcp fastmcp run jamfmcp.server:mcp` or install it globally and use `fastmcp run jamfmcp.server:mcp` directly.
-
-## Usage
-
-### Available Tools
-
-The MCP server exposes the following tools:
-
-- `get_computer_inventory` - Retrieve detailed computer inventory by serial number
-- `get_computer_history` - Get policy logs and management history
-- `search_computers` - Search for computers by name or serial
-- `get_health_scorecard` - Generate comprehensive health analysis with grades and recommendations
-- `get_basic_diagnostics` - Get basic diagnostic information
-- `get_cves` - Analyze CVE vulnerabilities for a computer
-- `get_policies`, `get_policy_details` - Policy management
-- `get_configuration_profiles`, `get_profile_details` - Configuration profile access
-- `get_scripts`, `get_script_details` - Script management
-- `get_packages`, `get_package_details` - Package information
-- Many more for users, groups, buildings, departments, network segments, etc.
+- "Generate a health scorecard for computer with serial ABC123"
+- "Find all computers that haven't checked in for 30 days"
+- "What CVEs affect computers running macOS 14.5?"
+- "List all configuration profiles and their scope"
 
 ## Development
 
-For contributors and developers working on JamfMCP:
+For contributors and developers:
 
-### Setup for Development
-
-1. Clone the repository and install with dev dependencies:
 ```bash
+# Clone and install for development
 git clone https://github.com/liquidz00/jamfmcp.git
 cd jamfmcp
-make install-dev  # Installs testing, linting, and documentation tools
+make install-dev
+
+# Run tests
+make test
+
+# For local development setup
+jamfmcp setup -p <platform> --local
 ```
 
-2. Set environment variables for local testing:
-```bash
-export JAMF_URL="your-jamf-server.com"
-export JAMF_AUTH_TYPE="basic"
-export JAMF_USERNAME="your-username"
-export JAMF_PASSWORD="your-password"
-```
+See the [development documentation](https://jamfmcp.readthedocs.io/en/latest/development/) for detailed contribution guidelines.
 
-Or create a `.env` file in the project root (not tracked in git).
+## Support
 
-### Run Tests
-
-```bash
-make test              # Run all tests
-make test-cov          # Run with coverage report
-make test-cov-html     # Generate HTML coverage report
-```
-
-### Code Quality
-
-```bash
-make lint              # Check code style
-make format            # Auto-format code
-make pre-commit-run    # Run pre-commit hooks
-```
-
-### Building
-
-```bash
-make build             # Build distribution packages
-```
-
-### Running Locally (Development)
-
-To run the MCP server directly for testing:
-
-```bash
-uv run fastmcp run jamfmcp.server:mcp
-```
-
-## Architecture
-
-- **FastMCP**: Framework for building MCP servers
-- **httpx**: Async HTTP client for Jamf Pro API calls
-- **Pydantic**: Data validation and serialization
-- **Jamf SDK**: Embedded SDK with models for Pro and Classic APIs
-
-## Configuration Reference
-
-The following environment variables should be set in your AI tool's `mcp.json` configuration file (see [Configuration](#configuration) section above):
-
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `JAMF_URL` | Jamf Pro server URL (FQDN or full URL) | Yes | - |
-| `JAMF_AUTH_TYPE` | Authentication type: `basic` or `client_credentials` | No | `basic` |
-| `JAMF_USERNAME` | Username for basic authentication | If using basic auth | - |
-| `JAMF_PASSWORD` | Password for basic authentication | If using basic auth | - |
-| `JAMF_CLIENT_ID` | OAuth client ID | If using OAuth | - |
-| `JAMF_CLIENT_SECRET` | OAuth client secret | If using OAuth | - |
+- **Documentation**: [liquidz00.github.io/jamfmcp](https://jamfmcp.readthedocs.io/en/latest)
+- **Issues**: [GitHub Issues](https://github.com/liquidz00/jamfmcp/issues)
+- **Discussions**: [MacAdmins Slack #jamfmcp](https://macadmins.slack.com/archives/C07EH1R7LB0)
 
 ## Contributing
 
-Contributions are welcome! Please ensure:
-- All tests pass: `make test`
-- Code is formatted: `make format`
-- Pre-commit hooks pass: `make pre-commit-run`
-- New features include tests and Sphinx-style docstrings
+Contributions are welcome! Please see our [contributing guide](https://jamfmcp.readthedocs.io/en/latest/development/contributing.html) for details.
 
 ## License
 

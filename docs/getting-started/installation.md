@@ -1,125 +1,249 @@
 # Installation
 
-JamfMCP is installed and run using [FastMCP](https://gofastmcp.com/getting-started/installation). This guide walks you through the installation process.
+This guide walks you through installing JamfMCP and setting it up with your MCP client using the automated CLI tool.
 
-## Install from Source
+:::::{important}
+**Before you begin**: Ensure you have completed the [prerequisites](prerequisites), especially the critical `uv` installation requirements for Claude Desktop users.
+:::::
 
-:::{note}
-PyPI distribution is planned but not yet available. Currently, installation from source is the only method.
-:::
+## {fas}`box-open` Install JamfMCP
 
-### Step 1: Clone the Repository
+:::::{tab-set}
+::::{tab-item} PyPI (uv)
+:sync: uv
+
+**Recommended method using uv:**
 
 ```bash
+# Install JamfMCP from PyPI
+uv pip install jamfmcp
+
+# Verify installation
+jamfmcp --version
+```
+
+:::{tip}
+Using `uv` is faster and more reliable than traditional pip. It handles dependencies better and provides cleaner virtual environments.
+:::
+::::
+
+::::{tab-item} PyPI (pip)
+:sync: pip
+
+**Traditional pip installation:**
+
+```bash
+# Install JamfMCP from PyPI
+pip install jamfmcp
+
+# Verify installation
+jamfmcp --version
+```
+
+:::{note}
+If you encounter dependency conflicts, consider using `uv` instead or creating a fresh virtual environment.
+:::
+::::
+
+::::{tab-item} From Source
+:sync: source
+
+**For development or testing latest features:**
+
+```bash
+# Clone the repository
 git clone https://github.com/liquidz00/jamfmcp.git
 cd jamfmcp
-```
 
-### Step 2: Install Dependencies
-
-JamfMCP uses [uv](https://github.com/astral-sh/uv) for dependency management. If you don't have uv installed, [install it first](https://github.com/astral-sh/uv#installation).
-
-Using the provided Makefile:
-
-```bash
-# For basic installation (recommended for users)
-make install
-
-# For development (includes testing and documentation tools)  
+# Install in development mode
 make install-dev
+
+# For CLI setup, use the --local flag
+jamfmcp setup -p claude-desktop --local
 ```
 
-This will:
-1. Create a virtual environment in `.venv`
-2. Install all required dependencies
-3. Set up JamfMCP for use with FastMCP
+:::{important}
+When installing from source, always use the `--local` flag with the CLI to ensure proper path resolution.
+:::
+::::
+:::::
 
-### Step 3: Verify Installation
+## {fas}`terminal` Quick Setup with CLI
 
-Test that JamfMCP is properly installed:
+After installation, use the JamfMCP CLI tool to automatically configure your MCP client:
 
 ```bash
-# Run the MCP server directly
-uv run fastmcp run src/jamfmcp/server.py:mcp
+# For Claude Desktop
+jamfmcp setup -p claude-desktop
+
+# For Cursor
+jamfmcp setup -p cursor
+
+# For other platforms
+jamfmcp setup -p <platform>
 ```
 
-You should see output indicating the server is starting. Press `Ctrl+C` to stop it.
+The CLI will:
+1. {fas}`check` Verify prerequisites (uv, fastmcp)
+2. {fas}`key` Collect your Jamf Pro credentials
+3. {fas}`server` Test the connection to your Jamf Pro server
+4. {fas}`cog` Generate the appropriate configuration
+5. {fas}`rocket` Set up your MCP client automatically
 
-## Configuration
+:::::{seealso}
+For detailed CLI usage and options, see the [CLI Setup Guide](cli-setup).
+:::::
 
-JamfMCP doesn't run standalone - it needs to be configured with an MCP client. The server is started automatically by your MCP client (Cursor, Claude Desktop, etc.) when configured properly.
+## {fas}`check-circle` Post-Installation Steps
 
-### Configure Your MCP Client
+:::::{grid} 1 1 2 2
+:gutter: 3
 
-See the configuration guides for your specific client:
+::::{grid-item-card} {fas}`wrench` Verify Installation
+Run `jamfmcp --version` to confirm the CLI is installed correctly
+::::
 
-- [Cursor Setup](cursor)
-- [Claude Desktop Setup](claude-desktop)
+::::{grid-item-card} {fas}`key` Prepare Credentials
+Have your Jamf Pro URL and API credentials ready for setup
+::::
 
-:::{note}
-Guides for other model configurations are on their way. A CLI will also be available to assist in automating configurations.
-:::
+::::{grid-item-card} {fas}`terminal` Run CLI Setup
+Use `jamfmcp setup -p <platform>` for automated configuration
+::::
 
-### Environment Variables
+::::{grid-item-card} {fas}`play` Test Connection
+The CLI will verify your Jamf Pro connection during setup
+::::
+:::::
 
-JamfMCP requires these environment variables, which are set in your MCP client configuration:
+## {fas}`cog` Manual Configuration (Advanced)
+
+While the CLI handles configuration automatically, you can manually configure your MCP client if needed.
+
+**Environment Variables Required:**
 
 | Variable | Description | Required |
 |----------|-------------|----------|
 | `JAMF_URL` | Your Jamf Pro server URL | Yes |
-| `JAMF_AUTH_TYPE` | Authentication type: `basic` or `client_credentials` | No (default: `basic`) |
+| `JAMF_AUTH_TYPE` | `basic` or `client_credentials` | No (default: `basic`) |
 | `JAMF_USERNAME` | Username for basic auth | If using basic auth |
 | `JAMF_PASSWORD` | Password for basic auth | If using basic auth |
 | `JAMF_CLIENT_ID` | OAuth client ID | If using OAuth |
 | `JAMF_CLIENT_SECRET` | OAuth client secret | If using OAuth |
 
+**Example MCP Configuration:**
+```json
+{
+  "mcpServers": {
+    "jamfmcp": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with", "jamfmcp",
+        "jamfmcp"
+      ],
+      "env": {
+        "JAMF_URL": "https://your-instance.jamfcloud.com",
+        "JAMF_CLIENT_ID": "your_client_id",
+        "JAMF_CLIENT_SECRET": "your_client_secret"
+      }
+    }
+  }
+}
+```
+
 :::{warning}
-Never set these environment variables in your shell or commit them to version control. Always configure them through your MCP client's configuration file.
+Never set these environment variables in your shell or commit them to version control.
 :::
 
-## Installation Methods Comparison
+## {fas}`sync` Updating JamfMCP
 
-| Method | Status | Use Case | Command |
-|--------|--------|----------|---------|
-| Source (Current) | ✅ Available | All users | `git clone` + `make install` |
-| PyPI (Future) | 🚧 Planned | Quick install | `pip install jamfmcp` |
-| uvx (Future) | 🚧 Planned | No install needed | `uvx jamfmcp` |
+:::::{tab-set}
+::::{tab-item} PyPI Installation
+:sync: pypi-update
 
-## Updating JamfMCP
+```bash
+# Update using uv
+uv pip install --upgrade jamfmcp
 
-To update to the latest version:
+# Or using pip
+pip install --upgrade jamfmcp
+```
+::::
+
+::::{tab-item} Source Installation
+:sync: source-update
 
 ```bash
 cd /path/to/jamfmcp
 git pull
 make install  # or make install-dev
 ```
+::::
+:::::
 
-## Uninstalling
+## {fas}`trash` Uninstalling
 
 To remove JamfMCP:
 
 ```bash
+# If installed via pip/uv
+pip uninstall jamfmcp
+
+# If installed from source
 cd /path/to/jamfmcp
-make uninstall  # Removes virtual environment
+make uninstall
 ```
 
 Then remove the JamfMCP configuration from your MCP client.
 
-## Troubleshooting
+## {fas}`exclamation-triangle` Troubleshooting
 
-For installation issues, see the [Installation Troubleshooting Guide](../troubleshooting/installation).
+:::::{grid} 1
+:gutter: 2
 
-## Next Steps
+::::{grid-item-card} {fas}`bug` Common Issues
+:link: ../troubleshooting/installation
+:link-type: doc
+
+- "spawn uv ENOENT" errors
+- Permission denied during install
+- Python version mismatches
+- Dependency conflicts
+::::
+:::::
+
+## {fas}`rocket` Next Steps
 
 With JamfMCP installed:
 
-1. [Set up Jamf API access](jamf-api-setup) if you haven't already
-2. [Configure your MCP client](configuration-overview) to connect to JamfMCP
-3. Try the [Quickstart guide](quickstart) for your first commands
+:::::{grid} 1 1 3 3
+:gutter: 2
 
-:::{seealso}
-- [FastMCP Installation Guide](https://gofastmcp.com/getting-started/installation)
-- [uv Documentation](https://github.com/astral-sh/uv)
-- [MCP Protocol Overview](https://modelcontextprotocol.io/introduction)
-:::
+::::{grid-item-card} {fas}`terminal` Use CLI Setup
+:link: cli-setup
+:link-type: doc
+
+Run `jamfmcp setup` to configure your MCP client automatically
+::::
+
+::::{grid-item-card} {fas}`key` Configure API Access
+:link: jamf-api-setup
+:link-type: doc
+
+Set up Jamf Pro API credentials if not already done
+::::
+
+::::{grid-item-card} {fas}`play-circle` Try Examples
+:link: quickstart
+:link-type: doc
+
+Test your setup with example queries and commands
+::::
+:::::
+
+:::::{seealso}
+- [CLI Setup Guide](cli-setup) - Detailed CLI usage and options
+- [FastMCP Documentation](https://gofastmcp.com) - Underlying MCP framework
+- [MCP Protocol Overview](https://modelcontextprotocol.io) - Protocol specification
+:::::

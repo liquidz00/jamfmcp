@@ -2,22 +2,99 @@
 
 This guide walks you through configuring JamfMCP for use with [Cursor](https://cursor.sh/), the AI-powered code editor.
 
-## Prerequisites
+:::::{tip}
+**New to JamfMCP?** Use the automated CLI setup - it's much faster than manual configuration!
+:::::
 
-Before configuring:
-- [Install JamfMCP](../getting-started/installation)
-- [Set up Jamf API access](../getting-started/jamf-api-setup)
-- Have Cursor installed on your system
+## {fas}`rocket` Quick Setup with CLI (Recommended)
 
-## Configuration Steps
+The fastest way to configure JamfMCP for Cursor:
+
+:::::{tab-set}
+::::{tab-item} Global Setup
+:sync: global
+
+**For system-wide Cursor configuration:**
+
+```bash
+# Install JamfMCP
+pip install jamfmcp
+
+# Run automated setup
+jamfmcp setup -p cursor
+```
+
+This configures JamfMCP globally for all Cursor projects.
+::::
+
+::::{tab-item} Project-Specific
+:sync: project
+
+**For individual project configuration:**
+
+```bash
+# Navigate to your project
+cd /path/to/your/project
+
+# Install JamfMCP
+pip install jamfmcp
+
+# Setup with workspace flag
+jamfmcp setup -p cursor --workspace .
+```
+
+This creates a project-specific MCP configuration.
+::::
+:::::
+
+The CLI will:
+1. ✅ Check prerequisites
+2. 🔑 Collect Jamf Pro credentials
+3. 🌐 Validate connection
+4. ⚙️ Configure Cursor automatically
+5. 📝 Provide next steps
+
+## {fas}`cog` Manual Configuration (Advanced)
+
+:::::{dropdown} {fas}`code` Manual Configuration Steps
+:color: warning
+
+If you prefer manual setup or need custom configuration:
 
 ### Step 1: Locate Configuration File
 
-Cursor stores MCP configuration in **macOS/Linux**: `~/.cursor/mcp.json`
+Cursor stores MCP configuration in: `~/.cursor/mcp.json`
 
-### Step 2: Edit Configuration
+### Step 2: Add JamfMCP Configuration
 
-Open the `mcp.json` file and add the JamfMCP server configuration:
+:::::{tab-set}
+::::{tab-item} PyPI Installation
+:sync: pypi-cursor
+
+```json
+{
+  "mcpServers": {
+    "jamfmcp": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with", "jamfmcp",
+        "jamfmcp"
+      ],
+      "env": {
+        "JAMF_URL": "https://your-instance.jamfcloud.com",
+        "JAMF_AUTH_TYPE": "client_credentials",
+        "JAMF_CLIENT_ID": "your-client-id",
+        "JAMF_CLIENT_SECRET": "your-client-secret"
+      }
+    }
+  }
+}
+```
+::::
+
+::::{tab-item} Local Development
+:sync: local-cursor
 
 ```json
 {
@@ -32,7 +109,7 @@ Open the `mcp.json` file and add the JamfMCP server configuration:
         "src/jamfmcp/server.py:mcp"
       ],
       "env": {
-        "JAMF_URL": "your-jamf-server.com",
+        "JAMF_URL": "https://your-instance.jamfcloud.com",
         "JAMF_AUTH_TYPE": "basic",
         "JAMF_USERNAME": "your-username",
         "JAMF_PASSWORD": "your-password"
@@ -41,204 +118,261 @@ Open the `mcp.json` file and add the JamfMCP server configuration:
   }
 }
 ```
+::::
+:::::
 
-:::{important}
-Replace `/path/to/jamfmcp` with the absolute path to your JamfMCP installation directory.
-:::
+### Step 3: Restart Cursor
 
-### Step 3: Configure Authentication
+1. **Completely quit** Cursor (Cmd+Q on macOS)
+2. **Relaunch** Cursor
+3. **Verify** MCP tools are available
+:::::
 
-#### Option A: Basic Authentication
+## {fas}`check-circle` Verifying Your Setup
 
-```json
-"env": {
-  "JAMF_URL": "your-jamf-server.com",
-  "JAMF_AUTH_TYPE": "basic",
-  "JAMF_USERNAME": "api-user",
-  "JAMF_PASSWORD": "secure-password"
-}
-```
+:::::{grid} 1 1 2 2
+:gutter: 3
 
-#### Option B: OAuth Client Credentials (Recommended)
+::::{grid-item-card} {fas}`terminal` Test Connection
+Open chat with **Cmd+K** and type:
+> "Ping the Jamf MCP server"
 
-```json
-"env": {
-  "JAMF_URL": "your-jamf-server.com",
-  "JAMF_AUTH_TYPE": "client_credentials",
-  "JAMF_CLIENT_ID": "your-client-id",
-  "JAMF_CLIENT_SECRET": "your-client-secret"
-}
-```
+Expected: Confirmation of connection
+::::
 
-### Step 4: Restart Cursor
+::::{grid-item-card} {fas}`list` Check Available Tools
+Ask Cursor:
+> "List all available Jamf MCP tools"
 
-After saving the configuration:
-1. Completely quit Cursor (Cmd+Q on macOS)
-2. Relaunch Cursor
-3. The MCP server will start automatically
+Expected: List of 40+ tools
+::::
 
-## Verifying Configuration
+::::{grid-item-card} {fas}`heartbeat` Run Test Query
+Try a simple query:
+> "Get computer inventory for serial ABC123"
 
-To verify JamfMCP is working in Cursor:
+Expected: Inventory data or "not found"
+::::
 
-1. Open a new chat (Cmd+K or Ctrl+K)
-2. Type: "Ping the Jamf MCP server"
-3. You should receive a response like:
-   ```json
-   {
-     "message": "pong",
-     "status": "ok"
-   }
-   ```
+::::{grid-item-card} {fas}`check` Verify in Terminal
+Open terminal chat and test:
+> "Using JamfMCP, list all buildings"
 
-## Example Configuration
+Expected: List of configured buildings
+::::
+:::::
 
-```json
-{
-  "mcpServers": {
-    "jamfmcp": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--directory", "/Users/username/projects/jamfmcp",
-        "fastmcp",
-        "run",
-        "src/jamfmcp/server.py:mcp"
-      ],
-      "env": {
-        "JAMF_URL": "mycompany.jamfcloud.com",
-        "JAMF_AUTH_TYPE": "client_credentials",
-        "JAMF_CLIENT_ID": "abc123def456",
-        "JAMF_CLIENT_SECRET": "super-secret-key"
-      }
-    }
-  }
-}
-```
+## {fas}`keyboard` Using JamfMCP in Cursor
 
-## Using JamfMCP in Cursor
+JamfMCP integrates with all Cursor AI features:
 
-Once configured, you can use JamfMCP in several ways:
+:::::{grid} 1
+:gutter: 2
 
-### In Chat (Cmd+K)
-
-Ask questions about your Jamf environment:
+::::{grid-item-card} {fas}`comment` Chat (Cmd+K)
+**Query your Jamf environment:**
 - "Show me all computers that haven't checked in for 30 days"
 - "Generate a health report for serial ABC123"
 - "What configuration profiles are deployed?"
+- "Find computers with critical CVEs"
+::::
 
-### In Composer (Cmd+I)
-
-Use JamfMCP data to help write code:
+::::{grid-item-card} {fas}`magic` Composer (Cmd+I)
+**Generate code using Jamf data:**
 - "Create a script that processes computers with low disk space based on Jamf data"
 - "Generate a report template for computer compliance status"
+- "Build a function to analyze policy deployment success rates"
+::::
 
-### In Terminal
+::::{grid-item-card} {fas}`terminal` Terminal Chat
+**Use in integrated terminal:**
+- "Check health of all Engineering computers"
+- "Export inventory data for Finance department"
+- "List all packages available in Jamf"
+::::
 
-JamfMCP tools are available in Cursor's integrated terminal chat as well.
+::::{grid-item-card} {fas}`code` Inline Edits
+**Reference Jamf data while coding:**
+- Get real computer names for scripts
+- Verify policy IDs and scopes
+- Check actual inventory values
+::::
+:::::
 
-## Troubleshooting
+## {fas}`exclamation-triangle` Troubleshooting
 
-For help with these issues, see the [Configuration Troubleshooting Guide](#cursor_configuration_issues).
+:::::{grid} 1
+:gutter: 2
 
-**Common issues**:
-- Incorrect path to JamfMCP
-- Missing uv installation
-- Python version mismatch
+::::{grid-item-card} {fas}`lock` Authentication Errors
+:class-header: bg-warning
 
-### Authentication Errors
+**Symptoms:** 401 or 403 errors when using tools
 
-**Symptoms**: 401 or 403 errors when using tools
+**Solutions:**
+```bash
+# Test credentials
+jamfmcp validate --url https://your.jamfcloud.com
 
-**Solutions**:
-1. Verify credentials in `mcp.json`
-2. Check Jamf API user permissions
-3. Ensure JAMF_URL is correct format
-
-### No Response from Tools
-
-**Symptoms**: Commands seem to hang or timeout
-
-**Solutions**:
-1. Check network connectivity to Jamf Pro
-2. Verify firewall allows HTTPS to Jamf
-3. Test with a simple ping command first
-
-### JSON Parsing Errors
-
-**Symptoms**: "Invalid JSON" errors on startup
-
-**Solutions**:
-1. Validate JSON syntax (remove trailing commas)
-2. Ensure all strings are properly quoted
-3. Use a JSON validator tool
-
-## Advanced Configuration
-
-### Multiple Jamf Instances
-
-You can configure multiple Jamf servers:
-
-```json
-{
-  "mcpServers": {
-    "jamfmcp-prod": {
-      "command": "uv",
-      "args": ["run", "--directory", "/path/to/jamfmcp", "fastmcp", "run", "src/jamfmcp/server.py:mcp"],
-      "env": {
-        "JAMF_URL": "prod.jamfcloud.com",
-        "JAMF_AUTH_TYPE": "client_credentials",
-        "JAMF_CLIENT_ID": "prod-client",
-        "JAMF_CLIENT_SECRET": "prod-secret"
-      }
-    },
-    "jamfmcp-test": {
-      "command": "uv",
-      "args": ["run", "--directory", "/path/to/jamfmcp", "fastmcp", "run", "src/jamfmcp/server.py:mcp"],
-      "env": {
-        "JAMF_URL": "test.jamfcloud.com",
-        "JAMF_AUTH_TYPE": "client_credentials",
-        "JAMF_CLIENT_ID": "test-client",
-        "JAMF_CLIENT_SECRET": "test-secret"
-      }
-    }
-  }
-}
+# Re-run setup
+jamfmcp setup -p cursor
 ```
 
-### Custom Python Path
+**Check:**
+- Correct JAMF_URL format (include https://)
+- Valid API credentials
+- Proper API permissions
+::::
 
-If you need to specify a Python executable:
+::::{grid-item-card} {fas}`times-circle` No MCP Tools
+:class-header: bg-warning
+
+**Symptoms:** Tools don't appear in Cursor
+
+**Solutions:**
+1. Quit and restart Cursor completely
+2. Check `~/.cursor/mcp.json` exists
+3. Validate JSON syntax:
+   ```bash
+   python -m json.tool < ~/.cursor/mcp.json
+   ```
+4. Re-run: `jamfmcp setup -p cursor`
+::::
+
+::::{grid-item-card} {fas}`clock` Timeouts
+:class-header: bg-warning
+
+**Symptoms:** Commands hang or timeout
+
+**Debug steps:**
+1. Test network: `ping your.jamfcloud.com`
+2. Check firewall allows HTTPS
+3. Try simpler query first
+4. Verify Jamf Pro is accessible
+::::
+:::::
+
+## {fas}`cogs` Advanced Configuration
+
+:::::{dropdown} {fas}`server` Multiple Jamf Instances
+:color: info
+
+Configure multiple environments:
+
+```bash
+# Production
+jamfmcp setup -p cursor --server-name jamf-prod \
+  --url https://prod.jamfcloud.com
+
+# Sandbox
+jamfmcp setup -p cursor --server-name jamf-sandbox \
+  --url https://sandbox.jamfcloud.com
+```
+
+Then specify which to use:
+> "Using jamf-prod, check health of serial ABC123"
+:::::
+
+:::::{dropdown} {fas}`folder` Project-Specific Config
+:color: info
+
+For per-project MCP servers:
+
+```bash
+cd /path/to/project
+jamfmcp setup -p cursor --workspace .
+```
+
+This creates `.cursor/mcp.json` in your project directory.
+:::::
+
+:::::{dropdown} {fab}`python` Custom Python Path
+:color: info
+
+If you need a specific Python version:
 
 ```json
 {
   "mcpServers": {
     "jamfmcp": {
-      "command": "/usr/local/bin/uv",
+      "command": "uv",
       "args": [
         "run",
-        "--python", "/usr/local/bin/python3.13",
-        "--directory", "/path/to/jamfmcp",
-        "fastmcp",
-        "run",
-        "src/jamfmcp/server.py:mcp"
+        "--python", "python3.13",
+        "jamfmcp"
       ],
       "env": {
-        // ... authentication config ...
+        // ... your config ...
       }
     }
   }
 }
 ```
+:::::
 
-## Next Steps
+## {fas}`lightbulb` Tips for Cursor
 
-- Try the [Quickstart Guide](quickstart)
-- Explore [Available Tools](tools-overview)
-- Learn about [Computer Health Analysis](computer-health)
+:::::{grid} 1 1 2 2
+:gutter: 3
 
-:::{seealso}
-- [Cursor Documentation](https://cursor.sh/docs)
-- [FastMCP Configuration](https://gofastmcp.com/servers/deployment)
-- [MCP Protocol Specification](https://modelcontextprotocol.io)
-:::
+::::{grid-item-card} {fas}`keyboard` Keyboard Shortcuts
+- **Cmd+K**: Open chat for queries
+- **Cmd+I**: Composer for code generation
+- **Cmd+L**: Add context to chat
+- **Option+Enter**: Apply AI suggestions
+::::
+
+::::{grid-item-card} {fas}`brain` Effective Prompts
+- Reference specific serials/IDs
+- Ask for formatted output (tables, CSV)
+- Chain queries for analysis
+- Use context from open files
+::::
+
+::::{grid-item-card} {fas}`code` Code Generation
+- "Generate Python script to analyze Jamf health data"
+- "Create report template for compliance"
+- "Build dashboard for inventory metrics"
+::::
+
+::::{grid-item-card} {fas}`sync` Workflow Tips
+- Keep Jamf data queries in chat history
+- Use composer for report generation
+- Reference real data in your code
+::::
+:::::
+
+## {fas}`arrow-right` Next Steps
+
+Now that Cursor is configured:
+
+:::::{grid} 1 1 3 3
+:gutter: 2
+
+::::{grid-item-card} {fas}`play-circle` Try Examples
+:link: quickstart
+:link-type: doc
+
+Work through quickstart scenarios
+::::
+
+::::{grid-item-card} {fas}`wrench` Explore Tools
+:link: tools-overview
+:link-type: doc
+
+Learn about all available tools
+::::
+
+::::{grid-item-card} {fas}`chart-line` Build Reports
+:link: computer-health
+:link-type: doc
+
+Create health analysis workflows
+::::
+:::::
+
+:::::{seealso}
+- [CLI Setup Guide](cli-setup) - Detailed CLI documentation
+- [Cursor Docs](https://cursor.sh/docs) - Official Cursor documentation
+- [FastMCP Clients](https://gofastmcp.com/clients) - MCP client configuration
+:::::

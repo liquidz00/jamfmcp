@@ -554,8 +554,8 @@ pip install jamfmcp
 # Run directly
 jamfmcp serve
 
-# Or with uvx
-uvx jamfmcp serve
+# Or with uv run
+uv run --with jamfmcp jamfmcp serve
 ```
 
 ### FastMCP Cloud
