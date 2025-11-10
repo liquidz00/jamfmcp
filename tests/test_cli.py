@@ -344,7 +344,7 @@ class TestCLICommands:
         mock_run.assert_called_once()
         cmd = mock_run.call_args[0][0]
         assert cmd[0:4] == ["fastmcp", "install", "claude-desktop", "jamfmcp.server:mcp"]
-        assert "--server-name" in cmd
+        assert "--name" in cmd
         assert "my-jamf" in cmd
         assert "--env" in cmd
         assert "JAMF_URL=https://example.jamfcloud.com" in cmd

@@ -276,12 +276,12 @@ async def setup(
         module_path = os.path.dirname(jamfmcp.__file__)
         server_path = os.path.join(module_path, "server.py")
         cmd = ["fastmcp", "install", platform, f"{server_path}:mcp"]
-        cmd.extend(["--server-name", server_name])
+        cmd.extend(["--name", server_name])
         project_root = os.path.dirname(os.path.dirname(module_path))
         cmd.extend(["--with-editable", project_root])
     else:
         cmd = ["fastmcp", "install", platform, "jamfmcp.server:mcp"]
-        cmd.extend(["--server-name", server_name])
+        cmd.extend(["--name", server_name])
         # Add jamfmcp package as dependency
         cmd.extend(["--with", "jamfmcp"])
 
