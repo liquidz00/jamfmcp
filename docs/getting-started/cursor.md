@@ -120,14 +120,14 @@ To verify JamfMCP is working in Cursor:
 
 Once configured, you can use JamfMCP in several ways:
 
-### In Chat (Cmd+K / Ctrl+K)
+### In Chat (Cmd+K)
 
 Ask questions about your Jamf environment:
 - "Show me all computers that haven't checked in for 30 days"
 - "Generate a health report for serial ABC123"
 - "What configuration profiles are deployed?"
 
-### In Composer (Cmd+I / Ctrl+I)
+### In Composer (Cmd+I)
 
 Use JamfMCP data to help write code:
 - "Create a script that processes computers with low disk space based on Jamf data"

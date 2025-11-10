@@ -32,6 +32,10 @@ All MCP clients use a similar configuration pattern:
 
 ### Basic Configuration Structure
 
+:::{important}
+The basic configuration structure below will work if you installed JamfMCP from source (cloning the repository). If you instead installed JamfMCP via `uv` or `pip`, the following structure will not work.
+:::
+
 ```json
 {
   "mcpServers": {

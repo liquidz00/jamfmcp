@@ -97,14 +97,6 @@ To verify JamfMCP is working:
 4. JamfMCP should appear as "jamfmcp"
 5. Test with: "Ping the Jamf MCP server"
 
-You should see:
-```json
-{
-  "message": "pong",
-  "status": "ok"
-}
-```
-
 ## Platform-Specific Examples
 
 ### macOS Configuration
@@ -205,7 +197,7 @@ uv run fastmcp run src/jamfmcp/server.py:mcp
 2. Verify API user has correct permissions
 3. Test credentials with curl:
    ```bash
-   curl -u username:password https://your-server.com/api/v1/auth/token
+   curl -u username:password https://your-server.jamfcloud.com/api/v1/auth/token
    ```
 
 ### Connection Issues

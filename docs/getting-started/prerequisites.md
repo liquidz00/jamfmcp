@@ -7,7 +7,7 @@ Before installing JamfMCP, ensure you have the necessary requirements and access
 - **Python 3.13 or higher** - JamfMCP requires Python 3.13+
 - **[uv](https://github.com/astral-sh/uv) package manager** - Modern Python package management
 - **A Jamf Pro server** - Cloud or on-premise instance
-- **MCP-compatible client** - Cursor, Claude Desktop, or other MCP clients
+- **MCP-compatible client** - Cursor, Claude Code, Claude Desktop, Gemini or other MCP clients
 
 :::{note}
 JamfMCP is built on [FastMCP](https://gofastmcp.com), which handles the MCP protocol implementation.
@@ -31,48 +31,12 @@ JamfMCP requires API access to your Jamf Pro server. You can use either:
 ### Required API Privileges
 
 When setting up API access, follow the [Jamf Pro API documentation](https://developer.jamf.com/jamf-pro/docs/jamf-pro-api-overview)
-for authentication setup. For OAuth Client Credentials, create an API role with these **minimum** privileges:
+for authentication setup. For OAuth Client Credentials, create an API role with **minimum** privileges.
 
 :::{admonition} Least Privilege Principle
 :class: important
 
 Grant only the minimum required privileges for read-only operations. JamfMCP is designed to be a read-only tool that analyzes and reports on your Jamf Pro data.
-:::
-
-#### Computers
-- Read Computer Inventory
-- Read Computer History  
-- Read Computer Groups
-- Read Computer Extension Attributes
-- Read Computer MDM Commands (for device lock PIN retrieval)
-
-#### Policies & Profiles
-- Read Policies
-- Read Configuration Profiles
-- Read Scripts
-- Read Packages
-- Read Patch Management
-
-#### Organization
-- Read Buildings
-- Read Departments
-- Read Network Segments
-- Read Sites
-- Read Categories
-
-#### Users & Groups
-- Read Users
-- Read User Groups
-- Read LDAP Servers
-- Read Directory Bindings
-
-#### Security & Compliance
-- Read Restricted Software
-- Read Licensed Software
-- Read Advanced Computer Searches
-- Read Webhooks
-
-:::{tip}
 For detailed instructions on creating API roles and client credentials, see the [Jamf API Setup Guide](jamf-api-setup).
 :::
 
@@ -87,8 +51,8 @@ For detailed instructions on creating API roles and client credentials, see the 
 Once you have confirmed all prerequisites are met:
 
 1. [Install JamfMCP](installation) using the installation guide
-2. [Configure your MCP client](configuration-overview) (Cursor, Claude Desktop, etc.)
-3. [Set up Jamf API access](jamf-api-setup) with the appropriate privileges
+2. [Set up Jamf API access](jamf-api-setup) with the appropriate privileges
+3. [Configure your MCP client](configuration-overview) (Cursor, Claude, etc.)
 
 :::{seealso}
 - [Jamf Pro API Overview](https://developer.jamf.com/jamf-pro/docs/jamf-pro-api-overview)

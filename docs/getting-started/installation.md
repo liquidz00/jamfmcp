@@ -56,6 +56,10 @@ See the configuration guides for your specific client:
 - [Cursor Setup](cursor)
 - [Claude Desktop Setup](claude-desktop)
 
+:::{note}
+Guides for other model configurations are on their way. A CLI will also be available to assist in automating configurations.
+:::
+
 ### Environment Variables
 
 JamfMCP requires these environment variables, which are set in your MCP client configuration:

@@ -11,13 +11,14 @@ Once you have JamfMCP configured in your MCP client, try these commands to verif
 Ask your AI assistant:
 > "Ping the Jamf MCP server"
 
-Expected response:
+Chances are your AI assistant will not show you the raw output, but if it does, it should look like this:
 ```json
 {
   "message": "pong",
   "status": "ok"
 }
 ```
+> See more about [expected responses and formats](#understanding-responses) below
 
 ### Basic Computer Lookup
 
@@ -83,24 +84,7 @@ Query organizational information:
 
 > "What departments are configured?"
 
-## Advanced Examples
-
-### Bulk Health Analysis
-
-> "Generate health scorecards for all computers in the Sales department and summarize the findings"
-
-### Compliance Reporting
-
-> "Find all computers that are non-compliant with our security policies and list the issues"
-
-### Software Audit
-
-> "Show me all computers with Adobe Creative Cloud installed and their last check-in times"
-
-### Patch Management
-
-> "What computers need macOS updates based on the latest security releases?"
-
+(understanding_responses)=
 ## Understanding Responses
 
 JamfMCP returns structured data that your AI assistant will interpret. Here's what to expect:

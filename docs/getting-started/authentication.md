@@ -32,16 +32,11 @@ Basic authentication uses a username and password combination.
 
 ### Pros and Cons
 
-**Advantages:**
-- Simple to set up
-- No additional configuration in Jamf Pro
-- Works with existing user accounts
-
-**Disadvantages:**
-- Less secure than OAuth
-- Password stored in configuration
-- Subject to password policies (expiration, complexity)
-- Full user session created for each request
+| Advantages | Disadvantages |
+| -----------|---------------|
+| ✅ Simple to set up | ❌ Less secure than OAuth |
+| ✅ No additional configuration in Jamf Pro | ❌ Password stored in configuration |
+| ✅ Works with existing user accounts | ❌ Subject to password policies (expiration, complexity) |
 
 ## OAuth Client Credentials
 
@@ -78,17 +73,13 @@ See the [Jamf API Setup Guide](../getting-started/jamf-api-setup) for detailed s
 
 ### Pros and Cons
 
-**Advantages:**
-- Token-based authentication
-- No password expiration
-- Detailed audit trail
-- Follows OAuth 2.0 standards
-- Can be revoked without affecting user accounts
-
-**Disadvantages:**
-- Requires Jamf Pro 10.49.0 or later
-- More complex initial setup
-- Client secret must be saved when created
+| Advantages | Disadvantages |
+| -----------|---------------|
+| ✅ Token-based authentication | ❌ Requires Jamf Pro 10.49.0 or later |
+| ✅ No password expiration | ❌ More complex initial setup |
+| ✅ Detailed audit trail | ❌ Client secret only shown once when created |
+| ✅ Follows Oauth 2.0 standards |  |
+| ✅ Can be revoked without affecting user accounts |  |
 
 ## Server URL Configuration
 
@@ -170,10 +161,10 @@ JamfMCP handles token management automatically:
 2. Test with curl:
    ```bash
    # Basic auth
-   curl -u username:password https://server.com/api/v1/auth/token
+   curl -u username:password https://server.jamfcloud.com/api/v1/auth/token
 
    # OAuth
-   curl -X POST https://server.com/api/oauth/token \
+   curl -X POST https://server.jamfcloud.com/api/oauth/token \
      -H "Content-Type: application/x-www-form-urlencoded" \
      -d "client_id=YOUR_ID&client_secret=YOUR_SECRET&grant_type=client_credentials"
    ```

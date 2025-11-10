@@ -12,8 +12,8 @@ OAuth client credentials provide token-based authentication using the OAuth 2.0 
 
 #### Step 1: Create an API Role
 
-1. Navigate to **Settings** → **System** → **API Roles** in Jamf Pro
-2. Click **New** to create a new API role
+1. Navigate to **Settings** → **System** → **API roles and clients** in Jamf Pro
+2. Select the **API Roles** tab, then click **New** in the upper right hand corner to create a new API role
 3. Name it something descriptive like "JamfMCP Read-Only"
 4. Grant the following privileges:
 
@@ -59,8 +59,8 @@ OAuth client credentials provide token-based authentication using the OAuth 2.0 
 
 #### Step 2: Create API Client
 
-1. Navigate to **Settings** → **System** → **API Clients**
-2. Click **New** to create a new API client
+1. Navigate to **Settings** → **System** → **API roles and clients**
+2. Select the **API Clients** tab, then click **New** to create a new API client
 3. Configure the client:
    - **Display Name**: "JamfMCP Client"
    - **API Role**: Select the role created in Step 1
@@ -153,13 +153,17 @@ For help with these issues, see the [Authentication Troubleshooting Guide](../tr
 - Check network connectivity to Jamf Pro
 - Ensure HTTPS/TLS is properly configured
 
-### API Rate Limits
+### API Rate Limits and Best Practices
 
-Jamf Pro implements API rate limiting. JamfMCP handles this automatically, but be aware:
+Jamf Pro implements [API rate limiting](https://developer.jamf.com/jamf-pro/docs/jamf-pro-api-scalability-best-practices#rate-limiting) to protect server performance. JamfMCP respects these limits and implements automatic retry logic with exponential backoff.
 
-- Default limit is typically 5000 requests per hour
-- Limits may vary based on your Jamf Pro configuration
-- Contact Jamf support if you need higher limits
+**Best Practices:**
+- Avoid excessive concurrent requests
+- Use targeted queries rather than full inventory pulls when possible
+- Monitor your Jamf Pro server performance during initial testing
+- Consult the [Jamf Pro API documentation](https://developer.jamf.com/jamf-pro/reference) for endpoint-specific guidance
+
+**Note**: While JamfMCP's read-only operations are generally low-impact, sustained high-volume API usage on any platform can affect server responsiveness. This is rare but possible with automated or repeated large-scale queries.
 
 ## Next Steps
 
