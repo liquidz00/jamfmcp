@@ -1,5 +1,7 @@
 # JamfMCP
 
+![](https://img.shields.io/badge/Python-3.13+-3776AB.svg?style=flat&logo=python&logoColor=white)&nbsp;![](https://img.shields.io/github/v/release/liquidz00/jamfmcp?color=orange)&nbsp;![](https://github.com/liquidz00/jamfmcp/actions/workflows/run-tests.yml/badge.svg)&nbsp;![](https://img.shields.io/pypi/v/jamfmcp?color=yellow)&nbsp;![](https://img.shields.io/badge/macOS-10.13%2B-blueviolet?logo=apple&logoSize=auto)
+
 > ⚠️ **Important** ⚠️
 >
 > This project is currently in active development and should be considered **alpha-quality software**.
