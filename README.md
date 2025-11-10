@@ -94,7 +94,7 @@ See the [development documentation](https://jamfmcp.readthedocs.io/en/latest/dev
 
 ## Support
 
-- **Documentation**: [liquidz00.github.io/jamfmcp](https://jamfmcp.readthedocs.io/en/latest)
+- **Documentation**: [Project Docs](https://jamfmcp.readthedocs.io/en/latest)
 - **Issues**: [GitHub Issues](https://github.com/liquidz00/jamfmcp/issues)
 - **Discussions**: [MacAdmins Slack #jamfmcp](https://macadmins.slack.com/archives/C07EH1R7LB0)
 
