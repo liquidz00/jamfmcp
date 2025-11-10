@@ -130,6 +130,7 @@ All MCP clients follow a similar pattern:
 }
 ```
 ::::
+:::::
 
 ### Environment Variables
 
