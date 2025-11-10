@@ -278,7 +278,7 @@ async def setup(
         cmd = ["fastmcp", "install", platform, f"{server_path}:mcp"]
         cmd.extend(["--name", server_name])
         project_root = os.path.dirname(os.path.dirname(module_path))
-        cmd.extend(["--with-editable", project_root])
+        cmd.extend(["--project", project_root])
     else:
         cmd = ["fastmcp", "install", platform, "jamfmcp.server:mcp"]
         cmd.extend(["--name", server_name])
