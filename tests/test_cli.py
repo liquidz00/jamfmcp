@@ -114,7 +114,7 @@ class TestHelperFunctions:
             username="admin",
             password="secret",
         )
-        mock_client.pro_api_request.assert_called_once_with("get", "/api/v1/auth")
+        mock_client.pro_api_request.assert_called_once_with("get", "v1/auth")
 
     @pytest.mark.asyncio
     async def test_validate_jamf_connection_oauth_success(self, mocker: MockerFixture) -> None:

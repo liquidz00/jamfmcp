@@ -56,7 +56,8 @@ async def validate_jamf_connection(url: str, auth_type: str, credentials: dict[s
             server=auth.server, credentials=auth.get_credentials_provider()
         ) as client:
             # Simple API call to verify connection
-            response = await client.pro_api_request("get", "/api/v1/auth")
+            # Note: pro_api_request already prepends /api/ to the resource path
+            response = await client.pro_api_request("get", "v1/auth")
             return response.status_code == 200
     except Exception as e:
         click.echo(click.style(f"Connection failed: {str(e)}", fg="red"))
