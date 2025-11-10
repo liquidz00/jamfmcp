@@ -42,7 +42,7 @@ jobs:
 
       - name: Check if tag exists
         run: |
-          if git ls-remote --tags origin | grep -q "refs/tags/v${{ env.VERSION }}";
+          if git ls-remote --tags origin | grep -q "refs/tags/v${{ env.VERSION }}"; then
             echo "Tag v${{ env.VERSION }} already exists!"
             exit 1
           fi
