@@ -2,18 +2,19 @@
 
 ![](https://img.shields.io/badge/Python-3.13+-3776AB.svg?style=flat&logo=python&logoColor=white)&nbsp;![](https://img.shields.io/github/v/release/liquidz00/jamfmcp?color=orange)&nbsp;![](https://github.com/liquidz00/jamfmcp/actions/workflows/run-tests.yml/badge.svg)&nbsp;![](https://img.shields.io/pypi/v/jamfmcp?color=yellow)&nbsp;![](https://img.shields.io/badge/macOS-10.13%2B-blueviolet?logo=apple&logoSize=auto)
 
-> ⚠️ **Important** ⚠️
+An async MCP (Model Context Protocol) server for Jamf Pro integration, providing AI assistants with tools for computer health analysis, inventory management, and policy monitoring.
+
+> [!IMPORTANT]
 >
 > This project is currently in active development and should be considered **alpha-quality software**.
 > The API, features, and functionality are subject to change without notice. Users should expect:
+>
 > - Breaking changes between versions
 > - Incomplete features and documentation
 > - Potential bugs and unexpected behavior
 > - API endpoints and tool signatures may change
 >
 > **Use in production environments at your own risk.** Contributions and feedback are welcome!
-
-An async MCP (Model Context Protocol) server for Jamf Pro integration, providing AI assistants with tools for computer health analysis, inventory management, and policy monitoring.
 
 ## Features
 
