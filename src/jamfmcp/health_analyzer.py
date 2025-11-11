@@ -1739,7 +1739,6 @@ class HealthAnalyzer:
                 **os_security_info,
                 **user_assignment_info,
                 "Uptime": eas.get("Uptime", "Unknown"),
-                "Okta SCEP Cert Present": self._verify_okta_cert_install_from_computer(computer),
             }
 
             return {**diag_data, **falcon_dict}
@@ -1841,17 +1840,3 @@ class HealthAnalyzer:
                     break
 
         return falcon_dict
-
-    def _verify_okta_cert_install_from_computer(self, computer: Computer) -> bool:
-        """
-        Verify if the Okta SCEP certificate is installed using Computer model.
-
-        :param computer: Computer object containing configuration profiles
-        :type computer: Computer
-        :return: True if Okta SCEP certificate is installed, False otherwise
-        :rtype: bool
-        """
-        if not computer.configurationProfiles:
-            return False
-
-        return any(profile and profile.id == "9" for profile in computer.configurationProfiles)
