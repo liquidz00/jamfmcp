@@ -2531,5 +2531,10 @@ async def ping(ctx: Context | None = None) -> dict[str, str]:
     return {"message": "pong", "status": "ok"}
 
 
+def main():
+    """Entry point for MCP server."""
+    mcp.run(transport="stdio")
+
+
 if __name__ == "__main__":
-    mcp.run()
+    main()
