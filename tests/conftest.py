@@ -16,9 +16,8 @@ def mock_jamf_env_vars(monkeypatch):
     This prevents import errors when modules try to initialize JamfAuth.
     """
     monkeypatch.setenv("JAMF_URL", "https://test.jamfcloud.com")
-    monkeypatch.setenv("JAMF_USERNAME", "test_user")
-    monkeypatch.setenv("JAMF_PASSWORD", "test_pass")
-    monkeypatch.setenv("JAMF_AUTH_TYPE", "basic")
+    monkeypatch.setenv("JAMF_CLIENT_ID", "test_user")
+    monkeypatch.setenv("JAMF_CLIENT_SECRET", "test_pass")
 
 
 @pytest.fixture
