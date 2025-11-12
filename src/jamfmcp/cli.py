@@ -1,16 +1,3 @@
-"""
-JamfMCP CLI - Configuration tool for setting up JamfMCP with AI platforms.
-
-This CLI helps users configure JamfMCP to work with various AI platforms like
-Claude Desktop, Cursor, and others. It handles two installation modes:
-
-1. PyPI Mode (default): For users who installed JamfMCP from PyPI
-2. Development Mode (--dev): For developers working on JamfMCP source code
-
-Both modes configure the MCP server to run locally on the user's machine.
-The difference is how the server is invoked (uvx vs uv run).
-"""
-
 import asyncio
 import json
 import os
@@ -304,14 +291,17 @@ async def main(
     This command collects your Jamf Pro credentials and configures JamfMCP
     to run locally on your machine with your chosen AI platform.
 
-    Installation Modes:
+    **Installation Modes**:
+
     - PyPI Mode (default): For users who installed 'pip install jamfmcp'
-    - Development Mode (--dev): For developers working on JamfMCP source
+    - Development Mode (``--dev``): For developers working on JamfMCP source
 
-    All MCP servers run locally via stdio - the distinction is just how
-    they're invoked (uvx for PyPI packages vs uv run for development).
+    All MCP servers run locally via ``stdio`` - the distinction is just how
+    they're invoked (``uvx`` for PyPI packages vs ``uv run`` for development).
 
-    Examples:
+    .. code-block:: bash
+        :caption: Examples
+
         # For users installing from PyPI:
         jamfmcp-cli -p claude-desktop --url https://example.jamfcloud.com
 
