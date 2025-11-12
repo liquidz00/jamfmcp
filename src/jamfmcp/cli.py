@@ -313,16 +313,16 @@ async def main(
 
     Examples:
         # For users installing from PyPI:
-        jamfmcp setup -p claude-desktop --url https://example.jamfcloud.com
+        jamfmcp-cli -p claude-desktop --url https://example.jamfcloud.com
 
         # For developers working on JamfMCP source:
-        jamfmcp setup -p claude-desktop --dev --url https://example.jamfcloud.com
+        jamfmcp-cli -p claude-desktop --dev --url https://example.jamfcloud.com
 
         # For Cursor with workspace:
-        jamfmcp setup -p cursor --workspace .
+        jamfmcp-cli -p cursor --workspace .
 
         # Dry run to see configuration:
-        jamfmcp setup -p gemini-cli --dry-run
+        jamfmcp-cli -p gemini-cli --dry-run
     """
     click.echo(click.style(f"\n🚀 Setting up JamfMCP for {platform}\n", fg="cyan", bold=True))
 
