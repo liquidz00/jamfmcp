@@ -558,10 +558,6 @@ Simple ping test to verify MCP server connectivity.
 4. **Documentation**: Document attribute purpose
 5. **Regular Audits**: Review for unused attributes
 
-## Troubleshooting
-
-For help with these issues, see the [Tools Troubleshooting Guide](#utility_tools).
-
 ### LDAP Problems
 - Test connection from Jamf Pro
 - Verify service account permissions

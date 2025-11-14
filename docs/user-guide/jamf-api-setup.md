@@ -1,16 +1,13 @@
+(jamf_api_setup)=
 # Jamf API Setup Guide
 
 This guide walks you through setting up API access for JamfMCP with the appropriate privileges following the principle of least privilege.
 
 ## Authentication Methods
 
-JamfMCP supports two authentication methods:
+JamfMCP **only** suports OAuth client credentials for authentication. OAuth client credentials provide token-based authentication using the OAuth 2.0 standard.
 
-### Option 1: OAuth Client Credentials
-
-OAuth client credentials provide token-based authentication using the OAuth 2.0 standard.
-
-#### Step 1: Create an API Role
+### Create an API Role
 
 1. Navigate to **Settings** → **System** → **API roles and clients** in Jamf Pro
 2. Select the **API Roles** tab, then click **New** in the upper right hand corner to create a new API role
@@ -57,7 +54,7 @@ OAuth client credentials provide token-based authentication using the OAuth 2.0 
 - [x] Read Extension Attributes
 :::
 
-#### Step 2: Create API Client
+### Create an API Client
 
 1. Navigate to **Settings** → **System** → **API roles and clients**
 2. Select the **API Clients** tab, then click **New** to create a new API client
@@ -71,44 +68,6 @@ OAuth client credentials provide token-based authentication using the OAuth 2.0 
 The client secret is only shown once! Save it immediately in a secure location.
 :::
 
-#### Step 3: Configure JamfMCP
-
-Use these credentials in your MCP client configuration:
-
-```json
-{
-  "env": {
-    "JAMF_URL": "your-jamf-server.com",
-    "JAMF_AUTH_TYPE": "client_credentials",
-    "JAMF_CLIENT_ID": "your-client-id",
-    "JAMF_CLIENT_SECRET": "your-client-secret"
-  }
-}
-```
-
-### Option 2: Basic Authentication
-
-Basic authentication uses username and password credentials.
-
-#### Step 1: Create or Use Service Account
-
-1. Navigate to **Settings** → **System** → **User Accounts**
-2. Create a new user or use existing
-3. Grant the same privileges as listed above for the API role
-
-#### Step 2: Configure JamfMCP
-
-```json
-{
-  "env": {
-    "JAMF_URL": "your-jamf-server.com",
-    "JAMF_AUTH_TYPE": "basic",
-    "JAMF_USERNAME": "your-username",
-    "JAMF_PASSWORD": "your-password"
-  }
-}
-```
-
 ## Server URL Format
 
 The `JAMF_URL` can be specified in several formats:
@@ -120,58 +79,18 @@ The `JAMF_URL` can be specified in several formats:
 
 JamfMCP will automatically handle the URL formatting.
 
-## Verifying Access
-
-After configuration, you can verify API access by:
-
-1. Starting your MCP client with JamfMCP configured
-2. Running a simple test command like "ping the Jamf MCP server"
-3. Checking for successful authentication in the response
-
-## Security Considerations
-
-:::{admonition} Important Security Notes
-:class: warning
-
-1. **Choose appropriate authentication** based on your organization's requirements
-2. **Rotate credentials** regularly
-3. **Use read-only privileges** - JamfMCP doesn't need write access
-4. **Store credentials securely** - never commit them to version control
-:::
-
-## Troubleshooting
-
-For help with these issues, see the [Authentication Troubleshooting Guide](../troubleshooting/authentication).
-
-**403 Forbidden**
-- Check API role has all required privileges
-- Verify the user/client is assigned the correct role
-- Ensure no IP restrictions are blocking access
-
-**Connection Failed**
-- Verify the JAMF_URL is correct
-- Check network connectivity to Jamf Pro
-- Ensure HTTPS/TLS is properly configured
-
-### API Rate Limits and Best Practices
+## API Rate Limits and Best Practices
 
 Jamf Pro implements [API rate limiting](https://developer.jamf.com/jamf-pro/docs/jamf-pro-api-scalability-best-practices#rate-limiting) to protect server performance. JamfMCP respects these limits and implements automatic retry logic with exponential backoff.
 
 **Best Practices:**
 - Avoid excessive concurrent requests
 - Use targeted queries rather than full inventory pulls when possible
-- Monitor your Jamf Pro server performance during initial testing
 - Consult the [Jamf Pro API documentation](https://developer.jamf.com/jamf-pro/reference) for endpoint-specific guidance
 
-**Note**: While JamfMCP's read-only operations are generally low-impact, sustained high-volume API usage on any platform can affect server responsiveness. This is rare but possible with automated or repeated large-scale queries.
-
-## Next Steps
-
-With API access configured, you're ready to:
-
-1. [Install JamfMCP](installation) if you haven't already
-2. [Configure your MCP client](configuration-overview) with the credentials
-3. Start using JamfMCP tools to analyze your Jamf Pro environment
+:::{danger}
+JamfMCP's read-only operations are meant to be low-impact, but sustained high-volume API usage on any platform can affect server responsiveness. Although rare it is technically possible with automated or repeated large-scale queries.
+:::
 
 :::{seealso}
 - [Jamf Pro API Documentation](https://developer.jamf.com/jamf-pro/docs)

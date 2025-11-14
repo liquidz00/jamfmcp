@@ -14,14 +14,14 @@ The server exposes 49 tools organized into categories. These tools are decorated
 - `get_cves` - Analyze CVE vulnerabilities
 - `get_compliance_status` - Check compliance status
 
-📖 See [Computer Health Tools](../getting-started/computer-health) for detailed documentation.
+📖 See [Computer Health Tools](../user-guide/computer-health) for detailed documentation.
 
 #### Inventory Management Tools (3 tools)
 - `get_computer_inventory` - Get detailed computer inventory
 - `get_computer_history` - Get computer history
 - `search_computers` - Search for computers
 
-📖 See [Inventory Management Tools](../getting-started/inventory) for detailed documentation.
+📖 See [Inventory Management Tools](../user-guide/inventory) for detailed documentation.
 
 #### Policy & Configuration Tools (11 tools)
 - `get_policies` - List all policies
@@ -36,7 +36,7 @@ The server exposes 49 tools organized into categories. These tools are decorated
 - `get_patch_software_title_details` - Get patch title details
 - `get_patch_policies` - List patch policies
 
-📖 See [Policy & Configuration Tools](../getting-started/policies) for detailed documentation.
+📖 See [Policy & Configuration Tools](../user-guide/policies) for detailed documentation.
 
 #### Security & Compliance Tools (5 tools)
 - `get_restricted_software` - List restricted software
@@ -45,7 +45,7 @@ The server exposes 49 tools organized into categories. These tools are decorated
 - `get_licensed_software_details` - Get licensed software details
 - `get_device_lock_pin` - Get device lock PIN
 
-📖 See [Security & Compliance Tools](../getting-started/security) for detailed documentation.
+📖 See [Security & Compliance Tools](../user-guide/security) for detailed documentation.
 
 #### Organization Management Tools (13 tools)
 - `get_buildings` - List buildings
@@ -62,7 +62,7 @@ The server exposes 49 tools organized into categories. These tools are decorated
 - `get_network_segments` - List network segments
 - `get_network_segment_details` - Get network segment details
 
-📖 See [Organization Tools](../getting-started/organization) for detailed documentation.
+📖 See [Organization Tools](../user-guide/organization) for detailed documentation.
 
 #### Utility Tools (13 tools)
 - `get_jcds_files` - List JCDS files
@@ -79,7 +79,7 @@ The server exposes 49 tools organized into categories. These tools are decorated
 - `get_extension_attributes` - List extension attributes
 - `ping` - Ping the server
 
-📖 See [Utility Tools](../getting-started/utility) for detailed documentation.
+📖 See [Utility Tools](../user-guide/utility) for detailed documentation.
 
 ## Logging
 
@@ -117,9 +117,6 @@ fastmcp run src/jamfmcp/server.py:mcp
 The server uses environment variables for configuration:
 
 - `JAMF_URL` - Jamf Pro server URL
-- `JAMF_AUTH_TYPE` - Authentication type (basic or client_credentials)
-- `JAMF_USERNAME` - Username for basic auth
-- `JAMF_PASSWORD` - Password for basic auth
 - `JAMF_CLIENT_ID` - Client ID for OAuth
 - `JAMF_CLIENT_SECRET` - Client secret for OAuth
 

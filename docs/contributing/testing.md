@@ -1,10 +1,11 @@
+(testing)=
 # Testing Guide
 
 This guide covers testing strategies, patterns, and best practices for JamfMCP.
 
 ## Testing Overview
 
-JamfMCP uses pytest for all testing with comprehensive coverage goals:
+JamfMCP uses pytest for all testing with the following goals in mind:
 
 - **Unit Tests**: Individual components
 - **Integration Tests**: Component interactions
@@ -37,13 +38,6 @@ uv run pytest -v
 # Run with print statements
 uv run pytest -s
 ```
-
-### Test Discovery
-
-pytest automatically discovers tests following these patterns:
-- Files: `test_*.py` or `*_test.py`
-- Classes: `Test*` (without `__init__` method)
-- Functions: `test_*`
 
 ## Test Structure
 
@@ -244,247 +238,6 @@ with patch.object(instance, 'method', return_value="mocked"):
     result = instance.method()
 ```
 
-## Test Patterns
-
-### Parametrized Tests
-
-```python
-@pytest.mark.parametrize("input,expected", [
-    ("valid", {"status": "success"}),
-    ("", {"error": "Empty input"}),
-    (None, {"error": "None not allowed"}),
-    ("special!@#", {"status": "success"}),
-])
-def test_various_inputs(input, expected):
-    """Test function with various inputs."""
-    result = function_under_test(input)
-    assert result == expected
-```
-
-### Testing Exceptions
-
-```python
-def test_exception_handling():
-    """Test that function raises expected exception."""
-    with pytest.raises(ValueError) as exc_info:
-        function_that_should_fail()
-
-    assert "Invalid input" in str(exc_info.value)
-
-@pytest.mark.asyncio
-async def test_async_exception():
-    """Test async exception handling."""
-    with pytest.raises(JamfApiError):
-        await async_function_that_fails()
-```
-
-### Testing Logging
-
-```python
-def test_logging(caplog):
-    """Test that function logs correctly."""
-    with caplog.at_level(logging.ERROR):
-        function_with_logging()
-
-    assert "Error message" in caplog.text
-    assert caplog.records[0].levelname == "ERROR"
-```
-
-## Integration Testing
-
-### Testing with Real Services
-
-```python
-@pytest.mark.integration
-@pytest.mark.skipif(
-    not os.getenv("JAMF_URL"),
-    reason="Jamf credentials not configured"
-)
-async def test_real_api_call():
-    """Test with real Jamf Pro API."""
-    auth = JamfAuth()
-    api = JamfApi(auth)
-
-    result = await api.get_computer_inventory("REAL_SERIAL")
-    assert "general" in result
-```
-
-### Testing Tool Integration
-
-```python
-@pytest.mark.asyncio
-async def test_tool_integration(mock_jamf_api, mock_sofa_feed):
-    """Test complete tool flow."""
-    # Setup mocks
-    mock_jamf_api.get_computer_inventory.return_value = inventory_data
-    mock_jamf_api.get_computer_history.return_value = history_data
-
-    # Test tool
-    result = await get_health_scorecard(serial="ABC123")
-
-    # Verify integration
-    assert result["overall_score"] > 0
-    assert result["grade"] in ["A", "B", "C", "D", "F"]
-```
-
-## Test Data Management
-
-### Using Fixtures for Test Data
-
-```python
-# In fixtures/computer_data.py
-def get_sample_computer():
-    """Get sample computer data."""
-    return {
-        "general": {
-            "id": 123,
-            "name": "Test Mac",
-            "serial_number": "ABC123"
-        }
-    }
-
-# In test file
-from fixtures.computer_data import get_sample_computer
-
-def test_with_sample_data():
-    """Test using sample data."""
-    computer = get_sample_computer()
-    result = process_computer(computer)
-    assert result is not None
-```
-
-### Factory Pattern
-
-```python
-class ComputerFactory:
-    """Factory for creating test computers."""
-
-    @staticmethod
-    def create(name="Test Mac", **kwargs):
-        """Create test computer with defaults."""
-        computer = {
-            "general": {
-                "name": name,
-                "serial_number": "ABC123",
-                "id": 123
-            }
-        }
-        computer.update(kwargs)
-        return computer
-
-# Usage
-def test_with_factory():
-    """Test using factory."""
-    computer = ComputerFactory.create(name="Custom Mac")
-    assert computer["general"]["name"] == "Custom Mac"
-```
-
-## Coverage
-
-### Coverage Configuration
-
-In `pyproject.toml`:
-
-```toml
-[tool.coverage.run]
-omit = [
-    "src/jamfmcp/jamfsdk/*",  # Exclude SDK
-    "*/tests/*",
-    "*/__pycache__/*",
-]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if TYPE_CHECKING:",
-]
-```
-
-### Coverage Goals
-
-- **Overall**: 90%+ coverage
-- **Core Modules**: 95%+ coverage
-- **New Code**: 100% coverage
-- **Exclude**: Generated code, SDK
-
-### Viewing Coverage
-
-```bash
-# Terminal report
-make test-cov
-
-# HTML report
-make test-cov-html
-open htmlcov/index.html
-```
-
-## Best Practices
-
-### Test Independence
-
-```python
-# Bad - tests depend on order
-class TestDependent:
-    shared_state = []
-
-    def test_first(self):
-        self.shared_state.append(1)
-
-    def test_second(self):
-        assert len(self.shared_state) == 1  # Fails if run alone
-
-# Good - independent tests
-class TestIndependent:
-    def test_first(self):
-        state = []
-        state.append(1)
-        assert len(state) == 1
-
-    def test_second(self):
-        state = [1]
-        assert len(state) == 1
-```
-
-### Clear Test Names
-
-```python
-# Bad
-def test_1():
-    pass
-
-def test_function():
-    pass
-
-# Good
-def test_health_scorecard_returns_valid_grade():
-    pass
-
-def test_invalid_serial_raises_value_error():
-    pass
-```
-
-### Arrange-Act-Assert Pattern
-
-```python
-@pytest.mark.asyncio
-async def test_get_computer_inventory():
-    """Test getting computer inventory."""
-    # Arrange
-    serial = "ABC123"
-    expected_data = {"general": {"name": "Test Mac"}}
-    mock_api.return_value = expected_data
-
-    # Act
-    result = await get_computer_inventory(serial)
-
-    # Assert
-    assert result == expected_data
-    mock_api.assert_called_once_with(serial=serial)
-```
-
 ## Continuous Integration
 
 ### GitHub Actions
@@ -540,27 +293,6 @@ pytest -k "test_health"
 
 # Run marked tests
 pytest -m "slow"
-```
-
-## Performance Testing
-
-### Timing Tests
-
-```python
-@pytest.mark.timeout(5)
-def test_performance():
-    """Test completes within 5 seconds."""
-    result = potentially_slow_function()
-    assert result is not None
-```
-
-### Benchmark Tests
-
-```python
-def test_benchmark(benchmark):
-    """Benchmark function performance."""
-    result = benchmark(function_to_benchmark, arg1, arg2)
-    assert result is not None
 ```
 
 :::{seealso}

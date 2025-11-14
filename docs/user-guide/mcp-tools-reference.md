@@ -135,51 +135,35 @@ All tools return JSON data that your AI assistant will interpret. Common pattern
 ]
 ```
 
-## Performance Considerations
-
-- **Pagination**: Handled automatically for large datasets
-- **Rate Limiting**: Respects Jamf Pro API limits
-- **Caching**: Some responses cached for efficiency
-- **Timeouts**: Long operations may take 10-30 seconds
-
-## Best Practices
-
-1. **Start Specific**: Use exact identifiers when known
-2. **Use Sections**: Request only needed data sections
-3. **Handle Errors**: Check for error responses
-4. **Chain Wisely**: Combine tools for complex workflows
-5. **Monitor Usage**: Be aware of API rate limits
-
-## Tool Documentation Format
-
-Each tool category page includes:
-
-- **Tool signature** with parameters
-- **Description** of functionality
-- **Parameters** with types and defaults
-- **Return value** structure
-- **Example usage** in context
-- **Related tools** for workflows
-
-## Getting Help
-
-- **In AI Assistant**: Ask "What tools are available for [task]?"
-- **Tool Details**: Ask "How do I use [tool_name]?"
-- **Examples**: Request "Show me an example of [tool_name]"
-- **Errors**: Share error messages for troubleshooting
-
-## Next Steps
-
-Explore specific tool categories:
-- [Computer Health Tools](computer-health)
-- [Inventory Management](inventory)
-- [Policy Tools](policies)
-- [Security Tools](security)
-- [Organization Tools](organization)
-- [Utility Tools](utility)
-
 :::{seealso}
-- [Quickstart Guide](quickstart)
+- [MCP Overview-Tools](https://modelcontextprotocol.io/docs/learn/server-concepts#tools)
 - [Jamf Pro API Reference](https://developer.jamf.com/jamf-pro/reference)
 - [FastMCP Tools Documentation](https://gofastmcp.com/servers/core-components#tools)
 :::
+
+```{toctree}
+:caption: Computer Health & History
+:maxdepth: 3
+:hidden:
+
+computer-health
+inventory
+```
+
+```{toctree}
+:caption: Security & Policy
+:maxdepth: 3
+:hidden:
+
+security
+policies
+```
+
+```{toctree}
+:caption: Utility Tools & Organization
+:maxdepth: 3
+:hidden:
+
+organization
+utility
+```

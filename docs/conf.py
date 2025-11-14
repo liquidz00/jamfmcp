@@ -19,11 +19,11 @@ sys.path.append(str(Path(".").resolve()))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "Jamf MCP"
-copyright = "2025, Andrew Lerman"
+copyright = "Copyright &copy; 2025, Andrew Lerman"
 author = "Andrew Lerman"
 
 version = __version__
-release = f"{__title__} v{__version__}"
+release = f"{__title__}"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -140,7 +140,7 @@ copybutton_prompt_is_regexp = True
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "pydata_sphinx_theme"
+html_theme = "shibuya"
 html_static_path = ["_static"]
 html_title = f"{release}"
 
@@ -154,7 +154,7 @@ html_theme_options ={
             "name": "Jamf Pro Docs"
         },
     ],
-    "header_links_before_dropdown": 4,
+    "header_links_before_dropdown": 3,
     "navbar_align": "left",
     "navbar_start": ["navbar-logo"],
     "navbar_center": ["navbar-nav"],

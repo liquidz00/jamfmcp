@@ -4,24 +4,24 @@
 :gutter: 3
 
 :::{grid-item-card} 🚀 Getting Started
-:link: getting-started/index
+:link: user-guide/index
 :link-type: doc
 
-New to JamfMCP? Start here with installation and setup guides.
+New to JamfMCP? Start here with the user guide.
 :::
 
-:::{grid-item-card} 🔧 MCP Tools Reference
-:link: getting-started/tools-overview
-:link-type: doc
-
-Explore all 49 available MCP tools for Jamf Pro integration.
-:::
-
-:::{grid-item-card} ⚙️ Configuration
-:link: getting-started/configuration-overview
+:::{grid-item-card} 👾 CLI Setup
+:link: user-guide/cli-setup
 :link-type: doc
 
 Configure JamfMCP for Cursor, Claude Desktop, and other MCP clients.
+:::
+
+:::{grid-item-card} 🔧 MCP Tools Reference
+:link: user-guide/mcp-tools-reference
+:link-type: doc
+
+Explore all 49 available MCP tools for Jamf Pro integration.
 :::
 
 :::{grid-item-card} 📚 API Reference
@@ -31,15 +31,15 @@ Configure JamfMCP for Cursor, Claude Desktop, and other MCP clients.
 Detailed API documentation with autodoc-generated references.
 :::
 
-:::{grid-item-card} 🛠️ Development
-:link: development/index
+:::{grid-item-card} 🤝 Contributing to JamfMCP
+:link: contributing/index
 :link-type: doc
 
-Architecture, contributing guidelines, and development resources.
+Contributing guidelines, code style, testing, and development resources.
 :::
 
 :::{grid-item-card} 🔍 Troubleshooting
-:link: troubleshooting/index
+:link: user-guide/troubleshooting
 :link-type: doc
 
 Solutions for common issues and debugging tips.
@@ -58,7 +58,7 @@ with tools to interact with [Jamf Pro APIs](https://developer.jamf.com/jamf-pro/
 - Core computer health analysis and inventory tools are stable
 - Some advanced features may have edge cases
 - API interfaces may change between minor versions
-- Please report issues or unexpected behavior via [GitHub Issues](https://github.com/liquidz00/jamfmcp/issues)
+- Please report issues or unexpected behavior via [GitHub Issues](https://github.com/liquidz00/jamfmcp/issues/new)
 :::
 
 ## Key Features
@@ -73,9 +73,9 @@ with tools to interact with [Jamf Pro APIs](https://developer.jamf.com/jamf-pro/
 
 ## Quick Links
 
-- [Installation Guide](getting-started/installation)
-- [Jamf API Setup](getting-started/jamf-api-setup)
-- [Tool Categories](getting-started/tools-overview)
+- [Installation Guide](user-guide/install)
+- [Jamf API Setup](user-guide/jamf-api-setup)
+- [Tool Categories](user-guide/mcp-tools-reference)
 - [GitHub Repository](https://github.com/liquidz00/jamfmcp)
 - [FastMCP Documentation](https://gofastmcp.com)
 - [Jamf Developer Portal](https://developer.jamf.com)
@@ -106,8 +106,7 @@ Built with 💙 for the MacAdmins community
 :maxdepth: 2
 :caption: Documentation
 
-getting-started/index
+user-guide/index
+contributing/index
 api-reference/index
-development/index
-troubleshooting/index
 ```

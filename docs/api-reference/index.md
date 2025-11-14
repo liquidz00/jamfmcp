@@ -24,7 +24,7 @@ macOS security vulnerability tracking via SOFA feed
 
 ## Module Overview
 
-### jamfmcp.server
+### [Server](server)
 
 The main MCP server module containing all tool implementations:
 - 49 MCP tools for Jamf Pro interaction
@@ -32,7 +32,7 @@ The main MCP server module containing all tool implementations:
 - Automatic error handling and logging
 - Parameter validation and type conversion
 
-### jamfmcp.health_analyzer
+### [Health Analyzer](health-analyzer)
 
 Health analysis engine that provides:
 - Comprehensive scoring across 4 categories
@@ -40,7 +40,7 @@ Health analysis engine that provides:
 - Compliance checking
 - Actionable recommendations
 
-### jamfmcp.sofa
+### [SOFA](sofa)
 
 Integration with macadmins SOFA feed for:
 - CVE tracking and analysis
@@ -48,27 +48,11 @@ Integration with macadmins SOFA feed for:
 - Security patch monitoring
 - Exploit detection
 
-### jamfmcp.api
-
-API client layer providing:
-- Authenticated requests to Jamf Pro
-- Response parsing and validation
-- Error handling and retries
-- Rate limit management
-
-### jamfmcp.auth
-
-Authentication provider supporting:
-- Basic authentication (username/password)
-- OAuth client credentials
-- Token management and caching
-- Automatic token refresh
-
 ## Using the API
 
 ### Direct Usage
 
-:::{note}
+:::{important}
 While JamfMCP is designed to be used through MCP clients, you can _hypothetically_ use it directly, although this feature is **not technically supported**.
 :::
 
@@ -81,9 +65,8 @@ async def main():
     # Initialize authentication
     auth = JamfAuth(
         server="your-server.jamfcloud.com",
-        auth_type="basic",
-        username="api-user",
-        password="password"
+        client_id="api-user",
+        client_secret="password"
     )
 
     # Create API client
@@ -194,13 +177,6 @@ inventories = await asyncio.gather(
 )
 ```
 
-## Next Steps
-
-Explore the detailed API documentation:
-- [Server Module](server) - All MCP tools
-- [Health Analyzer](health-analyzer) - Health scoring system
-- [SOFA Module](sofa) - CVE tracking
-
 :::{seealso}
 - [FastMCP API Documentation](https://gofastmcp.com/servers/core-components)
 - [Jamf Pro API Reference](https://developer.jamf.com/jamf-pro/reference)
@@ -232,4 +208,12 @@ sofa
 :maxdepth: 3
 
 server
+```
+
+```{toctree}
+:caption: Command Line Interface (CLI)
+:hidden:
+:maxdepth: 3
+
+cli
 ```

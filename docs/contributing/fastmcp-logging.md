@@ -9,7 +9,7 @@ All MCP tools now support optional Context-based logging that sends log messages
 ## Key Features
 
 ### 1. Optional Context Parameter
-All 43 MCP tools accept an optional `ctx: Context | None = None` parameter:
+All 49 MCP tools accept an optional `ctx: Context | None = None` parameter:
 
 ```python
 @mcp.tool
@@ -28,6 +28,10 @@ async def get_computer_inventory(
 - **Error**: Recoverable errors with context
 
 ### 3. Structured Logging
+
+:::{danger}
+Ensure all sensitive information is sanitized properly from logs. Code changes will not be approved if proper code sanitization has not been performed. This includes but is not limited to user information such as phone numbers, location, job title, etc. For more, visit the [security considerations](#security_considerations) doc.
+:::
 
 All log methods support an optional `extra` parameter for structured data:
 
