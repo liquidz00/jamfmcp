@@ -24,7 +24,6 @@ An async MCP (Model Context Protocol) server for Jamf Pro integration, providing
 - **Security Intelligence**: Integrate with macadmins SOFA feed for macOS security vulnerability tracking
 - **Organizational Data**: Query buildings, departments, sites, network segments, and more
 - **Async Architecture**: Built with modern async Python for high performance
-- **Flexible Authentication**: Support for both basic auth and OAuth client credentials
 
 ## Installation
 
@@ -38,13 +37,13 @@ Use the JamfMCP CLI tool for automated setup:
 
 ```bash
 # For Claude Desktop
-jamfmcp setup -p claude-desktop
+jamfmcp-cli -p claude-desktop
 
 # For Cursor
-jamfmcp setup -p cursor
+jamfmcp-cli -p cursor
 
 # For other platforms
-jamfmcp setup -p <platform>
+jamfmcp-cli -p <platform>
 ```
 
 The CLI will guide you through the entire configuration process.
@@ -55,15 +54,14 @@ For detailed installation, configuration, and usage instructions, please visit t
 
 ### Key Documentation Sections:
 
-- **[Getting Started](https://jamfmcp.readthedocs.io/en/latest/getting-started/)** - Installation and prerequisites
-- **[CLI Setup Guide](https://jamfmcp.readthedocs.io/en/latest/getting-started/cli-setup.html)** - Automated configuration tool
-- **[Quickstart Guide](https://jamfmcp.readthedocs.io/en/latest/getting-started/quickstart.html)** - Example queries and workflows
-- **[Configuration](https://jamfmcp.readthedocs.io/en/latest/getting-started/configuration-overview.html)** - Platform-specific setup
-- **[Troubleshooting](https://jamfmcp.readthedocs.io/en/latest/troubleshooting/)** - Common issues and solutions
+- **[Getting Started](https://jamfmcp.readthedocs.io/en/latest/user-guide/prereqs.html)** - Installation and prerequisites
+- **[CLI Setup Guide](https://jamfmcp.readthedocs.io/en/latest/user-guide/cli-setup.html)** - Automatically sets up JamfMCP with Claude or Cursor
+- **[Manual Configuration](https://jamfmcp.readthedocs.io/en/latest/user-guide/manual-configuration.html)** - Manually configuring JamfMCP with your preferred AI Platform
+- **[Troubleshooting](https://jamfmcp.readthedocs.io/en/latest/user-guide/troubleshooting)** - Common issues and solutions
 
 ### Important Notes for Claude Desktop Users
 
-Claude Desktop requires `uv` to be installed via Homebrew on macOS. See the [prerequisites documentation](https://jamfmcp.readthedocs.io/en/latest/getting-started/prerequisites.html) for critical setup requirements.
+Claude Desktop requires `uv` to be installed via Homebrew on macOS. See the [prerequisites documentation](https://jamfmcp.readthedocs.io/en/latest/user-guide/prereqs.html) for critical setup requirements.
 
 ## Basic Usage
 
@@ -88,10 +86,10 @@ make install-dev
 make test
 
 # For local development setup
-jamfmcp setup -p <platform> --local
+jamfmcp-cli -p <platform> --dev
 ```
 
-See the [development documentation](https://jamfmcp.readthedocs.io/en/latest/development/) for detailed contribution guidelines.
+See the [development documentation](https://jamfmcp.readthedocs.io/en/latest/contributing/contributor-guide.html) for detailed contribution guidelines.
 
 ## Support
 
@@ -101,7 +99,7 @@ See the [development documentation](https://jamfmcp.readthedocs.io/en/latest/dev
 
 ## Contributing
 
-Contributions are welcome! Please see our [contributing guide](https://jamfmcp.readthedocs.io/en/latest/development/contributing.html) for details.
+Contributions are welcome! Please see our [contributing guide](https://jamfmcp.readthedocs.io/en/latest/development/contributing/index.html) for details.
 
 ## License
 
