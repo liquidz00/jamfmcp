@@ -6,7 +6,7 @@ The JamfMCP CLI tool automates the entire setup process for connecting JamfMCP t
 The CLI is the **recommended method** for setting up JamfMCP. It handles all the complex configuration automatically and validates your setup before applying changes.
 :::::
 
-## {fas}`terminal` Quick Setup with CLI
+## Quick Setup with CLI
 
 After installation, use the JamfMCP CLI tool to automatically configure your MCP client:
 
@@ -66,7 +66,8 @@ Validating Jamf Pro connection...
 ```
 :::
 
-## {fas}`cog` CLI Options Reference
+(cli_options_reference)=
+## CLI Options Reference
 
 | Option | Short | Description | Example |
 |--------|-------|-------------|---------|
@@ -81,7 +82,7 @@ Validating Jamf Pro connection...
 | `--dev` | `-l` | Use local installation | For development from source |
 | `--write` | | Write configuration file to disk | For setup |
 
-## {fas}`lightbulb` Usage Examples
+## Usage Examples
 
 ### Dry Run Mode
 

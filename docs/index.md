@@ -1,55 +1,17 @@
+---
+layout: landing
+---
+
 # JamfMCP Documentation
 
-::::{grid} 2
-:gutter: 3
-
-:::{grid-item-card} 🚀 Getting Started
-:link: user-guide/index
-:link-type: doc
-
-New to JamfMCP? Start here with the user guide.
+:::{rst-class} lead
+A [FastMCP](https://gofastmcp.com) server providing AI assistants with tools to interact with [Jamf Pro APIs](https://developer.jamf.com/jamf-pro/docs/jamf-pro-api-overview)
 :::
 
-:::{grid-item-card} 👾 CLI Setup
-:link: user-guide/cli-setup
-:link-type: doc
-
-Configure JamfMCP for Cursor, Claude Desktop, and other MCP clients.
+:::{container} buttons
+[Docs](user-guide/index.md)
+[GitHub](https://github.com/liquidz00/jamfmp)
 :::
-
-:::{grid-item-card} 🔧 MCP Tools Reference
-:link: user-guide/mcp-tools-reference
-:link-type: doc
-
-Explore all 49 available MCP tools for Jamf Pro integration.
-:::
-
-:::{grid-item-card} 📚 API Reference
-:link: api-reference/index
-:link-type: doc
-
-Detailed API documentation with autodoc-generated references.
-:::
-
-:::{grid-item-card} 🤝 Contributing to JamfMCP
-:link: contributing/index
-:link-type: doc
-
-Contributing guidelines, code style, testing, and development resources.
-:::
-
-:::{grid-item-card} 🔍 Troubleshooting
-:link: user-guide/troubleshooting
-:link-type: doc
-
-Solutions for common issues and debugging tips.
-:::
-::::
-
-## What is JamfMCP?
-
-JamfMCP is an async MCP server built with [FastMCP](https://gofastmcp.com) that provides AI assistants
-with tools to interact with [Jamf Pro APIs](https://developer.jamf.com/jamf-pro/docs/jamf-pro-api-overview).
 
 :::{warning}
 **Early Release Software**: JamfMCP is in active development with evolving features and APIs. While core functionality has been tested in production environments, some features may have limited testing. We welcome feedback and contributions from the macadmin community to help improve reliability and coverage.
@@ -102,11 +64,54 @@ JamfMCP is licensed under the Apache License 2.0. See the [LICENSE](https://gith
 Built with 💙 for the MacAdmins community
 
 ```{toctree}
+:caption: 🚀 Getting Started
 :hidden:
-:maxdepth: 2
-:caption: Documentation
 
-user-guide/index
-contributing/index
-api-reference/index
+user-guide/prereqs
+user-guide/install
+user-guide/jamf-api-setup
+```
+
+```{toctree}
+:caption: ⚙️ Configuration
+:hidden:
+
+user-guide/cli-setup
+user-guide/manual-configuration
+user-guide/jamf-deployment
+```
+
+```{toctree}
+:caption: 🔧 MCP Tools
+:hidden:
+
+user-guide/mcp-tools-reference
+```
+
+```{toctree}
+:caption: ⛑️ Support
+:hidden:
+
+user-guide/troubleshooting
+user-guide/support
+```
+
+```{toctree}
+:caption: 🤝 Contributing
+:hidden:
+
+contributing/development-guide
+contributing/security-considerations
+contributing/fastmcp-logging
+contributing/testing
+```
+
+```{toctree}
+:caption: 📖 API Reference
+:hidden:
+
+api-reference/health-analyzer
+api-reference/sofa-integration
+api-reference/server
+api-reference/cli
 ```

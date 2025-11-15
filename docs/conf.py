@@ -35,6 +35,7 @@ extensions = [
     "myst_parser",
     "sphinx_copybutton",
     "sphinx_design",
+    "sphinx_iconify",
     "sphinxcontrib.autodoc_pydantic",
     "sphinx.ext.autosectionlabel",
 ]
@@ -83,6 +84,10 @@ myst_substitutions = {
     "version": __version__,
     "release": release,
 }
+
+# Pygments opts
+pygments_style = "one-light"
+pygments_dark_style = "one-dark-pro"
 
 # -- Link Code  --------------------------------------------------------------
 # based on pandas doc/source/conf.py
@@ -144,45 +149,31 @@ html_theme = "shibuya"
 html_static_path = ["_static"]
 html_title = f"{release}"
 
-html_theme_options ={
-    "external_links": [
-        {"url": "https://github.com/liquidz00/jamfmcp/blob/main/CHANGELOG.md", "name": "Changelog"},
-        {"url": "https://www.macadmins.org", "name": "MacAdmins Foundation"},
-        {"url": "https://community.jamf.com", "name": "JamfNation"},
+
+html_theme_options = {
+    "dark_code": True,
+    "nav_links": [
         {
-            "url": "https://learn.jamf.com/en-US/bundle/jamf-pro-documentation-current/page/Jamf_Pro_Documentation.html",
-            "name": "Jamf Pro Docs"
+            "title": "Changelog",
+            "url": "https://github.com/liquidz00/jamfmcp/blob/main/CHANGELOG.md",
+            "external": True,
+        },
+        {
+            "title": "More",
+            "children": [
+                {
+                    "title": "MacAdmins Foundation",
+                    "url": "https://www.macadmins.org"
+                },
+                {
+                    "title": "JamfNation",
+                    "url": "https://community.jamf.com"
+                },
+                {
+                    "title": "Jamf Pro Documentation",
+                    "url": "https://learn.jamf.com/en-US/bundle/jamf-pro-documentation-current/page/Jamf_Pro_Documentation.html"
+                },
+            ],
         },
     ],
-    "header_links_before_dropdown": 3,
-    "navbar_align": "left",
-    "navbar_start": ["navbar-logo"],
-    "navbar_center": ["navbar-nav"],
-    "navbar_end": ["theme-switcher", "navbar-icon-links"],
-    "icon_links": [
-        {
-            "name": "GitHub",
-            "url": "https://github.com/liquidz00/jamfmcp",
-            "icon": "fab fa-github",
-        },
-        {
-            "name": "PyPI",
-            "url": "https://pypi.org/project/jamfmcp",
-            "icon": "fab fa-python",
-        },
-        {
-            "name": "MacAdmins Slack",
-            "url": "https://macadmins.slack.com/archives/C07EH1R7LB0",
-            "icon": "fab fa-slack",
-        },
-    ],
-    "footer_start": ["copyright"],
-    "footer_end": ["theme-version"],
-    "back_to_top_button": False,
-    "secondary_sidebar_items": {
-        "**/*": ["page-toc"],
-    },
-    "show_toc_level": 3,
-    "pygments_light_style": "xcode",
-    "pygments_dark_style": "github-dark",
 }

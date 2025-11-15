@@ -1,6 +1,58 @@
+(health_analyzer_module)=
 # Health Analyzer Module
 
-The `jamfmcp.health_analyzer` module provides comprehensive health analysis for computers managed by Jamf Pro.
+:::{rst-class} lead
+Comprehensive health analysis for computers managed by Jamf Pro.
+:::
+
+(grading_and_scoring_models)=
+## Grading and Scoring
+
+Basic Python [enumeration](https://docs.python.org/3.13/library/enum.html#enum.Enum) classes for health grade and health status.
+
+### Health Grade
+
+```{eval-rst}
+.. autoclass:: jamfmcp.health_analyzer.HealthGrade
+   :members:
+   :undoc-members:
+   :show-inheritance:
+```
+
+### Health Status
+
+```{eval-rst}
+.. autoclass:: jamfmcp.health_analyzer.HealthStatus
+   :members:
+   :undoc-members:
+   :show-inheritance:
+```
+
+## Health Analyzer Data Models
+
+Pydantic data model configurations for Health Analyzer functionality.
+
+### Health Score
+
+Individual category score with details.
+
+```{eval-rst}
+.. autoclass:: jamfmcp.health_analyzer.HealthScore
+   :members:
+   :undoc-members:
+   :show-inheritance:
+```
+
+### Health Scorecard
+
+The complete health assessment result.
+
+```{eval-rst}
+.. autoclass:: jamfmcp.health_analyzer.HealthScorecard
+   :members:
+   :undoc-members:
+   :show-inheritance:
+```
 
 ## Core Classes
 
@@ -100,19 +152,3 @@ The analyzer generates actionable recommendations based on findings:
 - Install OS updates
 - Update applications
 - Renew certificates
-
-## Time Thresholds
-
-```python
-# Hours for various checks
-RECENT_CHECKIN_THRESHOLD = 24      # 1 day
-RECENT_ACTIVITY_THRESHOLD = 72     # 3 days  
-ACCEPTABLE_UPTIME_MAX = 336        # 2 weeks
-```
-
-## Performance Considerations
-
-- Analysis typically completes in < 1 second
-- CVE checking may add 1-2 seconds
-- Large history data may impact performance
-- Consider caching SOFA feed data

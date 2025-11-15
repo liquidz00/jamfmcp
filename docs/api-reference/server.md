@@ -1,6 +1,8 @@
 # Server Module
 
-The `jamfmcp.server` module contains the FastMCP server implementation with all available MCP tools.
+:::{rst-class} lead
+FastMCP server implementation with all available MCP tools.
+:::
 
 ## Available Tools
 
@@ -109,35 +111,5 @@ if __name__ == "__main__":
 Or through FastMCP:
 
 ```bash
-fastmcp run src/jamfmcp/server.py:mcp
-```
-
-## Environment Variables
-
-The server uses environment variables for configuration:
-
-- `JAMF_URL` - Jamf Pro server URL
-- `JAMF_CLIENT_ID` - Client ID for OAuth
-- `JAMF_CLIENT_SECRET` - Client secret for OAuth
-
-## Performance Considerations
-
-- Tools use async/await for non-blocking operations
-- API calls are rate-limited by Jamf Pro
-- Large result sets are paginated automatically
-- Caching is handled at the API client level
-
-## Testing
-
-Tools can be tested individually:
-
-```python
-import asyncio
-from jamfmcp.server import get_health_scorecard
-
-async def test():
-    result = await get_health_scorecard(serial="ABC123")
-    print(result)
-
-asyncio.run(test())
+fastmcp run src/jamfmcp/server.py:main
 ```

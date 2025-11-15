@@ -1,4 +1,4 @@
-# Contributing to JamfMCP
+# Contributor Guide
 
 Thank you for your interest in contributing to JamfMCP! This guide will help you get started.
 

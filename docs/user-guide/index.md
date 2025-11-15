@@ -12,7 +12,7 @@ JamfMCP enables AI assistants like Cursor and Claude Desktop to interact with yo
 - {fas}`exclamation-triangle` **Track** CVE vulnerabilities with SOFA integration
 - {fas}`chart-line` **Generate** comprehensive reports and recommendations
 
-## {fas}`rocket` Quick Start Path
+## Quick Start Path
 
 :::::{grid} 1 1 2 2
 :gutter: 3
