@@ -13,7 +13,7 @@ A [FastMCP](https://gofastmcp.com) server providing AI assistants with tools to 
 [GitHub](https://github.com/liquidz00/jamfmp)
 :::
 
-:::{warning}
+:::{important}
 **Early Release Software**: JamfMCP is in active development with evolving features and APIs. While core functionality has been tested in production environments, some features may have limited testing. We welcome feedback and contributions from the macadmin community to help improve reliability and coverage.
 
 **What this means:**
@@ -31,7 +31,6 @@ A [FastMCP](https://gofastmcp.com) server providing AI assistants with tools to 
 - **🔒 Security Intelligence**: Integrate with [macadmins SOFA feed](https://sofa.macadmins.io/) for macOS security vulnerability tracking
 - **🏢 Organizational Data**: Query buildings, departments, sites, network segments, and more
 - **⚡ Async Architecture**: Built with modern async Python for high performance
-- **🔐 Flexible Authentication**: Support for both basic auth and OAuth client credentials
 
 ## Quick Links
 
@@ -44,15 +43,15 @@ A [FastMCP](https://gofastmcp.com) server providing AI assistants with tools to 
 
 ## Requirements
 
-- Python 3.13+
-- [uv](https://github.com/astral-sh/uv) package manager
-- Access to a Jamf Pro server with API credentials
-- MCP-compatible client (Cursor, Claude Desktop)
+- {iconify}`material-icon-theme:python` Python 3.13+
+- {iconify}`material-icon-theme:uv` [uv](https://github.com/astral-sh/uv) package manager
+- {iconify}`mdi:server` Access to a Jamf Pro server with API credentials
+- {iconify}`material-icon-theme:claude` MCP-compatible client (Cursor, Claude Desktop)
 
 ## Getting Help
 
-- {fab}`slack` [MacAdmins Slack](https://macadmins.slack.com/archives/C09RR0UGF0W) - Join the `#jamfmcp` channel
-- {fab}`github` [GitHub Issues](https://github.com/liquidz00/jamfmcp/issues) - Report bugs or request features
+- {iconify}`devicon:slack` [MacAdmins Slack](https://macadmins.slack.com/archives/C09RR0UGF0W) - Join the `#jamfmcp` channel
+- {iconify}`mdi:github` [GitHub Issues](https://github.com/liquidz00/jamfmcp/issues) - Report bugs or request features
 - 📖 [Jamf Nation](https://community.jamf.com) - Jamf Pro community resources
 
 ## License
@@ -100,6 +99,7 @@ user-guide/support
 :caption: 🤝 Contributing
 :hidden:
 
+contributing/contributor-guide
 contributing/development-guide
 contributing/security-considerations
 contributing/fastmcp-logging

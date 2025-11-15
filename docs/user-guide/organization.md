@@ -1,58 +1,36 @@
 # Organization Tools
 
-These tools provide access to organizational data including buildings, departments, users, groups, and sites.
-
-:::{note}
-**About JSON Response Schemas**
-
-The JSON examples throughout this document show the structure of data that JamfMCP returns. When using these tools through an AI assistant, you won't see raw JSON - the AI will interpret and present this information in a natural, conversational format.
+:::{rst-class} lead
+Tools for accessing organizational data including buildings, departments, users, groups, and sites.
 :::
 
 ## Buildings & Locations
 
-### get_buildings
+(get_buildings)=
+### Get Buildings
 
 List all buildings configured in Jamf Pro.
 
-**Tool:** `get_buildings`
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
 
-**Returns:**
-```python
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   -
+    -
+    -
+    - No parameters required
+:::
+
+:::{dropdown} Example Response
+
+```json
 [
-    {
-        "id": 1,
-        "name": "Headquarters",
-        "street_address1": "123 Main Street",
-        "street_address2": "Suite 100",
-        "city": "San Francisco",
-        "state_province": "CA",
-        "zip_postal_code": "94105",
-        "country": "United States"
-    },
-    {
-        "id": 2,
-        "name": "East Coast Office",
-        "street_address1": "456 Broadway",
-        "city": "New York",
-        "state_province": "NY",
-        "zip_postal_code": "10013",
-        "country": "United States"
-    }
-]
-```
-
-### get_building_details
-
-Get detailed information about a specific building.
-
-**Tool:** `get_building_details`
-
-**Parameters:**
-- `building_id` (int | str, required): Building ID
-
-**Returns:**
-```python
-{
+  {
     "id": 1,
     "name": "Headquarters",
     "street_address1": "123 Main Street",
@@ -60,448 +38,1037 @@ Get detailed information about a specific building.
     "city": "San Francisco",
     "state_province": "CA",
     "zip_postal_code": "94105",
-    "country": "United States",
-    "assigned_computers": 245,
-    "assigned_users": 198,
-    "assigned_devices": 312
+    "country": "United States"
+  },
+  {
+    "id": 2,
+    "name": "East Coast Office",
+    "street_address1": "456 Broadway",
+    "city": "New York",
+    "state_province": "NY",
+    "zip_postal_code": "10013",
+    "country": "United States"
+  }
+]
+```
+:::
+
+#### Usage Examples
+
+:::{ai-prompt}
+List all buildings in our organization
+:::
+
+:::{ai-prompt}
+Show me all office locations
+:::
+
+:::{ai-prompt}
+Get addresses for all buildings
+:::
+
+#### Related Tools
+
+:::::{grid} 1 1 2 2
+:gutter: 2
+
+::::{grid-item-card} Get Building Details
+:link: get_building_details
+:link-type: ref
+
+Detailed building information
+::::
+
+::::{grid-item-card} Get Departments
+:link: get_departments
+:link-type: ref
+
+Department assignments
+::::
+:::::
+
+---
+
+(get_building_details)=
+### Get Building Details
+
+Get detailed information about a specific building.
+
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
+
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   - `building_id`
+    - int | str
+    - **Yes**
+    - Building ID
+:::
+
+:::{dropdown} Example Response
+
+```json
+{
+  "id": 1,
+  "name": "Headquarters",
+  "street_address1": "123 Main Street",
+  "street_address2": "Suite 100",
+  "city": "San Francisco",
+  "state_province": "CA",
+  "zip_postal_code": "94105",
+  "country": "United States",
+  "assigned_computers": 245,
+  "assigned_users": 198,
+  "assigned_devices": 312
 }
 ```
+:::
+
+#### Usage Examples
+
+:::{ai-prompt}
+Get details for building ID 1
+:::
+
+:::{ai-prompt}
+Show me how many computers are assigned to building 5
+:::
+
+:::{ai-prompt}
+Get the full address for building ID 10
+:::
+
+#### Related Tools
+
+:::::{grid} 1 1 2 2
+:gutter: 2
+
+::::{grid-item-card} Get Buildings
+:link: get_buildings
+:link-type: ref
+
+List all buildings
+::::
+
+::::{grid-item-card} Search Computers
+:link: search_computers
+:link-type: ref
+
+Find computers by building
+::::
+:::::
+
+---
 
 ## Departments
 
-### get_departments
+(get_departments)=
+### Get Departments
 
 List all departments configured in Jamf Pro.
 
-**Tool:** `get_departments`
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
 
-**Returns:**
-```python
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   -
+    -
+    -
+    - No parameters required
+:::
+
+:::{dropdown} Example Response
+
+```json
 [
-    {
-        "id": 1,
-        "name": "Engineering",
-        "created_date": "2023-01-15T00:00:00Z",
-        "updated_date": "2024-01-10T00:00:00Z"
-    },
-    {
-        "id": 2,
-        "name": "Sales",
-        "created_date": "2023-01-15T00:00:00Z",
-        "updated_date": "2023-12-01T00:00:00Z"
-    },
-    {
-        "id": 3,
-        "name": "Human Resources",
-        "created_date": "2023-01-15T00:00:00Z",
-        "updated_date": "2023-06-15T00:00:00Z"
-    }
-]
-```
-
-### get_department_details
-
-Get detailed information about a specific department.
-
-**Tool:** `get_department_details`
-
-**Parameters:**
-- `department_id` (int | str, required): Department ID
-
-**Returns:**
-```python
-{
+  {
     "id": 1,
     "name": "Engineering",
     "created_date": "2023-01-15T00:00:00Z",
-    "updated_date": "2024-01-10T00:00:00Z",
-    "assigned_computers": 87,
-    "assigned_users": 92,
-    "assigned_devices": 156
+    "updated_date": "2024-01-10T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "name": "Sales",
+    "created_date": "2023-01-15T00:00:00Z",
+    "updated_date": "2023-12-01T00:00:00Z"
+  },
+  {
+    "id": 3,
+    "name": "Human Resources",
+    "created_date": "2023-01-15T00:00:00Z",
+    "updated_date": "2023-06-15T00:00:00Z"
+  }
+]
+```
+:::
+
+#### Usage Examples
+
+:::{ai-prompt}
+List all departments in the organization
+:::
+
+:::{ai-prompt}
+Show me all departments and when they were created
+:::
+
+:::{ai-prompt}
+Get department names and IDs
+:::
+
+#### Related Tools
+
+:::::{grid} 1 1 2 2
+:gutter: 2
+
+::::{grid-item-card} Get Department Details
+:link: get_department_details
+:link-type: ref
+
+Detailed department information
+::::
+
+::::{grid-item-card} Get Users
+:link: get_users
+:link-type: ref
+
+Users by department
+::::
+:::::
+
+---
+
+(get_department_details)=
+### Get Department Details
+
+Get detailed information about a specific department.
+
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
+
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   - `department_id`
+    - int | str
+    - **Yes**
+    - Department ID
+:::
+
+:::{dropdown} Example Response
+
+```json
+{
+  "id": 1,
+  "name": "Engineering",
+  "created_date": "2023-01-15T00:00:00Z",
+  "updated_date": "2024-01-10T00:00:00Z",
+  "assigned_computers": 87,
+  "assigned_users": 92,
+  "assigned_devices": 156
 }
 ```
+:::
+
+#### Usage Examples
+
+:::{ai-prompt}
+Get details for department ID 1
+:::
+
+:::{ai-prompt}
+How many computers are assigned to department 5?
+:::
+
+:::{ai-prompt}
+Show me user count for Engineering department
+:::
+
+#### Related Tools
+
+:::::{grid} 1 1 2 2
+:gutter: 2
+
+::::{grid-item-card} Get Departments
+:link: get_departments
+:link-type: ref
+
+List all departments
+::::
+
+::::{grid-item-card} Search Computers
+:link: search_computers
+:link-type: ref
+
+Find computers by department
+::::
+:::::
+
+---
 
 ## Users & Groups
 
 (get_users)=
-### get_users
+### Get Users
 
 List all users in Jamf Pro.
 
-**Tool:** `get_users`
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
 
-**Returns:**
-```python
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   -
+    -
+    -
+    - No parameters required
+:::
+
+:::{dropdown} Example Response
+
+```json
 [
-    {
-        "id": 1,
-        "username": "john.doe",
-        "full_name": "John Doe",
-        "email": "john.doe@company.com",
-        "phone_number": "555-1234",
-        "position": "Senior Engineer",
-        "enable_custom_photo_url": False,
-        "custom_photo_url": "",
-        "ldap_server": {
-            "id": 1,
-            "name": "Corporate AD"
-        },
-        "extension_attributes": []
-    },
-    {
-        "id": 2,
-        "username": "jane.smith",
-        "full_name": "Jane Smith",
-        "email": "jane.smith@company.com",
-        "phone_number": "555-5678",
-        "position": "Sales Manager"
-    }
-]
-```
-(get_user_details)=
-### get_user_details
-
-Get detailed information about a specific user.
-
-**Tool:** `get_user_details`
-
-**Parameters:**
-- `user_id` (str, required): User ID
-
-**Returns:**
-```python
-{
+  {
     "id": 1,
     "username": "john.doe",
     "full_name": "John Doe",
     "email": "john.doe@company.com",
-    "email_address": "john.doe@company.com",
     "phone_number": "555-1234",
     "position": "Senior Engineer",
-    "enable_custom_photo_url": False,
+    "enable_custom_photo_url": false,
     "custom_photo_url": "",
     "ldap_server": {
-        "id": 1,
-        "name": "Corporate AD"
+      "id": 1,
+      "name": "Corporate AD"
     },
-    "extension_attributes": [
-        {
-            "id": 1,
-            "name": "Employee ID",
-            "type": "String",
-            "value": "EMP12345"
-        }
-    ],
-    "sites": [],
-    "managed_computers": [
-        {
-            "id": 123,
-            "name": "John's MacBook Pro",
-            "serial_number": "ABC123456"
-        }
-    ],
-    "managed_mobile_devices": []
+    "extension_attributes": []
+  },
+  {
+    "id": 2,
+    "username": "jane.smith",
+    "full_name": "Jane Smith",
+    "email": "jane.smith@company.com",
+    "phone_number": "555-5678",
+    "position": "Sales Manager"
+  }
+]
+```
+:::
+
+#### Usage Examples
+
+:::{ai-prompt}
+List all users in Jamf Pro
+:::
+
+:::{ai-prompt}
+Show me all users with their email addresses
+:::
+
+:::{ai-prompt}
+Get all users and their positions
+:::
+
+#### Related Tools
+
+:::::{grid} 1 1 2 2
+:gutter: 2
+
+::::{grid-item-card} Get User Details
+:link: get_user_details
+:link-type: ref
+
+Detailed user information
+::::
+
+::::{grid-item-card} Get User Group Details
+:link: get_user_group_details
+:link-type: ref
+
+User group memberships
+::::
+:::::
+
+---
+
+(get_user_details)=
+### Get User Details
+
+Get detailed information about a specific user.
+
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
+
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   - `user_id`
+    - str
+    - **Yes**
+    - User ID
+:::
+
+:::{dropdown} Example Response
+
+```json
+{
+  "id": 1,
+  "username": "john.doe",
+  "full_name": "John Doe",
+  "email": "john.doe@company.com",
+  "email_address": "john.doe@company.com",
+  "phone_number": "555-1234",
+  "position": "Senior Engineer",
+  "enable_custom_photo_url": false,
+  "custom_photo_url": "",
+  "ldap_server": {
+    "id": 1,
+    "name": "Corporate AD"
+  },
+  "extension_attributes": [
+    {
+      "id": 1,
+      "name": "Employee ID",
+      "type": "String",
+      "value": "EMP12345"
+    }
+  ],
+  "sites": [],
+  "managed_computers": [
+    {
+      "id": 123,
+      "name": "John's MacBook Pro",
+      "serial_number": "ABC123456"
+    }
+  ],
+  "managed_mobile_devices": []
 }
 ```
+:::
 
-### get_user_group_details
+#### Usage Examples
+
+:::{ai-prompt}
+Get details for user ID 1
+:::
+
+:::{ai-prompt}
+Show me which computers are assigned to user john.doe
+:::
+
+:::{ai-prompt}
+Get employee ID for user 100
+:::
+
+#### Related Tools
+
+:::::{grid} 1 1 2 2
+:gutter: 2
+
+::::{grid-item-card} Get Users
+:link: get_users
+:link-type: ref
+
+List all users
+::::
+
+::::{grid-item-card} Get Computer Inventory
+:link: get_computer_inventory
+:link-type: ref
+
+Computer assignments
+::::
+:::::
+
+---
+
+(get_user_group_details)=
+### Get User Group Details
 
 Get detailed information about a user group.
 
-**Tool:** `get_user_group_details`
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
 
-**Parameters:**
-- `group_id` (int | str, required): User group ID
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   - `group_id`
+    - int | str
+    - **Yes**
+    - User group ID
+:::
 
-**Returns:**
-```python
+:::{dropdown} Example Response
+
+```json
 {
-    "id": 10,
-    "name": "Engineering Team",
-    "is_smart": True,
-    "is_notify_on_change": False,
-    "site": {
-        "id": -1,
-        "name": "None"
-    },
-    "criteria": [
-        {
-            "name": "Department",
-            "priority": 0,
-            "and_or": "and",
-            "search_type": "is",
-            "value": "Engineering"
-        }
-    ],
-    "users": [
-        {
-            "id": 1,
-            "username": "john.doe",
-            "full_name": "John Doe",
-            "email": "john.doe@company.com"
-        }
-    ],
-    "user_count": 92
+  "id": 10,
+  "name": "Engineering Team",
+  "is_smart": true,
+  "is_notify_on_change": false,
+  "site": {
+    "id": -1,
+    "name": "None"
+  },
+  "criteria": [
+    {
+      "name": "Department",
+      "priority": 0,
+      "and_or": "and",
+      "search_type": "is",
+      "value": "Engineering"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "john.doe",
+      "full_name": "John Doe",
+      "email": "john.doe@company.com"
+    }
+  ],
+  "user_count": 92
 }
 ```
+:::
+
+#### Usage Examples
+
+:::{ai-prompt}
+Get details for user group ID 10
+:::
+
+:::{ai-prompt}
+Show me all members of the Engineering Team group
+:::
+
+:::{ai-prompt}
+What are the criteria for user group 5?
+:::
+
+#### Related Tools
+
+:::::{grid} 1 1 2 2
+:gutter: 2
+
+::::{grid-item-card} Get Users
+:link: get_users
+:link-type: ref
+
+List all users
+::::
+
+::::{grid-item-card} Get Smart Groups
+:link: get_smart_groups
+:link-type: ref
+
+Computer groups
+::::
+:::::
+
+---
 
 ## Sites
 
-### get_sites
+(get_sites)=
+### Get Sites
 
 List all sites configured in Jamf Pro.
 
-**Tool:** `get_sites`
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
 
-**Returns:**
-```python
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   -
+    -
+    -
+    - No parameters required
+:::
+
+:::{dropdown} Example Response
+
+```json
 [
-    {
-        "id": -1,
-        "name": "None"
-    },
-    {
-        "id": 1,
-        "name": "West Coast",
-        "created_date": "2023-01-01T00:00:00Z"
-    },
-    {
-        "id": 2,
-        "name": "East Coast",
-        "created_date": "2023-01-01T00:00:00Z"
-    }
+  {
+    "id": -1,
+    "name": "None"
+  },
+  {
+    "id": 1,
+    "name": "West Coast",
+    "created_date": "2023-01-01T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "name": "East Coast",
+    "created_date": "2023-01-01T00:00:00Z"
+  }
 ]
 ```
+:::
 
-### get_site_details
+#### Usage Examples
+
+:::{ai-prompt}
+List all sites in Jamf Pro
+:::
+
+:::{ai-prompt}
+Show me all configured sites
+:::
+
+:::{ai-prompt}
+Get site names and IDs
+:::
+
+#### Related Tools
+
+:::::{grid} 1 1 2 2
+:gutter: 2
+
+::::{grid-item-card} Get Site Details
+:link: get_site_details
+:link-type: ref
+
+Detailed site information
+::::
+
+::::{grid-item-card} Get Policies
+:link: get_policies
+:link-type: ref
+
+Site-specific policies
+::::
+:::::
+
+---
+
+(get_site_details)=
+### Get Site Details
 
 Get detailed information about a specific site.
 
-**Tool:** `get_site_details`
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
 
-**Parameters:**
-- `site_id` (str | int, required): Site ID
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   - `site_id`
+    - str | int
+    - **Yes**
+    - Site ID
+:::
 
-**Returns:**
-```python
+:::{dropdown} Example Response
+
+```json
 {
-    "id": 1,
-    "name": "West Coast",
-    "created_date": "2023-01-01T00:00:00Z",
-    "updated_date": "2024-01-15T00:00:00Z",
-    "assigned_objects": {
-        "computers": 156,
-        "mobile_devices": 203,
-        "configuration_profiles": 25,
-        "policies": 48,
-        "users": 198
-    }
+  "id": 1,
+  "name": "West Coast",
+  "created_date": "2023-01-01T00:00:00Z",
+  "updated_date": "2024-01-15T00:00:00Z",
+  "assigned_objects": {
+    "computers": 156,
+    "mobile_devices": 203,
+    "configuration_profiles": 25,
+    "policies": 48,
+    "users": 198
+  }
 }
 ```
+:::
 
-## Categories
+#### Usage Examples
+
+:::{ai-prompt}
+Get details for site ID 1
+:::
+
+:::{ai-prompt}
+How many computers are assigned to site 2?
+:::
+
+:::{ai-prompt}
+Show me all objects assigned to the West Coast site
+:::
+
+#### Related Tools
+
+:::::{grid} 1 1 2 2
+:gutter: 2
+
+::::{grid-item-card} Get Sites
+:link: get_sites
+:link-type: ref
+
+List all sites
+::::
+
+::::{grid-item-card} Get Configuration Profiles
+:link: get_configuration_profiles
+:link-type: ref
+
+Site-specific profiles
+::::
+:::::
+
+---
 
 (get_categories)=
-### get_categories
+### Get Categories
 
 List all categories used for organizing items.
 
-**Tool:** `get_categories`
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
 
-**Returns:**
-```python
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   -
+    -
+    -
+    - No parameters required
+:::
+
+:::{dropdown} Example Response
+
+```json
 [
-    {
-        "id": 1,
-        "name": "Productivity",
-        "priority": 9
-    },
-    {
-        "id": 2,
-        "name": "Security",
-        "priority": 10
-    },
-    {
-        "id": 3,
-        "name": "Utilities",
-        "priority": 5
-    }
+  {
+    "id": 1,
+    "name": "Productivity",
+    "priority": 9
+  },
+  {
+    "id": 2,
+    "name": "Security",
+    "priority": 10
+  },
+  {
+    "id": 3,
+    "name": "Utilities",
+    "priority": 5
+  }
 ]
 ```
+:::
 
-### get_category_details
+#### Usage Examples
+
+:::{ai-prompt}
+List all categories
+:::
+
+:::{ai-prompt}
+Show me categories sorted by priority
+:::
+
+:::{ai-prompt}
+Get all category names and IDs
+:::
+
+#### Related Tools
+
+:::::{grid} 1 1 2 2
+:gutter: 2
+
+::::{grid-item-card} Get Category Details
+:link: get_category_details
+:link-type: ref
+
+Category usage information
+::::
+
+::::{grid-item-card} Get Policies
+:link: get_policies
+:link-type: ref
+
+Policies by category
+::::
+:::::
+
+---
+
+(get_category_details)=
+### Get Category Details
 
 Get detailed information about a specific category.
 
-**Tool:** `get_category_details`
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
 
-**Parameters:**
-- `category_id` (str | int, required): Category ID
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   - `category_id`
+    - str | int
+    - **Yes**
+    - Category ID
+:::
 
-**Returns:**
-```python
+:::{dropdown} Example Response
+
+```json
 {
-    "id": 2,
-    "name": "Security",
-    "priority": 10,
-    "usage": {
-        "policies": 15,
-        "packages": 8,
-        "scripts": 12,
-        "printers": 0,
-        "computer_extension_attributes": 3,
-        "mobile_device_extension_attributes": 2
-    }
+  "id": 2,
+  "name": "Security",
+  "priority": 10,
+  "usage": {
+    "policies": 15,
+    "packages": 8,
+    "scripts": 12,
+    "printers": 0,
+    "computer_extension_attributes": 3,
+    "mobile_device_extension_attributes": 2
+  }
 }
 ```
+:::
+
+#### Usage Examples
+
+:::{ai-prompt}
+Get details for category ID 2
+:::
+
+:::{ai-prompt}
+How many policies use category 5?
+:::
+
+:::{ai-prompt}
+Show me usage statistics for the Security category
+:::
+
+#### Related Tools
+
+:::::{grid} 1 1 2 2
+:gutter: 2
+
+::::{grid-item-card} Get Categories
+:link: get_categories
+:link-type: ref
+
+List all categories
+::::
+
+::::{grid-item-card} Get Scripts
+:link: get_scripts
+:link-type: ref
+
+Scripts by category
+::::
+:::::
+
+---
 
 ## Network Segments
 
-### get_network_segments
+(get_network_segments)=
+### Get Network Segments
 
 List all network segments configured in Jamf Pro.
 
-**Tool:** `get_network_segments`
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
 
-**Returns:**
-```python
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   -
+    -
+    -
+    - No parameters required
+:::
+
+:::{dropdown} Example Response
+
+```json
 [
-    {
-        "id": 1,
-        "name": "Corporate LAN",
-        "starting_address": "10.0.0.0",
-        "ending_address": "10.0.255.255",
-        "distribution_server": "",
-        "distribution_point": "",
-        "url": "",
-        "swu_server": "",
-        "building": "Headquarters",
-        "department": "",
-        "override_buildings": False,
-        "override_departments": False
-    },
-    {
-        "id": 2,
-        "name": "Guest WiFi",
-        "starting_address": "192.168.1.0",
-        "ending_address": "192.168.1.255"
-    }
-]
-```
-
-### get_network_segment_details
-
-Get detailed information about a specific network segment.
-
-**Tool:** `get_network_segment_details`
-
-**Parameters:**
-- `segment_id` (str | int, required): Network segment ID
-
-**Returns:**
-```python
-{
+  {
     "id": 1,
     "name": "Corporate LAN",
     "starting_address": "10.0.0.0",
     "ending_address": "10.0.255.255",
     "distribution_server": "",
-    "distribution_point": "Main DP",
-    "url": "https://dp.company.com",
+    "distribution_point": "",
+    "url": "",
     "swu_server": "",
-    "building": {
-        "id": 1,
-        "name": "Headquarters"
-    },
-    "department": {
-        "id": -1,
-        "name": "None"
-    },
-    "override_buildings": False,
-    "override_departments": False,
-    "assigned_computers": 245
+    "building": "Headquarters",
+    "department": "",
+    "override_buildings": false,
+    "override_departments": false
+  },
+  {
+    "id": 2,
+    "name": "Guest WiFi",
+    "starting_address": "192.168.1.0",
+    "ending_address": "192.168.1.255"
+  }
+]
+```
+:::
+
+#### Usage Examples
+
+:::{ai-prompt}
+List all network segments
+:::
+
+:::{ai-prompt}
+Show me IP ranges for all network segments
+:::
+
+:::{ai-prompt}
+Get network segments by building
+:::
+
+#### Related Tools
+
+:::::{grid} 1 1 2 2
+:gutter: 2
+
+::::{grid-item-card} Get Network Segment Details
+:link: get_network_segment_details
+:link-type: ref
+
+Detailed segment information
+::::
+
+::::{grid-item-card} Get Buildings
+:link: get_buildings
+:link-type: ref
+
+Building associations
+::::
+:::::
+
+---
+
+(get_network_segment_details)=
+### Get Network Segment Details
+
+Get detailed information about a specific network segment.
+
+:::{list-table}
+:widths: auto
+:align: left
+:header-rows: 1
+
+*   - Parameter
+    - Type
+    - Required
+    - Description
+*   - `segment_id`
+    - str | int
+    - **Yes**
+    - Network segment ID
+:::
+
+:::{dropdown} Example Response
+
+```json
+{
+  "id": 1,
+  "name": "Corporate LAN",
+  "starting_address": "10.0.0.0",
+  "ending_address": "10.0.255.255",
+  "distribution_server": "",
+  "distribution_point": "Main DP",
+  "url": "https://dp.company.com",
+  "swu_server": "",
+  "building": {
+    "id": 1,
+    "name": "Headquarters"
+  },
+  "department": {
+    "id": -1,
+    "name": "None"
+  },
+  "override_buildings": false,
+  "override_departments": false,
+  "assigned_computers": 245
 }
 ```
+:::
 
-## Common Use Cases
+#### Usage Examples
 
-### Organizational Overview
-```python
-# Get organizational structure
-buildings = await get_buildings()
-departments = await get_departments()
-sites = await get_sites()
+:::{ai-prompt}
+Get details for network segment ID 1
+:::
 
-print(f"Organization has:")
-print(f"- {len(buildings)} buildings")
-print(f"- {len(departments)} departments")
-print(f"- {len(sites)} sites")
+:::{ai-prompt}
+How many computers are on network segment 5?
+:::
 
-# Department breakdown
-for dept in departments:
-    details = await get_department_details(department_id=dept["id"])
-    print(f"{dept['name']}: {details['assigned_computers']} computers")
-```
+:::{ai-prompt}
+Show me the IP range for the Corporate LAN segment
+:::
 
-### User Management Audit
-```python
-# Analyze user assignments
-users = await get_users()
+#### Related Tools
 
-# Check for users without email
-no_email = [u for u in users if not u.get("email")]
-print(f"Users without email: {len(no_email)}")
+:::::{grid} 1 1 2 2
+:gutter: 2
 
-# Find users with multiple computers
-for user in users[:10]:  # Sample
-    details = await get_user_details(user_id=str(user["id"]))
-    computer_count = len(details.get("managed_computers", []))
-    if computer_count > 1:
-        print(f"{user['full_name']}: {computer_count} computers")
-```
+::::{grid-item-card} Get Network Segments
+:link: get_network_segments
+:link-type: ref
 
-### Network Segment Analysis
-```python
-# Review network segments
-segments = await get_network_segments()
+List all segments
+::::
 
-for segment in segments:
-    details = await get_network_segment_details(segment_id=segment["id"])
-    print(f"{segment['name']}: {segment['starting_address']} - {segment['ending_address']}")
-    print(f"  Assigned computers: {details.get('assigned_computers', 0)}")
-    if segment.get("building"):
-        print(f"  Building: {segment['building']}")
-```
+::::{grid-item-card} Get Building Details
+:link: get_building_details
+:link-type: ref
 
-### Site-Based Reporting
-```python
-# Analyze site distribution
-sites = await get_sites()
+Building information
+::::
+:::::
 
-for site in sites:
-    if site["id"] != -1:  # Skip "None" site
-        details = await get_site_details(site_id=site["id"])
-        objects = details["assigned_objects"]
-        print(f"\n{site['name']}:")
-        print(f"  Computers: {objects['computers']}")
-        print(f"  Policies: {objects['policies']}")
-        print(f"  Profiles: {objects['configuration_profiles']}")
-```
-
-### Category Usage
-```python
-# Review category utilization
-categories = await get_categories()
-
-# Sort by priority
-sorted_cats = sorted(categories, key=lambda x: x["priority"], reverse=True)
-
-for cat in sorted_cats:
-    details = await get_category_details(category_id=cat["id"])
-    usage = details["usage"]
-    total_usage = sum(usage.values())
-    print(f"{cat['name']} (Priority {cat['priority']}): {total_usage} items")
-```
+---
 
 ## Best Practices
 
@@ -528,55 +1095,6 @@ for cat in sorted_cats:
 2. **Building Association**: Link segments to locations
 3. **Distribution Points**: Configure for each segment
 4. **Documentation**: Document segment purposes
-
-## Integration Examples
-
-### With Computer Inventory
-```python
-# Get computers by building
-building = await get_building_details(building_id=1)
-computers = await search_computers()
-
-building_computers = [
-    c for c in computers
-    if c.get("building") == building["name"]
-]
-```
-
-### With User Groups
-```python
-# Analyze department user groups
-departments = await get_departments()
-
-for dept in departments:
-    # Find matching user group
-    group_name = f"{dept['name']} Team"
-    # Would need to get all groups and filter
-    # This is a conceptual example
-```
-
-### With Policies
-```python
-# Check site-specific policies
-sites = await get_sites()
-policies = await get_policies()
-
-for site in sites:
-    if site["id"] != -1:
-        site_policies = [
-            p for p in policies
-            if p.get("site", {}).get("id") == site["id"]
-        ]
-        print(f"{site['name']}: {len(site_policies)} policies")
-```
-
-## Related Tools
-
-- [`get_computer_inventory`](#get_computer_inventory) - Computer assignments
-- [`search_computers`](#search_computers) - Find by location
-- [`get_policies`](#get_policies) - Site-specific policies
-- [`get_smart_groups`](#get_smart_groups) - Department groups
-- [`get_ldap_servers`](#get_ldap_servers) - User directory integration
 
 :::{seealso}
 - [Jamf Pro Buildings API](https://developer.jamf.com/jamf-pro/reference/get_v1-buildings)

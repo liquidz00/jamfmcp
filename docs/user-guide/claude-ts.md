@@ -1,5 +1,9 @@
 # Claude Troubleshooting (Desktop & Code)
 
+:::{rst-class} lead
+Claude-specific troubleshooting. For general JamfMCP troubleshooting, see the [main troubleshooting guide](troubleshooting).
+:::
+
 (claude-desktop-configuration-issues)=
 ## Claude Desktop Configuration Issues
 

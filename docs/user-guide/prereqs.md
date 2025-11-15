@@ -1,10 +1,12 @@
 (prereqs)=
 # Prerequisites & Installation
 
+:::{rst-class} lead
 Ensuring you have the necessary requirements and access configured for a smooth installation experience.
+:::
 
 (claude_desktop_requirements)=
-:::{important}
+:::{attention}
 **Claude Desktop Requirements**
 
 Claude Desktop runs in an isolated environment that cannot access user-install programs. This means `uv` **must** be installed via [Homebrew](https://brew.sh/) for proper access: `brew install uv`.
@@ -14,40 +16,40 @@ Installing `uv` via `pip`, `curl` or other methods will place it in paths like `
 **Why does this matter?** Glad you asked! Claude Desktop's security model isolates it from user `PATH` locations. Only system-wide installations (like those from Homebrew to `/opt/homebrew/bin` or `/usr/local/bin`) are accessible.
 :::
 
-## {fas}`desktop` System Requirements
+## System Requirements
 
 :::::{grid} 1 1 2 2
 :gutter: 3
 
-::::{grid-item-card} {fab}`python` Python 3.13+
+::::{grid-item-card} {iconify}`material-icon-theme:python` Python 3.13+
 :class-header: bg-light
 
 JamfMCP requires modern Python features available in 3.13 or higher
 ::::
 
-::::{grid-item-card} {fas}`cube` uv Package Manager
+::::{grid-item-card} {iconify}`material-icon-theme:uv` uv Package Manager
 :class-header: bg-light
 
 Modern, fast Python package management
 ::::
 
-::::{grid-item-card} {fas}`server` Jamf Pro Server
+::::{grid-item-card} {iconify}`mdi:server` Jamf Pro Server
 :class-header: bg-light
 
 Cloud or on-premise instance with API access enabled
 ::::
 
-::::{grid-item-card} {fas}`plug` MCP Client
+::::{grid-item-card} {iconify}`octicon:mcp-16` MCP Client
 :class-header: bg-light
 
 Claude Desktop, Cursor, or other MCP-compatible clients
 ::::
 :::::
 
-## {fas}`download` Installing `uv`
+## Installing `uv`
 
 :::::{tab-set}
-::::{tab-item} macOS (Homebrew)
+::::{tab-item} {iconify}`devicon:homebrew` macOS (Homebrew)
 :sync: macos
 
 ```bash
@@ -63,10 +65,8 @@ which uv
 
 ::::
 
-::::{tab-item} Linux
+::::{tab-item} {iconify}`mdi:linux` Linux
 :sync: linux
-
-**For Linux users (Note: Claude Desktop on Linux still requires system-wide installation):**
 
 ```bash
 # Install to system location
@@ -81,7 +81,9 @@ which uv
 ::::
 :::::
 
-After installing uv, verify it's accessible:
+:::{dropdown} (Optional) Verify installation
+:open:
+After installing `uv`, verify it's accessible:
 
 ```bash
 # Check version
@@ -94,6 +96,7 @@ which uv  # macOS/Linux
 # Good: /opt/homebrew/bin/uv, /usr/local/bin/uv
 # Bad: ~/.local/bin/uv, ~/bin/uv
 ```
+:::
 
 :::{seealso}
 - [Jamf Pro API Overview](https://developer.jamf.com/jamf-pro/docs/jamf-pro-api-overview)

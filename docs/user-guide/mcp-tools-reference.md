@@ -1,6 +1,15 @@
 # MCP Tools Reference
 
-JamfMCP provides 49 tools for interacting with Jamf Pro through the Model Context Protocol. These tools are organized by category for easy reference.
+:::{rst-class} lead
+JamfMCP provides 49 tools for interacting with Jamf Pro through the Model Context Protocol.
+:::
+
+Tools are organized by category for easy reference.
+
+:::{admonition} About JSON Response Schemas
+:class: attention
+The JSON examples throughout this document show the structure of data that JamfMCP returns. When using these tools through an AI assistant, you won't see raw JSON - the AI will interpret and present this information in a natural, conversational format.
+:::
 
 ## Tool Categories
 
@@ -89,7 +98,9 @@ Additional utility and management tools
 ### Natural Language
 
 Ask your AI assistant naturally:
-> "Show me the health status of computer ABC123"
+:::{ai-prompt}
+Show me the health status of computer ABC123
+:::
 
 The AI will translate to:
 ```python
@@ -99,12 +110,43 @@ get_health_scorecard(serial="ABC123")
 ### Direct Tool Calls
 
 You can also request specific tools:
-> "Use get_computer_inventory to check serial ABC123"
+:::{ai-prompt}
+Use get_computer_inventory to check serial ABC123
+:::
 
 ### Chaining Tools
 
 Combine tools for complex queries:
-> "Find all computers in the Sales department and check their health scores"
+:::{ai-prompt}
+Find all computers in the Sales department and check their health scores
+:::
+
+## Real-World Examples
+
+### Daily Security Check
+:::{ai-prompt}
+Check for actively exploited CVEs on all computers and generate a priority list for patching
+:::
+
+### Inventory Audit
+:::{ai-prompt}
+Find all computers with less than 20% disk space and create a report grouped by department
+:::
+
+### Compliance Review
+:::{ai-prompt}
+Show me all computers that haven't checked in for 30 days and their last known location
+:::
+
+### Software License Audit
+:::{ai-prompt}
+> "List all licensed software with less than 10% available licenses and show current usage by department"
+:::
+
+### Policy Verification
+:::{ai-prompt}
+Check which computers are missing the FileVault encryption profile and list their users
+:::
 
 ## Response Formats
 

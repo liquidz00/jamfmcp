@@ -13,6 +13,7 @@ from jamfmcp.__about__ import __title__, __version__
 
 sys.path.insert(0, os.path.abspath(".."))
 sys.path.insert(0, os.path.abspath("../src"))
+sys.path.insert(0, os.path.abspath("./_ext"))
 sys.path.append(str(Path(".").resolve()))
 
 # -- Project information -----------------------------------------------------
@@ -38,6 +39,7 @@ extensions = [
     "sphinx_iconify",
     "sphinxcontrib.autodoc_pydantic",
     "sphinx.ext.autosectionlabel",
+    "ai_prompt",
 ]
 
 # Intersphinx mapping
@@ -84,10 +86,6 @@ myst_substitutions = {
     "version": __version__,
     "release": release,
 }
-
-# Pygments opts
-pygments_style = "one-light"
-pygments_dark_style = "one-dark-pro"
 
 # -- Link Code  --------------------------------------------------------------
 # based on pandas doc/source/conf.py
@@ -148,7 +146,10 @@ copybutton_prompt_is_regexp = True
 html_theme = "shibuya"
 html_static_path = ["_static"]
 html_title = f"{release}"
-
+html_css_files = [
+    "css/custom.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+]
 
 html_theme_options = {
     "dark_code": True,

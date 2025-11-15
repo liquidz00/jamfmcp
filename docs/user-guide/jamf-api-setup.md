@@ -1,7 +1,9 @@
 (jamf_api_setup)=
 # Jamf API Setup Guide
 
+:::{rst-class} lead
 This guide walks you through setting up API access for JamfMCP with the appropriate privileges following the principle of least privilege.
+:::
 
 ## Authentication Methods
 
@@ -15,7 +17,7 @@ JamfMCP **only** suports OAuth client credentials for authentication. OAuth clie
 4. Grant the following privileges:
 
 :::{admonition} Required Privileges Checklist
-:class: important
+:class: hint
 
 **Computers**
 - [x] Read Computers

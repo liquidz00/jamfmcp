@@ -1,6 +1,8 @@
 # Manual Configuration
 
+:::{rst-class} lead
 This guide covers the different ways to manually configure JamfMCP for various clients.
+:::
 
 ## MCP Configuration Pattern
 
@@ -24,10 +26,6 @@ All MCP clients follow a similar pattern:
 
 ### FastMCP CLI Usage
 
-:::{important}
-The FastMCP CLI assumes that you're building a server from scratch _OR_ you've installed the server **from source**. It is not recommended to use if you've installed JamfMCP via `uv` or `pip`
-:::
-
 The FastMCP CLI tool can assist in streamlining the process of configuring the JamfMCP locally. Reference FastMCP docs for your specific AI Platform:
 
 - [Claude Desktop](https://gofastmcp.com/integrations/claude-desktop#install-the-server)
@@ -44,7 +42,7 @@ The JSON examples below are **only** of the JamfMCP configuration. Actual MCP co
 :::
 
 :::::{tab-set}
-::::{tab-item} `uvx`
+::::{tab-item} {iconify}`material-icon-theme:uv` `uvx`
 ```json
 {
   "jamfmcp": {
@@ -60,7 +58,7 @@ The JSON examples below are **only** of the JamfMCP configuration. Actual MCP co
 ```
 ::::
 
-::::{tab-item} PyPI Installation (via `pip`)
+::::{tab-item} {iconify}`devicon:pypi` PyPI Installation (via `pip`)
 ```json
 {
   "jamfmcp": {
@@ -116,13 +114,13 @@ The JSON examples below are **only** of the JamfMCP configuration. Actual MCP co
 :::::{grid} 1 1 2 2
 :gutter: 2
 
-::::{grid-item-card} Cursor
+::::{grid-item-card} {iconify}`vscode-icons:file-type-cursorrules` Cursor
 **Global Location:** `~/.cursor/mcp.json`
 
 **Project-specific:** `.cursor/mcp.json` in workspace
 ::::
 
-::::{grid-item-card} Claude
+::::{grid-item-card} {iconify}`material-icon-theme:claude` Claude
 According to the [following document](https://mcpcat.io/guides/adding-an-mcp-server-to-claude-code/), Claude Code and Claude Desktop both utilize the **same file location** for MCP server configurations:
 
 `~/Library/Application Support/Claude/claude_desktop_config.json`

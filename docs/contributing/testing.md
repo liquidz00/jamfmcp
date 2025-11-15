@@ -1,7 +1,9 @@
 (testing)=
 # Testing Guide
 
+:::{rst-class} lead
 This guide covers testing strategies, patterns, and best practices for JamfMCP.
+:::
 
 ## Testing Overview
 

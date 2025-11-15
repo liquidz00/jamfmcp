@@ -1,6 +1,8 @@
 # Contributor Guide
 
+:::{rst-class} lead
 Thank you for your interest in contributing to JamfMCP! This guide will help you get started.
+:::
 
 ## Code of Conduct
 
@@ -23,7 +25,7 @@ By participating in this project, you agree to abide by our code of conduct:
 ::::{grid} 2
 :gutter: 3
 
-:::{grid-item-card} Development Guide
+:::{grid-item-card} 👾 Development Guide
 :link: development-guide
 :link-type: doc
 
@@ -74,27 +76,3 @@ Testing strategies and running tests
 - Proper logging at all levels
 - Graceful degradation
 - User-friendly messages
-
-### Security
-
-- No credentials in code
-- Secure token handling
-- Input validation
-- Least privilege principle
-
-:::{seealso}
-- [Support & Resources](../user-guide/support.md)
-- [Python Async Best Practices](https://docs.python.org/3/library/asyncio-dev.html)
-- [Pydantic Usage](https://docs.pydantic.dev/)
-:::
-
-```{toctree}
-:caption: Contributing
-:hidden:
-:maxdepth: 1
-
-development-guide
-security-considerations
-fastmcp-logging
-testing
-```

@@ -1,6 +1,8 @@
 # CLI Setup Guide
 
+:::{rst-class} lead
 The JamfMCP CLI tool automates the entire setup process for connecting JamfMCP to your AI assistant. This guide covers all CLI features and options.
+:::
 
 :::::{tip}
 The CLI is the **recommended method** for setting up JamfMCP. It handles all the complex configuration automatically and validates your setup before applying changes.
@@ -11,7 +13,7 @@ The CLI is the **recommended method** for setting up JamfMCP. It handles all the
 After installation, use the JamfMCP CLI tool to automatically configure your MCP client:
 
 :::::{tab-set}
-::::{tab-item} Claude
+::::{tab-item} {iconify}`material-icon-theme:claude` Claude
 :sync: claude
 
 ```bash
@@ -19,11 +21,19 @@ jamfmcp-cli -p claude-desktop
 ```
 ::::
 
-::::{tab-item} Cursor
+::::{tab-item} {iconify}`vscode-icons:file-type-cursorrules` Cursor
 :sync: cursor
 
 ```bash
 jamfmcp-cli -p cursor
+```
+::::
+
+::::{tab-item} {iconify}`vscode-icons:file-type-gemini` Gemini
+:sync: other
+
+```bash
+jamfmcp-cli -p gemini-cli
 ```
 ::::
 

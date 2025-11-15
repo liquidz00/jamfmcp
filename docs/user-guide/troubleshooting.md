@@ -1,6 +1,8 @@
 # Troubleshooting
 
-This section helps you diagnose and resolve common issues with JamfMCP.
+:::{rst-class} lead
+Diagnose and resolve common issues with JamfMCP.
+:::
 
 ## Jamf API Troubleshooting
 

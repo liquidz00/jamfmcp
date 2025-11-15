@@ -1,7 +1,9 @@
 # Jamf Deployment
 
-## Falcon Extension Attributes
+:::{rst-class} lead
+Deploying JamfMCP to devices via Jamf Pro
+:::
 
-## Deploy via Script with Parameters
-
-## Deploy via Package
+:::{important}
+This page is under construction and will be up and running shortly!
+:::

@@ -1,6 +1,8 @@
-# FastMCP Client Logging Implementation
+# FastMCP Client Logging
 
+:::{rst-class} lead
 This document describes the FastMCP client logging implementation in the JamfMCP server.
+:::
 
 ## Overview
 

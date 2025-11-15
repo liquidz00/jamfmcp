@@ -1,6 +1,8 @@
 # Development Guide
 
+:::{rst-class} lead
 Configuring your development environment for best success
+:::
 
 ## Project Structure
 
@@ -90,7 +92,7 @@ make docs
 cd docs/_build && python -m http.server
 ```
 
-### 3. Creating and Running Tests
+### 3. Write Tests
 
 Write comprehensive tests for your changes:
 
@@ -139,8 +141,15 @@ uv run pytest tests/test_health_analyzer.py
 uv run pytest tests/test_health_analyzer.py::test_score_calculation
 ```
 
+All changes must include appropriate tests. We use pytest for our test suite.
+
 :::{seealso}
-See the full [testing guide](#testing) for more on writing unit tests.
+See the full [Testing Guide](testing) for detailed information on:
+- Writing unit tests
+- Using fixtures
+- Testing async functions
+- Running tests with coverage
+- Debugging tests
 :::
 
 ### 4. Format and Lint Code

