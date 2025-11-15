@@ -1,0 +1,79 @@
+/*
+ * AI Prompt Box Styling - Chat Input Style
+ */
+
+ .ai-prompt-box {
+    margin: 2rem 0;
+    position: relative;
+}
+
+.ai-prompt-input {
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 24px;
+    padding: 1rem 4rem 1rem 1.5rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #2c3e50;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+}
+
+/* Arrow button created with CSS */
+.ai-prompt-input::after {
+    content: "↗";
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: white;
+    background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+}
+
+/* Dark mode */
+html[data-theme="dark"] .ai-prompt-input,
+[data-theme="dark"] .ai-prompt-input,
+.dark .ai-prompt-input {
+    background: #1e1e1e;
+    border-color: #404040;
+    color: #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+html[data-theme="dark"] .ai-prompt-input::after,
+[data-theme="dark"] .ai-prompt-input::after,
+.dark .ai-prompt-input::after {
+    background: linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .ai-prompt-box {
+        margin: 1.5rem 0;
+    }
+
+    .ai-prompt-input {
+        padding: 0.875rem 3.5rem 0.875rem 1.25rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+    }
+
+    .ai-prompt-input::after {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+    }
+}
