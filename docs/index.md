@@ -10,7 +10,7 @@ A [FastMCP](https://gofastmcp.com) server providing AI assistants with tools to 
 
 :::{container} buttons
 [Docs](user-guide/index.md)
-[GitHub](https://github.com/liquidz00/jamfmp)
+[GitHub](https://github.com/liquidz00/jamfmcp)
 :::
 
 :::{important}
