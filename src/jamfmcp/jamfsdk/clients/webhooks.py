@@ -5,7 +5,7 @@ import string
 import time
 import uuid
 from functools import lru_cache
-from typing import Iterator, Type, Union, cast
+from typing import Iterator, cast
 
 import httpx
 
@@ -73,7 +73,7 @@ class WebhooksClient:
 
     @staticmethod
     def _batch(
-        generator: Union[WebhookGenerator, Type[WebhookGenerator]], count: int
+        generator: WebhookGenerator | type[WebhookGenerator], count: int
     ) -> Iterator[webhooks.WebhookModel]:
         for _ in range(count):
             yield generator.build()
@@ -97,7 +97,7 @@ class WebhooksClient:
 
     async def fire(
         self,
-        webhook: Type[webhooks.WebhookModel],
+        webhook: type[webhooks.WebhookModel],
         count: int = 1,
     ) -> Iterator[httpx.Response]:
         """
@@ -151,7 +151,7 @@ def udid() -> str:
 
 
 @lru_cache
-def get_webhook_generator(model: Type[webhooks.WebhookModel], **kwargs) -> Type[WebhookGenerator]:
+def get_webhook_generator(model: type[webhooks.WebhookModel], **kwargs) -> type[WebhookGenerator]:
     """Returns a webhook generator for the given webhook model. Generators are wrappers around
     webhook models to create mock data.
 
@@ -164,7 +164,7 @@ def get_webhook_generator(model: Type[webhooks.WebhookModel], **kwargs) -> Type[
         kwargs = {}
 
     return cast(
-        "Type[WebhookGenerator]",
+        "type[WebhookGenerator]",
         type(
             model.__name__ + "Generator",
             (WebhookGenerator,),

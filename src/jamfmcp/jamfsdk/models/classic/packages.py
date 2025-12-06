@@ -1,5 +1,3 @@
-from typing import Optional, Union
-
 from pydantic import ConfigDict
 
 from .. import BaseModel
@@ -16,8 +14,8 @@ class ClassicPackageItem(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[int] = None
-    name: Optional[str] = None
+    id: int | None = None
+    name: str | None = None
 
 
 class ClassicPackage(ClassicApiModel):
@@ -48,23 +46,23 @@ class ClassicPackage(ClassicApiModel):
         "install_if_reported_available",
     }
 
-    id: Optional[int] = None
-    name: Optional[str] = None
-    category: Optional[str] = None
-    filename: Optional[str] = None
-    info: Optional[str] = None
-    notes: Optional[str] = None
-    priority: Optional[int] = None
-    reboot_required: Optional[bool] = None
-    fill_user_template: Optional[bool] = None
-    fill_existing_users: Optional[bool] = None
-    allow_uninstalled: Optional[bool] = None
-    os_requirements: Optional[str] = None
-    required_processor: Optional[str] = None
-    hash_type: Optional[str] = None
-    hash_value: Optional[str] = None
-    switch_with_package: Optional[str] = None
-    install_if_reported_available: Optional[bool] = None
-    reinstall_option: Optional[str] = None
-    triggering_files: Optional[Union[dict, str]] = None
-    send_notification: Optional[bool] = None
+    id: int | None = None
+    name: str | None = None
+    category: str | None = None
+    filename: str | None = None
+    info: str | None = None
+    notes: str | None = None
+    priority: int | None = None
+    reboot_required: bool | None = None
+    fill_user_template: bool | None = None
+    fill_existing_users: bool | None = None
+    allow_uninstalled: bool | None = None
+    os_requirements: str | None = None
+    required_processor: str | None = None
+    hash_type: str | None = None
+    hash_value: str | None = None
+    switch_with_package: str | None = None
+    install_if_reported_available: bool | None = None
+    reinstall_option: str | None = None
+    triggering_files: dict | str | None = None
+    send_notification: bool | None = None

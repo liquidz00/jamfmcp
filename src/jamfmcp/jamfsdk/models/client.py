@@ -2,7 +2,6 @@ import platform
 from datetime import datetime, timedelta, timezone
 from enum import Enum
 from pathlib import Path
-from typing import List, Optional, Union
 
 from ..__about__ import __version__
 from . import BaseModel
@@ -52,14 +51,14 @@ class SessionConfig(BaseModel):
     :type scheme: str
     """
 
-    timeout: Optional[int] = None
+    timeout: int | None = None
     max_retries: int = 0
     max_concurrency: int = 5
     return_exceptions: bool = True
     user_agent: str = DEFAULT_USER_AGENT
     verify: bool = True
-    cookie: Optional[Union[str, Path]] = None
-    ca_cert_bundle: Optional[Union[str, Path]] = None
+    cookie: str | Path | None = None
+    ca_cert_bundle: str | Path | None = None
     scheme: Schemes = Schemes.https
 
 
@@ -79,13 +78,13 @@ class AccessToken(BaseModel):
 
     :param scope: If the access token is an ``oauth`` type the scope claim will be passed as a list
         of string values.
-    :type scope: List[str]
+    :type scope: list[str]
     """
 
     type: str = ""
     token: str = ""
     expires: datetime = EPOCH_DATETIME
-    scope: Optional[List[str]] = None
+    scope: list[str] | None = None
 
     def __str__(self):
         return self.token

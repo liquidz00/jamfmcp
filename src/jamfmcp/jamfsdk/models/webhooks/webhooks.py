@@ -1,5 +1,5 @@
 from ipaddress import IPv4Address
-from typing import Literal, Optional, Union
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
@@ -238,7 +238,7 @@ class PushSentWebhook(WebhookData):
 
 
 class PushSentEvent(WebhookModel):
-    managementId: Union[int, str]
+    managementId: int | str
     type: str
 
 
@@ -300,9 +300,9 @@ class SmartGroupMobileDeviceMembershipChangeWebhook(WebhookData):
 
 class SmartGroupMobileDeviceMembershipChangeEvent(WebhookModel):
     computer: Literal[False]
-    groupAddedDevices: list[Optional[dict[str, str]]]
+    groupAddedDevices: list[dict[str, str]] | None
     groupAddedDevicesIds: list[int]
-    groupRemovedDevices: list[Optional[dict[str, str]]]
+    groupRemovedDevices: list[dict[str, str]] | None
     groupRemovedDevicesIds: list[int]
     jssid: int
     name: str

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Dict, Iterable, Iterator, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Iterable, Iterator
 
 from pydantic import BaseModel
 
@@ -21,7 +21,7 @@ class FilterEntry:
 
 
 class FilterExpression:
-    def __init__(self, filter_expression: str, fields: List[FilterEntry]):
+    def __init__(self, filter_expression: str, fields: list[FilterEntry]):
         self.filter_expression = filter_expression
         self.fields = fields
 
@@ -40,7 +40,7 @@ class FilterExpression:
     def __or__(self, expression: FilterExpression):
         return self._compose(expression=expression, sep=",")
 
-    def validate(self, allowed_fields: List[str]):
+    def validate(self, allowed_fields: list[str]):
         if not all([i.name in allowed_fields for i in self.fields]):
             raise ValueError(
                 f"A field is not in allowed filter fields: {', '.join(allowed_fields)}"
@@ -51,38 +51,38 @@ class FilterField:
     def __init__(self, name: str):
         self.name = name
 
-    def _return_expression(self, operator: str, value: Union[bool, int, str]) -> FilterExpression:
+    def _return_expression(self, operator: str, value: bool | int | str) -> FilterExpression:
         return FilterExpression(
             filter_expression=f"{self.name}{operator}{value}",
             fields=[FilterEntry(name=self.name, op=operator, value=str(value))],
         )
 
-    def eq(self, value: Union[bool, int, str]) -> FilterExpression:
+    def eq(self, value: bool | int | str) -> FilterExpression:
         return self._return_expression("==", value)
 
-    def ne(self, value: Union[bool, int, str]) -> FilterExpression:
+    def ne(self, value: bool | int | str) -> FilterExpression:
         return self._return_expression("!=", value)
 
-    def lt(self, value: Union[bool, int, str]) -> FilterExpression:
+    def lt(self, value: bool | int | str) -> FilterExpression:
         return self._return_expression("<", value)
 
-    def lte(self, value: Union[bool, int, str]) -> FilterExpression:
+    def lte(self, value: bool | int | str) -> FilterExpression:
         return self._return_expression("<=", value)
 
-    def gt(self, value: Union[bool, int, str]) -> FilterExpression:
+    def gt(self, value: bool | int | str) -> FilterExpression:
         return self._return_expression(">", value)
 
-    def gte(self, value: Union[bool, int, str]) -> FilterExpression:
+    def gte(self, value: bool | int | str) -> FilterExpression:
         return self._return_expression(">=", value)
 
     @staticmethod
     def _iter_to_str(iterable: Iterable):
         return ",".join([str(i) for i in iterable])
 
-    def is_in(self, value: Iterable[Union[bool, int, str]]) -> FilterExpression:
+    def is_in(self, value: Iterable[bool | int | str]) -> FilterExpression:
         return self._return_expression("=in=", f"({self._iter_to_str(value)})")
 
-    def not_in(self, value: Iterable[Union[bool, int, str]]) -> FilterExpression:
+    def not_in(self, value: Iterable[bool | int | str]) -> FilterExpression:
         return self._return_expression("=out=", f"({self._iter_to_str(value)})")
 
 
@@ -97,7 +97,7 @@ def filter_group(expression: FilterExpression) -> FilterExpression:
 
 
 class SortExpression:
-    def __init__(self, sort_expression: str, fields: List[str]):
+    def __init__(self, sort_expression: str, fields: list[str]):
         self.sort_expression = sort_expression
         self.fields = fields
 
@@ -110,7 +110,7 @@ class SortExpression:
             fields=self.fields + expression.fields,
         )
 
-    def validate(self, allowed_fields: List[str]):
+    def validate(self, allowed_fields: list[str]):
         if not all([i in allowed_fields for i in self.fields]):
             raise ValueError(f"A field is not in allowed sort fields: {', '.join(allowed_fields)}")
 
@@ -146,13 +146,13 @@ class Paginator:
         self,
         api_client: ProApi,
         resource_path: str,
-        return_model: Type[BaseModel],
+        return_model: type[BaseModel],
         start_page: int = 0,
-        end_page: Optional[int] = None,
+        end_page: int | None = None,
         page_size: int = 100,
-        sort_expression: Optional[SortExpression] = None,
-        filter_expression: Optional[FilterExpression] = None,
-        extra_params: Optional[Dict[str, str]] = None,
+        sort_expression: SortExpression | None = None,
+        filter_expression: FilterExpression | None = None,
+        extra_params: dict[str, str] | None = None,
     ):
         """
         A paginator for the Jamf Pro API. A paginator automatically iterates over an API if
@@ -199,7 +199,7 @@ class Paginator:
 
         :param extra_params: (optional) A dictionary of key-value pairs that will be added to the
             query string parameters of the requests.
-        :type extra_params: Dict[str, str]
+        :type extra_params: dict[str, str]
 
         """
         self._api_client = api_client
@@ -275,7 +275,7 @@ class Paginator:
             ):
                 yield page
 
-    async def __call__(self, return_generator: bool = True) -> Union[List, Iterator[Page]]:
+    async def __call__(self, return_generator: bool = True) -> list | Iterator[Page]:
         """
         Call the instantiated paginator to return results.
 
@@ -285,7 +285,7 @@ class Paginator:
 
         :return: An iterator that yields :class:`~Page` objects, or a list of responses if
             ``return_generator`` is ``False``.
-        :rtype: Union[List, Iterator[Page]]
+        :rtype: list | Iterator[Page]
         """
         generator = self._request()
         if return_generator:

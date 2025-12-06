@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import ConfigDict
 
 from .. import BaseModel
@@ -16,10 +14,10 @@ class ClassicNetworkSegmentItem(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[int] = None
-    name: Optional[str] = None
-    starting_address: Optional[str] = None
-    ending_address: Optional[str] = None
+    id: int | None = None
+    name: str | None = None
+    starting_address: str | None = None
+    ending_address: str | None = None
 
 
 class ClassicNetworkSegment(ClassicApiModel):
@@ -46,15 +44,15 @@ class ClassicNetworkSegment(ClassicApiModel):
         "override_departments",
     }
 
-    id: Optional[int] = None
-    name: Optional[str] = None
-    starting_address: Optional[str] = None
-    ending_address: Optional[str] = None
-    distribution_server: Optional[str] = None
-    distribution_point: Optional[str] = None
-    url: Optional[str] = None
-    swu_server: Optional[str] = None
-    building: Optional[str] = None
-    department: Optional[str] = None
-    override_buildings: Optional[bool] = None
-    override_departments: Optional[bool] = None
+    id: int | None = None
+    name: str | None = None
+    starting_address: str | None = None
+    ending_address: str | None = None
+    distribution_server: str | None = None
+    distribution_point: str | None = None
+    url: str | None = None
+    swu_server: str | None = None
+    building: str | None = None
+    department: str | None = None
+    override_buildings: bool | None = None
+    override_departments: bool | None = None

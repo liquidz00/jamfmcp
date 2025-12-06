@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import ConfigDict
 
 from .. import BaseModel
@@ -10,38 +8,38 @@ class Package(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[str]
+    id: str | None
     packageName: str
     fileName: str
     categoryId: str
-    info: Optional[str]
-    notes: Optional[str]
+    info: str | None
+    notes: str | None
     priority: int
-    osRequirements: Optional[str]
+    osRequirements: str | None
     fillUserTemplate: bool
     indexed: bool
     fillExistingUsers: bool
     swu: bool
     rebootRequired: bool
     selfHealNotify: bool
-    selfHealingAction: Optional[str]
+    selfHealingAction: str | None
     osInstall: bool
-    serialNumber: Optional[str]
-    parentPackageId: Optional[str]
-    basePath: Optional[str]
+    serialNumber: str | None
+    parentPackageId: str | None
+    basePath: str | None
     suppressUpdates: bool
     cloudTransferStatus: str
     ignoreConflicts: bool
     suppressFromDock: bool
     suppressEula: bool
     suppressRegistration: bool
-    installLanguage: Optional[str]
-    md5: Optional[str]
-    sha256: Optional[str]
-    hashType: Optional[str]
-    hashValue: Optional[str]
-    size: Optional[str]
-    osInstallerVersion: Optional[str]
-    manifest: Optional[str]
-    manifestFileName: Optional[str]
-    format: Optional[str]
+    installLanguage: str | None
+    md5: str | None
+    sha256: str | None
+    hashType: str | None
+    hashValue: str | None
+    size: str | None
+    osInstallerVersion: str | None
+    manifest: str | None
+    manifestFileName: str | None
+    format: str | None

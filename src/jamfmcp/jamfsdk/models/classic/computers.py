@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, List, Optional, Union
+from typing import Any
 
 from pydantic import ConfigDict, Field
 
@@ -51,10 +51,10 @@ class ClassicComputerGeneralRemoteManagement(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    managed: Optional[bool] = None
-    management_username: Optional[str] = None
-    management_password: Optional[str] = None
-    management_password_sha256: Optional[str] = None
+    managed: bool | None = None
+    management_username: str | None = None
+    management_password: str | None = None
+    management_password_sha256: str | None = None
 
 
 class ClassicComputerGeneralMdmCapableUsers(BaseModel):
@@ -62,7 +62,7 @@ class ClassicComputerGeneralMdmCapableUsers(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    mdm_capable_user: Optional[str] = None
+    mdm_capable_user: str | None = None
 
 
 class ClassicComputerGeneralManagementStatus(BaseModel):
@@ -70,9 +70,9 @@ class ClassicComputerGeneralManagementStatus(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    enrolled_via_dep: Optional[bool] = None
-    user_approved_enrollment: Optional[bool] = None
-    user_approved_mdm: Optional[bool] = None
+    enrolled_via_dep: bool | None = None
+    user_approved_enrollment: bool | None = None
+    user_approved_mdm: bool | None = None
 
 
 class ClassicComputerGeneral(BaseModel):
@@ -80,45 +80,45 @@ class ClassicComputerGeneral(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[int] = None
-    name: Optional[str] = None
-    mac_address: Optional[str] = None
-    network_adapter_type: Optional[str] = None
-    alt_mac_address: Optional[str] = None
-    alt_network_adapter_type: Optional[str] = None
-    ip_address: Optional[str] = None
-    last_reported_ip: Optional[str] = None
-    serial_number: Optional[str] = None
-    udid: Optional[str] = None
-    jamf_version: Optional[str] = None
-    platform: Optional[str] = None
-    barcode_1: Optional[str] = None
-    barcode_2: Optional[str] = None
-    asset_tag: Optional[str] = None
-    remote_management: Optional[ClassicComputerGeneralRemoteManagement] = None
-    supervised: Optional[bool] = None
-    mdm_capable: Optional[bool] = None
-    mdm_capable_users: Optional[Union[dict, ClassicComputerGeneralMdmCapableUsers]] = None
-    management_status: Optional[ClassicComputerGeneralManagementStatus] = None
-    report_date: Optional[str] = None
-    report_date_epoch: Optional[int] = None
-    report_date_utc: Union[Optional[datetime], Optional[str]] = None
-    last_contact_time: Optional[str] = None
-    last_contact_time_epoch: Optional[int] = None
-    last_contact_time_utc: Optional[str] = None
-    initial_entry_date: Optional[str] = None
-    initial_entry_date_epoch: Optional[int] = None
-    initial_entry_date_utc: Union[Optional[datetime], Optional[str]] = None
-    last_cloud_backup_date_epoch: Optional[int] = None
-    last_cloud_backup_date_utc: Union[Optional[datetime], Optional[str]] = None
-    last_enrolled_date_epoch: Optional[int] = None
-    last_enrolled_date_utc: Union[Optional[datetime], Optional[str]] = None
-    mdm_profile_expiration_epoch: Optional[int] = None
-    mdm_profile_expiration_utc: Union[Optional[datetime], Optional[str]] = None
-    distribution_point: Optional[str] = None
-    sus: Optional[str] = None
-    site: Optional[ClassicSite] = None
-    itunes_store_account_is_active: Optional[bool] = None
+    id: int | None = None
+    name: str | None = None
+    mac_address: str | None = None
+    network_adapter_type: str | None = None
+    alt_mac_address: str | None = None
+    alt_network_adapter_type: str | None = None
+    ip_address: str | None = None
+    last_reported_ip: str | None = None
+    serial_number: str | None = None
+    udid: str | None = None
+    jamf_version: str | None = None
+    platform: str | None = None
+    barcode_1: str | None = None
+    barcode_2: str | None = None
+    asset_tag: str | None = None
+    remote_management: ClassicComputerGeneralRemoteManagement | None = None
+    supervised: bool | None = None
+    mdm_capable: bool | None = None
+    mdm_capable_users: dict | ClassicComputerGeneralMdmCapableUsers | None = None
+    management_status: ClassicComputerGeneralManagementStatus | None = None
+    report_date: str | None = None
+    report_date_epoch: int | None = None
+    report_date_utc: datetime | str | None = None
+    last_contact_time: str | None = None
+    last_contact_time_epoch: int | None = None
+    last_contact_time_utc: str | None = None
+    initial_entry_date: str | None = None
+    initial_entry_date_epoch: int | None = None
+    initial_entry_date_utc: datetime | str | None = None
+    last_cloud_backup_date_epoch: int | None = None
+    last_cloud_backup_date_utc: datetime | str | None = None
+    last_enrolled_date_epoch: int | None = None
+    last_enrolled_date_utc: datetime | str | None = None
+    mdm_profile_expiration_epoch: int | None = None
+    mdm_profile_expiration_utc: datetime | str | None = None
+    distribution_point: str | None = None
+    sus: str | None = None
+    site: ClassicSite | None = None
+    itunes_store_account_is_active: bool | None = None
 
 
 # Computer.Hardware Models
@@ -129,20 +129,20 @@ class ClassicComputerHardwareStorageDevicePartition(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    size: Optional[int] = None
-    type: Optional[str] = None
-    partition_capacity_mb: Optional[int] = None
-    percentage_full: Optional[int] = None
-    available_mb: Optional[int] = None
-    filevault_status: Optional[str] = None
-    filevault_percent: Optional[int] = None
-    filevault2_status: Optional[str] = None
-    filevault2_percent: Optional[int] = None
-    boot_drive_available_mb: Optional[int] = None
-    lvgUUID: Optional[str] = None
-    lvUUID: Optional[str] = None
-    pvUUID: Optional[str] = None
+    name: str | None = None
+    size: int | None = None
+    type: str | None = None
+    partition_capacity_mb: int | None = None
+    percentage_full: int | None = None
+    available_mb: int | None = None
+    filevault_status: str | None = None
+    filevault_percent: int | None = None
+    filevault2_status: str | None = None
+    filevault2_percent: int | None = None
+    boot_drive_available_mb: int | None = None
+    lvgUUID: str | None = None
+    lvUUID: str | None = None
+    pvUUID: str | None = None
 
 
 class ClassicComputerHardwareStorageDevice(BaseModel):
@@ -150,15 +150,15 @@ class ClassicComputerHardwareStorageDevice(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    disk: Optional[str] = None
-    model: Optional[str] = None
-    revision: Optional[str] = None
-    serial_number: Optional[str] = None
-    size: Optional[int] = None
-    drive_capacity_mb: Optional[int] = None
-    connection_type: Optional[str] = None
-    smart_status: Optional[str] = None
-    partitions: Optional[List[ClassicComputerHardwareStorageDevicePartition]] = None
+    disk: str | None = None
+    model: str | None = None
+    revision: str | None = None
+    serial_number: str | None = None
+    size: int | None = None
+    drive_capacity_mb: int | None = None
+    connection_type: str | None = None
+    smart_status: str | None = None
+    partitions: list[ClassicComputerHardwareStorageDevicePartition] | None = None
 
 
 class ClassicComputerHardwareMappedPrinter(BaseModel):
@@ -166,10 +166,10 @@ class ClassicComputerHardwareMappedPrinter(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    uri: Optional[str] = None
-    type: Optional[str] = None
-    location: Optional[str] = None
+    name: str | None = None
+    uri: str | None = None
+    type: str | None = None
+    location: str | None = None
 
 
 class ClassicComputerHardware(ClassicApiModel):
@@ -182,44 +182,44 @@ class ClassicComputerHardware(ClassicApiModel):
     _xml_root_name = "hardware"
     _xml_array_item_names = _XML_ARRAY_ITEM_NAMES
 
-    make: Optional[str] = None
-    model: Optional[str] = None
-    model_identifier: Optional[str] = None
-    os_name: Optional[str] = None
-    os_version: Optional[str] = None
-    os_build: Optional[str] = None
-    software_update_device_id: Optional[str] = None
-    active_directory_status: Optional[str] = None
-    service_pack: Optional[str] = None
-    processor_type: Optional[str] = None
-    is_apple_silicon: Optional[bool] = None
-    processor_architecture: Optional[str] = None
-    processor_speed: Optional[int] = None
-    processor_speed_mhz: Optional[int] = None
-    number_processors: Optional[int] = None
-    number_cores: Optional[int] = None
-    total_ram: Optional[int] = None
-    total_ram_mb: Optional[int] = None
-    boot_rom: Optional[str] = None
-    bus_speed: Optional[int] = None
-    bus_speed_mhz: Optional[int] = None
-    battery_capacity: Optional[int] = None
-    cache_size: Optional[int] = None
-    cache_size_kb: Optional[int] = None
-    available_ram_slots: Optional[int] = None
-    optical_drive: Optional[str] = None
-    nic_speed: Optional[str] = None
-    smc_version: Optional[str] = None
-    ble_capable: Optional[bool] = None
-    supports_ios_app_installs: Optional[bool] = None
-    sip_status: Optional[str] = None
-    gatekeeper_status: Optional[str] = None
-    xprotect_version: Optional[str] = None
-    institutional_recovery_key: Optional[str] = None
-    disk_encryption_configuration: Optional[str] = None
-    filevault2_users: Optional[List[str]] = None
-    storage: Optional[List[ClassicComputerHardwareStorageDevice]] = None
-    mapped_printers: Optional[List[ClassicComputerHardwareMappedPrinter]] = None
+    make: str | None = None
+    model: str | None = None
+    model_identifier: str | None = None
+    os_name: str | None = None
+    os_version: str | None = None
+    os_build: str | None = None
+    software_update_device_id: str | None = None
+    active_directory_status: str | None = None
+    service_pack: str | None = None
+    processor_type: str | None = None
+    is_apple_silicon: bool | None = None
+    processor_architecture: str | None = None
+    processor_speed: int | None = None
+    processor_speed_mhz: int | None = None
+    number_processors: int | None = None
+    number_cores: int | None = None
+    total_ram: int | None = None
+    total_ram_mb: int | None = None
+    boot_rom: str | None = None
+    bus_speed: int | None = None
+    bus_speed_mhz: int | None = None
+    battery_capacity: int | None = None
+    cache_size: int | None = None
+    cache_size_kb: int | None = None
+    available_ram_slots: int | None = None
+    optical_drive: str | None = None
+    nic_speed: str | None = None
+    smc_version: str | None = None
+    ble_capable: bool | None = None
+    supports_ios_app_installs: bool | None = None
+    sip_status: str | None = None
+    gatekeeper_status: str | None = None
+    xprotect_version: str | None = None
+    institutional_recovery_key: str | None = None
+    disk_encryption_configuration: str | None = None
+    filevault2_users: list[str] | None = None
+    storage: list[ClassicComputerHardwareStorageDevice] | None = None
+    mapped_printers: list[ClassicComputerHardwareMappedPrinter] | None = None
 
 
 # Computer.Certificate Models
@@ -230,11 +230,11 @@ class ClassicComputerCertificate(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    common_name: Optional[str] = None
-    identity: Optional[bool] = None
-    expires_utc: Optional[str] = None
-    expires_epoch: Optional[int] = None
-    name: Optional[str] = None
+    common_name: str | None = None
+    identity: bool | None = None
+    expires_utc: str | None = None
+    expires_epoch: int | None = None
+    name: str | None = None
 
 
 # Computer.Security Models
@@ -245,11 +245,11 @@ class ClassicComputerSecurity(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    activation_lock: Optional[bool] = None
-    recovery_lock_enabled: Optional[bool] = None
-    secure_boot_level: Optional[str] = None
-    external_boot_level: Optional[str] = None
-    firewall_enabled: Optional[bool] = None
+    activation_lock: bool | None = None
+    recovery_lock_enabled: bool | None = None
+    secure_boot_level: str | None = None
+    external_boot_level: str | None = None
+    firewall_enabled: bool | None = None
 
 
 # Computer.Software Models
@@ -260,9 +260,9 @@ class ClassicComputerSoftwareAvailableUpdate(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    package_name: Optional[str] = None
-    version: Optional[str] = None
+    name: str | None = None
+    package_name: str | None = None
+    version: str | None = None
 
 
 class ClassicComputerSoftwareItem(BaseModel):
@@ -273,10 +273,10 @@ class ClassicComputerSoftwareItem(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    path: Optional[str] = None
-    version: Optional[str] = None
-    bundle_id: Optional[str] = None
+    name: str | None = None
+    path: str | None = None
+    version: str | None = None
+    bundle_id: str | None = None
 
 
 class ClassicComputerSoftware(BaseModel):  # Lots of assumptions in this object
@@ -284,19 +284,17 @@ class ClassicComputerSoftware(BaseModel):  # Lots of assumptions in this object
 
     model_config = ConfigDict(extra="allow")
 
-    unix_executables: Optional[List[str]] = None
-    licensed_software: Optional[List[str]] = None
-    installed_by_casper: Optional[List[str]] = None
-    installed_by_installer_swu: Optional[List[str]] = None
-    cached_by_casper: Optional[List[str]] = None
-    available_software_updates: Optional[List[str]] = None
-    available_updates: Union[
-        Optional[List[ClassicComputerSoftwareAvailableUpdate]], Optional[dict]
-    ] = None
-    running_services: Optional[List[str]] = None
-    applications: Optional[List[ClassicComputerSoftwareItem]] = None
-    fonts: Optional[List[ClassicComputerSoftwareItem]] = None
-    plugins: Optional[List[ClassicComputerSoftwareItem]] = None
+    unix_executables: list[str] | None = None
+    licensed_software: list[str] | None = None
+    installed_by_casper: list[str] | None = None
+    installed_by_installer_swu: list[str] | None = None
+    cached_by_casper: list[str] | None = None
+    available_software_updates: list[str] | None = None
+    available_updates: list[ClassicComputerSoftwareAvailableUpdate] | dict | None = None
+    running_services: list[str] | None = None
+    applications: list[ClassicComputerSoftwareItem] | None = None
+    fonts: list[ClassicComputerSoftwareItem] | None = None
+    plugins: list[ClassicComputerSoftwareItem] | None = None
 
 
 # Computer.ExtensionAttributes Models
@@ -307,11 +305,11 @@ class ClassicComputerExtensionAttribute(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[int] = None
-    name: Optional[str] = None
-    type: Optional[str] = None
-    multi_value: Optional[bool] = None
-    value: Optional[str] = None
+    id: int | None = None
+    name: str | None = None
+    type: str | None = None
+    multi_value: bool | None = None
+    value: str | None = None
 
 
 # Computer GroupsAccounts Models
@@ -322,14 +320,14 @@ class ClassicComputerGroupsAccountsLocalAccount(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    realname: Optional[str] = None
-    uid: Optional[str] = None
-    home: Optional[str] = None
-    home_size: Optional[str] = None
-    home_size_mb: Optional[int] = None
-    administrator: Optional[bool] = None
-    filevault_enabled: Optional[bool] = None
+    name: str | None = None
+    realname: str | None = None
+    uid: str | None = None
+    home: str | None = None
+    home_size: str | None = None
+    home_size_mb: int | None = None
+    administrator: bool | None = None
+    filevault_enabled: bool | None = None
 
 
 class ClassicComputerGroupsAccountsUserInventoriesUser(BaseModel):
@@ -337,12 +335,12 @@ class ClassicComputerGroupsAccountsUserInventoriesUser(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    username: Optional[str] = None
-    password_history_depth: Optional[str] = None
-    password_min_length: Optional[str] = None
-    password_max_age: Optional[str] = None
-    password_min_complex_characters: Optional[str] = None
-    password_require_alphanumeric: Optional[str] = None
+    username: str | None = None
+    password_history_depth: str | None = None
+    password_min_length: str | None = None
+    password_max_age: str | None = None
+    password_min_complex_characters: str | None = None
+    password_require_alphanumeric: str | None = None
 
 
 class ClassicComputerGroupsAccountsUserInventories(BaseModel):
@@ -373,11 +371,12 @@ class ClassicComputerGroupsAccountsUserInventories(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    disable_automatic_login: Optional[bool] = None
-    user: Union[
-        Optional[ClassicComputerGroupsAccountsUserInventoriesUser],
-        Optional[List[ClassicComputerGroupsAccountsUserInventoriesUser]],
-    ] = None
+    disable_automatic_login: bool | None = None
+    user: (
+        ClassicComputerGroupsAccountsUserInventoriesUser
+        | list[ClassicComputerGroupsAccountsUserInventoriesUser]
+        | None
+    ) = None
 
 
 class ClassicComputerGroupsAccounts(BaseModel):
@@ -385,9 +384,9 @@ class ClassicComputerGroupsAccounts(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    computer_group_memberships: Optional[List[str]] = None
-    local_accounts: Optional[List[ClassicComputerGroupsAccountsLocalAccount]] = None
-    user_inventories: Optional[ClassicComputerGroupsAccountsUserInventories] = None
+    computer_group_memberships: list[str] | None = None
+    local_accounts: list[ClassicComputerGroupsAccountsLocalAccount] | None = None
+    user_inventories: ClassicComputerGroupsAccountsUserInventories | None = None
 
 
 # Computer.ConfigurationProfiles Models
@@ -398,10 +397,10 @@ class ClassicComputerConfigurationProfile(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[int] = None
-    name: Optional[str] = None
-    uuid: Optional[str] = None
-    is_removable: Optional[bool] = None
+    id: int | None = None
+    name: str | None = None
+    uuid: str | None = None
+    is_removable: bool | None = None
 
 
 # Computer Models
@@ -420,16 +419,16 @@ class ClassicComputersItem(BaseModel):
 
     id: int
     name: str
-    managed: Optional[bool] = None
-    username: Optional[str] = None
-    model: Optional[str] = None
-    department: Optional[str] = None
-    building: Optional[str] = None
-    mac_address: Optional[str] = None
-    udid: Optional[str] = None
-    serial_number: Optional[str] = None
-    report_date_utc: Union[Optional[datetime], Optional[str]] = None
-    report_date_epoch: Optional[int] = None
+    managed: bool | None = None
+    username: str | None = None
+    model: str | None = None
+    department: str | None = None
+    building: str | None = None
+    mac_address: str | None = None
+    udid: str | None = None
+    serial_number: str | None = None
+    report_date_utc: datetime | str | None = None
+    report_date_epoch: int | None = None
 
 
 class ClassicComputer(ClassicApiModel):
@@ -449,19 +448,19 @@ class ClassicComputer(ClassicApiModel):
     _xml_array_item_names = _XML_ARRAY_ITEM_NAMES
     _xml_write_fields = {"general", "location", "extension_attributes"}
 
-    general: Optional[ClassicComputerGeneral] = Field(default_factory=ClassicComputerGeneral)
-    location: Optional[ClassicDeviceLocation] = Field(default_factory=ClassicDeviceLocation)
-    purchasing: Optional[ClassicDevicePurchasing] = None
+    general: ClassicComputerGeneral | None = Field(default_factory=ClassicComputerGeneral)
+    location: ClassicDeviceLocation | None = Field(default_factory=ClassicDeviceLocation)
+    purchasing: ClassicDevicePurchasing | None = None
     # Peripherals are a deprecated feature of Jamf Pro
-    peripherals: Optional[Any] = None
-    hardware: Optional[ClassicComputerHardware] = None
-    certificates: Optional[List[ClassicComputerCertificate]] = None
-    security: Optional[ClassicComputerSecurity] = None
-    software: Optional[ClassicComputerSoftware] = None
-    extension_attributes: Optional[List[ClassicComputerExtensionAttribute]] = Field(
+    peripherals: Any | None = None
+    hardware: ClassicComputerHardware | None = None
+    certificates: list[ClassicComputerCertificate] | None = None
+    security: ClassicComputerSecurity | None = None
+    software: ClassicComputerSoftware | None = None
+    extension_attributes: list[ClassicComputerExtensionAttribute] | None = Field(
         default_factory=list
     )
-    groups_accounts: Optional[ClassicComputerGroupsAccounts] = None
+    groups_accounts: ClassicComputerGroupsAccounts | None = None
     # iPhones in Computer inventory is a deprecated feature of Jamf Pro
-    iphones: Optional[Any] = None
-    configuration_profiles: Optional[List[ClassicComputerConfigurationProfile]] = None
+    iphones: Any | None = None
+    configuration_profiles: list[ClassicComputerConfigurationProfile] | None = None

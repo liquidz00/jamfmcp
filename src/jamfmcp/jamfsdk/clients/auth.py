@@ -2,7 +2,7 @@ import asyncio
 import logging
 from datetime import datetime, timedelta, timezone
 from getpass import getpass
-from typing import TYPE_CHECKING, Optional, Type, overload
+from typing import TYPE_CHECKING, overload
 
 try:
     import keyring
@@ -27,19 +27,19 @@ class CredentialsProvider:
     """The base credentials provider class all other providers should inherit from."""
 
     def __init__(self):
-        self._client: Optional["JamfProClient"] = None
+        self._client: "JamfProClient | None" = None
         self._global_lock = asyncio.Semaphore(1)
         self._access_token = AccessToken()
 
     def attach_client(self, client: "JamfProClient"):
         self._client = client
 
-    async def get_access_token(self, semaphore: Optional[asyncio.Semaphore] = None) -> AccessToken:
+    async def get_access_token(self, semaphore: asyncio.Semaphore | None = None) -> AccessToken:
         """
         Thread safe method for obtaining the current API access token.
 
         :param semaphore: Optional semaphore for controlling access concurrency.
-        :type semaphore: Optional[asyncio.Semaphore]
+        :type semaphore: asyncio.Semaphore | None
 
         :return: An ``AccessToken`` object.
         :rtype: AccessToken
@@ -245,18 +245,18 @@ class UserCredentialsProvider(CredentialsProvider):
 
 @overload
 def prompt_for_credentials(
-    provider_type: Type[UserCredentialsProvider],
+    provider_type: type[UserCredentialsProvider],
 ) -> UserCredentialsProvider: ...
 
 
 @overload
 def prompt_for_credentials(
-    provider_type: Type[ApiClientCredentialsProvider],
+    provider_type: type[ApiClientCredentialsProvider],
 ) -> ApiClientCredentialsProvider: ...
 
 
 def prompt_for_credentials(
-    provider_type: Type[CredentialsProvider],
+    provider_type: type[CredentialsProvider],
 ) -> CredentialsProvider:
     """
     Prompts the user for credentials based on the given provider type.
@@ -283,7 +283,7 @@ def prompt_for_credentials(
 
 @overload
 def load_from_keychain(
-    provider_type: Type[UserCredentialsProvider],
+    provider_type: type[UserCredentialsProvider],
     server: str,
     *,
     username: str,
@@ -293,7 +293,7 @@ def load_from_keychain(
 
 @overload
 def load_from_keychain(
-    provider_type: Type[ApiClientCredentialsProvider],
+    provider_type: type[ApiClientCredentialsProvider],
     server: str,
     *,
     client_id: str,
@@ -302,10 +302,10 @@ def load_from_keychain(
 
 
 def load_from_keychain(
-    provider_type: Type[CredentialsProvider],
+    provider_type: type[CredentialsProvider],
     server: str,
-    client_id: Optional[str] = None,
-    username: Optional[str] = None,
+    client_id: str | None = None,
+    username: str | None = None,
 ) -> CredentialsProvider:
     """
     Load credentials from the macOS login keychain and return an instance of the
@@ -329,10 +329,10 @@ def load_from_keychain(
     :type server: str
 
     :param client_id: The client ID used for ``ApiClientCredentialsProvider``. Required if ``provider_type`` is that provider.
-    :type client_id: Optional[str]
+    :type client_id: str | None
 
     :param username: The username used for ``UserCredentialsProvider``. Required if ``provider_type`` is that provider.
-    :type username: Optional[str]
+    :type username: str | None
 
     :return: An instantiated credentials provider using the keychain values.
     :rtype: CredentialsProvider

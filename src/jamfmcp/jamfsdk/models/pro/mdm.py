@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Annotated, List, Literal, Optional, Union
+from typing import Annotated, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints
@@ -99,11 +99,11 @@ class EraseDeviceCommand(BaseModel):
     """
 
     commandType: Literal["ERASE_DEVICE"] = "ERASE_DEVICE"
-    preserveDataPlan: Optional[bool] = None
-    disallowProximitySetup: Optional[bool] = None
-    pin: Optional[EraseDeviceCommandPin] = None
-    obliterationBehavior: Optional[EraseDeviceCommandObliterationBehavior] = None
-    returnToService: Optional[EraseDeviceCommandReturnToService] = None
+    preserveDataPlan: bool | None = None
+    disallowProximitySetup: bool | None = None
+    pin: EraseDeviceCommandPin | None = None
+    obliterationBehavior: EraseDeviceCommandObliterationBehavior | None = None
+    returnToService: EraseDeviceCommandReturnToService | None = None
 
 
 # Log Out User
@@ -148,9 +148,9 @@ class RestartDeviceCommand(BaseModel):
     """
 
     commandType: Literal["RESTART_DEVICE"] = "RESTART_DEVICE"
-    rebuildKernelCache: Optional[bool]
-    kextPaths: Optional[List[str]]
-    notifyUser: Optional[bool]
+    rebuildKernelCache: bool | None
+    kextPaths: list[str] | None
+    notifyUser: bool | None
 
 
 # Set Recovery Lock
@@ -214,25 +214,23 @@ class CustomCommand(BaseModel):
 
 
 class SendMdmCommandClientData(BaseModel):
-    managementId: Union[str, UUID]
+    managementId: str | UUID
 
 
 BuiltInCommands = Annotated[
-    Union[
-        EnableLostModeCommand,
-        EraseDeviceCommand,
-        LogOutUserCommand,
-        RestartDeviceCommand,
-        SetRecoveryLockCommand,
-        ShutDownDeviceCommand,
-    ],
+    EnableLostModeCommand
+    | EraseDeviceCommand
+    | LogOutUserCommand
+    | RestartDeviceCommand
+    | SetRecoveryLockCommand
+    | ShutDownDeviceCommand,
     Field(..., discriminator="commandType"),
 ]
 
 
 class SendMdmCommand(BaseModel):
-    clientData: List[SendMdmCommandClientData]
-    commandData: Union[BuiltInCommands, CustomCommand]
+    clientData: list[SendMdmCommandClientData]
+    commandData: BuiltInCommands | CustomCommand
 
 
 # MDM Command Responses
@@ -253,7 +251,7 @@ class RenewMdmProfileResponse(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    udidsNotProcessed: Optional[List[UUID]]
+    udidsNotProcessed: list[UUID] | None
 
 
 # MDM Command Status Models
@@ -296,4 +294,4 @@ class MdmCommandStatus(BaseModel):
     commandType: MdmCommandStatusTypes
     dateSent: datetime
     dateCompleted: datetime
-    profileId: Optional[int] = None
+    profileId: int | None = None

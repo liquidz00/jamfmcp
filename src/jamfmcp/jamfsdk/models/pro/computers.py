@@ -1,6 +1,5 @@
 from datetime import date, datetime  # date in models: 2019-01-01
 from enum import Enum
-from typing import List, Optional
 
 from pydantic import ConfigDict, Field
 
@@ -26,15 +25,15 @@ class ComputerExtensionAttributeInputType(str, Enum):
 class ComputerExtensionAttribute(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    definitionId: Optional[str] = None
-    name: Optional[str] = None
-    description: Optional[str] = None
-    enabled: Optional[bool] = None
-    multiValue: Optional[bool] = None
-    values: Optional[List[str]] = None
-    dataType: Optional[ComputerExtensionAttributeDataType] = None
-    options: Optional[List[str]] = None
-    inputType: Optional[ComputerExtensionAttributeInputType] = None
+    definitionId: str | None = None
+    name: str | None = None
+    description: str | None = None
+    enabled: bool | None = None
+    multiValue: bool | None = None
+    values: list[str] | None = None
+    dataType: ComputerExtensionAttributeDataType | None = None
+    options: list[str] | None = None
+    inputType: ComputerExtensionAttributeInputType | None = None
 
 
 # Computer General Models
@@ -43,57 +42,57 @@ class ComputerExtensionAttribute(BaseModel):
 class ComputerRemoteManagement(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    managed: Optional[bool] = None
-    managementUsername: Optional[str] = None
-    managementPassword: Optional[str] = None
+    managed: bool | None = None
+    managementUsername: str | None = None
+    managementPassword: str | None = None
 
 
 class ComputerMdmCapability(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    capable: Optional[bool] = None
-    capableUsers: Optional[List[str]] = None
+    capable: bool | None = None
+    capableUsers: list[str] | None = None
 
 
 class EnrollmentMethod(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[str] = None
-    objectName: Optional[str] = None
-    objectType: Optional[str] = None
+    id: str | None = None
+    objectName: str | None = None
+    objectType: str | None = None
 
 
 class ComputerGeneral(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    lastIpAddress: Optional[str] = None
-    lastReportedIp: Optional[str] = None
-    jamfBinaryVersion: Optional[str] = None
-    platform: Optional[str] = None
-    barcode1: Optional[str] = None
-    barcode2: Optional[str] = None
-    assetTag: Optional[str] = None
-    remoteManagement: Optional[ComputerRemoteManagement] = Field(
+    name: str | None = None
+    lastIpAddress: str | None = None
+    lastReportedIp: str | None = None
+    jamfBinaryVersion: str | None = None
+    platform: str | None = None
+    barcode1: str | None = None
+    barcode2: str | None = None
+    assetTag: str | None = None
+    remoteManagement: ComputerRemoteManagement | None = Field(
         default_factory=ComputerRemoteManagement
     )
-    supervised: Optional[bool] = None
-    mdmCapable: Optional[ComputerMdmCapability] = None
-    reportDate: Optional[datetime] = None
-    lastContactTime: Optional[datetime] = None
-    lastCloudBackupDate: Optional[datetime] = None
-    lastEnrolledDate: Optional[datetime] = None
-    mdmProfileExpiration: Optional[datetime] = None
-    initialEntryDate: Optional[date] = None  # 2018-10-31
-    distributionPoint: Optional[str] = None
-    enrollmentMethod: Optional[EnrollmentMethod] = None
-    site: Optional[V1Site] = Field(default_factory=V1Site)
-    itunesStoreAccountActive: Optional[bool] = None
-    enrolledViaAutomatedDeviceEnrollment: Optional[bool] = None
-    userApprovedMdm: Optional[bool] = None
-    declarativeDeviceManagementEnabled: Optional[bool] = None
-    extensionAttributes: Optional[List[ComputerExtensionAttribute]] = None
-    managementId: Optional[str] = None
+    supervised: bool | None = None
+    mdmCapable: ComputerMdmCapability | None = None
+    reportDate: datetime | None = None
+    lastContactTime: datetime | None = None
+    lastCloudBackupDate: datetime | None = None
+    lastEnrolledDate: datetime | None = None
+    mdmProfileExpiration: datetime | None = None
+    initialEntryDate: date | None = None  # 2018-10-31
+    distributionPoint: str | None = None
+    enrollmentMethod: EnrollmentMethod | None = None
+    site: V1Site | None = Field(default_factory=V1Site)
+    itunesStoreAccountActive: bool | None = None
+    enrolledViaAutomatedDeviceEnrollment: bool | None = None
+    userApprovedMdm: bool | None = None
+    declarativeDeviceManagementEnabled: bool | None = None
+    extensionAttributes: list[ComputerExtensionAttribute] | None = None
+    managementId: str | None = None
 
 
 # Computer Disk Encryption Models
@@ -123,20 +122,20 @@ class IndividualRecoveryKeyValidityStatus(str, Enum):
 class ComputerPartitionEncryption(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    partitionName: Optional[str] = None
-    partitionFileVault2State: Optional[ComputerPartitionFileVault2State] = None
-    partitionFileVault2Percent: Optional[int] = None
+    partitionName: str | None = None
+    partitionFileVault2State: ComputerPartitionFileVault2State | None = None
+    partitionFileVault2Percent: int | None = None
 
 
 class ComputerDiskEncryption(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    bootPartitionEncryptionDetails: Optional[ComputerPartitionEncryption] = None
-    individualRecoveryKeyValidityStatus: Optional[IndividualRecoveryKeyValidityStatus] = None
-    institutionalRecoveryKeyPresent: Optional[bool] = None
-    diskEncryptionConfigurationName: Optional[str] = None
-    fileVault2EnabledUserNames: Optional[List[str]] = None
-    fileVault2EligibilityMessage: Optional[str] = None
+    bootPartitionEncryptionDetails: ComputerPartitionEncryption | None = None
+    individualRecoveryKeyValidityStatus: IndividualRecoveryKeyValidityStatus | None = None
+    institutionalRecoveryKeyPresent: bool | None = None
+    diskEncryptionConfigurationName: str | None = None
+    fileVault2EnabledUserNames: list[str] | None = None
+    fileVault2EligibilityMessage: str | None = None
 
 
 # Computer Purchase Model
@@ -145,19 +144,19 @@ class ComputerDiskEncryption(BaseModel):
 class ComputerPurchase(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    leased: Optional[bool] = None
-    purchased: Optional[bool] = None
-    poNumber: Optional[str] = None
-    poDate: Optional[date] = None
-    vendor: Optional[str] = None
-    warrantyDate: Optional[date] = None
-    appleCareId: Optional[str] = None
-    leaseDate: Optional[date] = None
-    purchasePrice: Optional[str] = None
-    lifeExpectancy: Optional[int] = None
-    purchasingAccount: Optional[str] = None
-    purchasingContact: Optional[str] = None
-    extensionAttributes: Optional[List[ComputerExtensionAttribute]] = None
+    leased: bool | None = None
+    purchased: bool | None = None
+    poNumber: str | None = None
+    poDate: date | None = None
+    vendor: str | None = None
+    warrantyDate: date | None = None
+    appleCareId: str | None = None
+    leaseDate: date | None = None
+    purchasePrice: str | None = None
+    lifeExpectancy: int | None = None
+    purchasingAccount: str | None = None
+    purchasingContact: str | None = None
+    extensionAttributes: list[ComputerExtensionAttribute] | None = None
 
 
 # Computer Application Model
@@ -166,14 +165,14 @@ class ComputerPurchase(BaseModel):
 class ComputerApplication(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    path: Optional[str] = None
-    version: Optional[str] = None
-    macAppStore: Optional[bool] = None
-    sizeMegabytes: Optional[int] = None
-    bundleId: Optional[str] = None
-    updateAvailable: Optional[bool] = None
-    externalVersionId: Optional[str] = None
+    name: str | None = None
+    path: str | None = None
+    version: str | None = None
+    macAppStore: bool | None = None
+    sizeMegabytes: int | None = None
+    bundleId: str | None = None
+    updateAvailable: bool | None = None
+    externalVersionId: str | None = None
 
 
 # Computer Storage Models
@@ -188,35 +187,35 @@ class PartitionType(str, Enum):
 class ComputerPartition(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    sizeMegabytes: Optional[int] = None
-    availableMegabytes: Optional[int] = None
-    partitionType: Optional[PartitionType] = None
-    percentUsed: Optional[int] = None
-    fileVault2State: Optional[ComputerPartitionFileVault2State] = None
-    fileVault2ProgressPercent: Optional[int] = None
-    lvmManaged: Optional[bool] = None
+    name: str | None = None
+    sizeMegabytes: int | None = None
+    availableMegabytes: int | None = None
+    partitionType: PartitionType | None = None
+    percentUsed: int | None = None
+    fileVault2State: ComputerPartitionFileVault2State | None = None
+    fileVault2ProgressPercent: int | None = None
+    lvmManaged: bool | None = None
 
 
 class ComputerDisk(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[str] = None
-    device: Optional[str] = None
-    model: Optional[str] = None
-    revision: Optional[str] = None
-    serialNumber: Optional[str] = None
-    sizeMegabytes: Optional[int] = None
-    smartStatus: Optional[str] = None
-    type: Optional[str] = None
-    partitions: Optional[List[ComputerPartition]] = None
+    id: str | None = None
+    device: str | None = None
+    model: str | None = None
+    revision: str | None = None
+    serialNumber: str | None = None
+    sizeMegabytes: int | None = None
+    smartStatus: str | None = None
+    type: str | None = None
+    partitions: list[ComputerPartition] | None = None
 
 
 class ComputerStorage(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    bootDriveAvailableSpaceMegabytes: Optional[int] = None
-    disks: Optional[List[ComputerDisk]] = None
+    bootDriveAvailableSpaceMegabytes: int | None = None
+    disks: list[ComputerDisk] | None = None
 
 
 # Computer User and Location Model
@@ -225,15 +224,15 @@ class ComputerStorage(BaseModel):
 class ComputerUserAndLocation(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    username: Optional[str] = None
-    realname: Optional[str] = None
-    email: Optional[str] = None
-    position: Optional[str] = None
-    phone: Optional[str] = None
-    departmentId: Optional[str] = None
-    buildingId: Optional[str] = None
-    room: Optional[str] = None
-    extensionAttributes: Optional[List[ComputerExtensionAttribute]] = None
+    username: str | None = None
+    realname: str | None = None
+    email: str | None = None
+    position: str | None = None
+    phone: str | None = None
+    departmentId: str | None = None
+    buildingId: str | None = None
+    room: str | None = None
+    extensionAttributes: list[ComputerExtensionAttribute] | None = None
 
 
 # Computer Configuration Profile Model
@@ -242,12 +241,12 @@ class ComputerUserAndLocation(BaseModel):
 class ComputerConfigurationProfile(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[str] = None
-    username: Optional[str] = None
-    lastInstalled: Optional[datetime] = None
-    removable: Optional[bool] = None
-    displayName: Optional[str] = None
-    profileIdentifier: Optional[str] = None
+    id: str | None = None
+    username: str | None = None
+    lastInstalled: datetime | None = None
+    removable: bool | None = None
+    displayName: str | None = None
+    profileIdentifier: str | None = None
 
 
 # Computer Printer Model
@@ -256,10 +255,10 @@ class ComputerConfigurationProfile(BaseModel):
 class ComputerPrinter(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    type: Optional[str] = None
-    uri: Optional[str] = None
-    location: Optional[str] = None
+    name: str | None = None
+    type: str | None = None
+    uri: str | None = None
+    location: str | None = None
 
 
 # Computer Service Model
@@ -268,7 +267,7 @@ class ComputerPrinter(BaseModel):
 class ComputerService(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
+    name: str | None = None
 
 
 # Computer Hardware Models
@@ -277,32 +276,32 @@ class ComputerService(BaseModel):
 class ComputerHardware(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    make: Optional[str] = None
-    model: Optional[str] = None
-    modelIdentifier: Optional[str] = None
-    serialNumber: Optional[str] = None
-    processorSpeedMhz: Optional[int] = None
-    processorCount: Optional[int] = None
-    coreCount: Optional[int] = None
-    processorType: Optional[str] = None
-    processorArchitecture: Optional[str] = None
-    busSpeedMhz: Optional[int] = None
-    cacheSizeKilobytes: Optional[int] = None
-    networkAdapterType: Optional[str] = None
-    macAddress: Optional[str] = None
-    altNetworkAdapterType: Optional[str] = None
-    altMacAddress: Optional[str] = None
-    totalRamMegabytes: Optional[int] = None
-    openRamSlots: Optional[int] = None
-    batteryCapacityPercent: Optional[int] = None
-    smcVersion: Optional[str] = None
-    nicSpeed: Optional[str] = None
-    opticalDrive: Optional[str] = None
-    bootRom: Optional[str] = None
-    bleCapable: Optional[bool] = None
-    supportsIosAppInstalls: Optional[bool] = None
-    appleSilicon: Optional[bool] = None
-    extensionAttributes: Optional[List[ComputerExtensionAttribute]] = None
+    make: str | None = None
+    model: str | None = None
+    modelIdentifier: str | None = None
+    serialNumber: str | None = None
+    processorSpeedMhz: int | None = None
+    processorCount: int | None = None
+    coreCount: int | None = None
+    processorType: str | None = None
+    processorArchitecture: str | None = None
+    busSpeedMhz: int | None = None
+    cacheSizeKilobytes: int | None = None
+    networkAdapterType: str | None = None
+    macAddress: str | None = None
+    altNetworkAdapterType: str | None = None
+    altMacAddress: str | None = None
+    totalRamMegabytes: int | None = None
+    openRamSlots: int | None = None
+    batteryCapacityPercent: int | None = None
+    smcVersion: str | None = None
+    nicSpeed: str | None = None
+    opticalDrive: str | None = None
+    bootRom: str | None = None
+    bleCapable: bool | None = None
+    supportsIosAppInstalls: bool | None = None
+    appleSilicon: bool | None = None
+    extensionAttributes: list[ComputerExtensionAttribute] | None = None
 
 
 # Computer Local User Account Models
@@ -324,22 +323,22 @@ class AzureActiveDirectoryId(str, Enum):
 class ComputerLocalUserAccount(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    uid: Optional[str] = None
-    username: Optional[str] = None
-    fullName: Optional[str] = None
-    admin: Optional[bool] = None
-    homeDirectory: Optional[str] = None
-    homeDirectorySizeMb: Optional[int] = None
-    fileVault2Enabled: Optional[bool] = None
-    userAccountType: Optional[UserAccountType] = None
-    passwordMinLength: Optional[int] = None
-    passwordMaxAge: Optional[int] = None
-    passwordMinComplexCharacters: Optional[int] = None
-    passwordHistoryDepth: Optional[int] = None
-    passwordRequireAlphanumeric: Optional[bool] = None
-    computerAzureActiveDirectoryId: Optional[str] = None
-    userAzureActiveDirectoryId: Optional[str] = None
-    azureActiveDirectoryId: Optional[AzureActiveDirectoryId] = None
+    uid: str | None = None
+    username: str | None = None
+    fullName: str | None = None
+    admin: bool | None = None
+    homeDirectory: str | None = None
+    homeDirectorySizeMb: int | None = None
+    fileVault2Enabled: bool | None = None
+    userAccountType: UserAccountType | None = None
+    passwordMinLength: int | None = None
+    passwordMaxAge: int | None = None
+    passwordMinComplexCharacters: int | None = None
+    passwordHistoryDepth: int | None = None
+    passwordRequireAlphanumeric: bool | None = None
+    computerAzureActiveDirectoryId: str | None = None
+    userAzureActiveDirectoryId: str | None = None
+    azureActiveDirectoryId: AzureActiveDirectoryId | None = None
 
 
 # Computer Certificate Models
@@ -361,16 +360,16 @@ class CertificateStatus(str, Enum):
 class ComputerCertificate(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    commonName: Optional[str] = None
-    identity: Optional[bool] = None
-    expirationDate: Optional[datetime] = None
-    username: Optional[str] = None
-    lifecycleStatus: Optional[LifecycleStatus] = None
-    certificateStatus: Optional[CertificateStatus] = None
-    subjectName: Optional[str] = None
-    serialNumber: Optional[str] = None
-    sha1Fingerprint: Optional[str] = None
-    issuedDate: Optional[str] = None
+    commonName: str | None = None
+    identity: bool | None = None
+    expirationDate: datetime | None = None
+    username: str | None = None
+    lifecycleStatus: LifecycleStatus | None = None
+    certificateStatus: CertificateStatus | None = None
+    subjectName: str | None = None
+    serialNumber: str | None = None
+    sha1Fingerprint: str | None = None
+    issuedDate: str | None = None
 
 
 # Computer Attachment Model
@@ -379,10 +378,10 @@ class ComputerCertificate(BaseModel):
 class ComputerAttachment(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[str] = None
-    name: Optional[str] = None
-    fileType: Optional[str] = None
-    sizeBytes: Optional[int] = None
+    id: str | None = None
+    name: str | None = None
+    fileType: str | None = None
+    sizeBytes: int | None = None
 
 
 # Computer Plugin Model
@@ -391,9 +390,9 @@ class ComputerAttachment(BaseModel):
 class ComputerPlugin(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    version: Optional[str] = None
-    path: Optional[str] = None
+    name: str | None = None
+    version: str | None = None
+    path: str | None = None
 
 
 # Computer Package Receipt Model
@@ -402,9 +401,9 @@ class ComputerPlugin(BaseModel):
 class ComputerPackageReceipts(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    installedByJamfPro: Optional[List[str]] = None
-    installedByInstallerSwu: Optional[List[str]] = None
-    cached: Optional[List[str]] = None
+    installedByJamfPro: list[str] | None = None
+    installedByInstallerSwu: list[str] | None = None
+    cached: list[str] | None = None
 
 
 # Computer Font Model
@@ -413,9 +412,9 @@ class ComputerPackageReceipts(BaseModel):
 class ComputerFont(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    version: Optional[str] = None
-    path: Optional[str] = None
+    name: str | None = None
+    version: str | None = None
+    path: str | None = None
 
 
 # Computer Security Models
@@ -453,17 +452,17 @@ class ExternalBootLevel(str, Enum):
 class ComputerSecurity(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    sipStatus: Optional[SipStatus] = None
-    gatekeeperStatus: Optional[GatekeeperStatus] = None
-    xprotectVersion: Optional[str] = None
-    autoLoginDisabled: Optional[bool] = None
-    remoteDesktopEnabled: Optional[bool] = None
-    activationLockEnabled: Optional[bool] = None
-    recoveryLockEnabled: Optional[bool] = None
-    firewallEnabled: Optional[bool] = None
-    secureBootLevel: Optional[SecureBootLevel] = None
-    externalBootLevel: Optional[ExternalBootLevel] = None
-    bootstrapTokenAllowed: Optional[bool] = None
+    sipStatus: SipStatus | None = None
+    gatekeeperStatus: GatekeeperStatus | None = None
+    xprotectVersion: str | None = None
+    autoLoginDisabled: bool | None = None
+    remoteDesktopEnabled: bool | None = None
+    activationLockEnabled: bool | None = None
+    recoveryLockEnabled: bool | None = None
+    firewallEnabled: bool | None = None
+    secureBootLevel: SecureBootLevel | None = None
+    externalBootLevel: ExternalBootLevel | None = None
+    bootstrapTokenAllowed: bool | None = None
 
 
 # Computer Operating System Models
@@ -480,13 +479,13 @@ class FileVault2Status(str, Enum):
 class ComputerOperatingSystem(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    version: Optional[str] = None
-    build: Optional[str] = None
-    activeDirectoryStatus: Optional[str] = None
-    fileVault2Status: Optional[FileVault2Status] = None
-    softwareUpdateDeviceId: Optional[str] = None
-    extensionAttributes: Optional[List[ComputerExtensionAttribute]] = None
+    name: str | None = None
+    version: str | None = None
+    build: str | None = None
+    activeDirectoryStatus: str | None = None
+    fileVault2Status: FileVault2Status | None = None
+    softwareUpdateDeviceId: str | None = None
+    extensionAttributes: list[ComputerExtensionAttribute] | None = None
 
 
 # Computer Licensed Software Model
@@ -495,8 +494,8 @@ class ComputerOperatingSystem(BaseModel):
 class ComputerLicensedSoftware(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[str] = None
-    name: Optional[str] = None
+    id: str | None = None
+    name: str | None = None
 
 
 # Computer iBeacon Model
@@ -505,7 +504,7 @@ class ComputerLicensedSoftware(BaseModel):
 class ComputeriBeacon(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
+    name: str | None = None
 
 
 # Computer Software Update Model
@@ -514,9 +513,9 @@ class ComputeriBeacon(BaseModel):
 class ComputerSoftwareUpdate(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    name: Optional[str] = None
-    version: Optional[str] = None
-    packageName: Optional[str] = None
+    name: str | None = None
+    version: str | None = None
+    packageName: str | None = None
 
 
 # Computer Content Caching Models
@@ -525,88 +524,88 @@ class ComputerSoftwareUpdate(BaseModel):
 class ComputerContentCachingParentAlert(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    contentCachingParentAlertId: Optional[str] = None
-    addresses: Optional[List[str]] = None
-    className: Optional[str] = None
-    postDate: Optional[datetime] = None
+    contentCachingParentAlertId: str | None = None
+    addresses: list[str] | None = None
+    className: str | None = None
+    postDate: datetime | None = None
 
 
 class ComputerContentCachingParentCapabilities(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    contentCachingParentCapabilitiesId: Optional[str] = None
-    imports: Optional[bool] = None
-    namespaces: Optional[bool] = None
-    personalContent: Optional[bool] = None
-    queryParameters: Optional[bool] = None
-    sharedContent: Optional[bool] = None
-    prioritization: Optional[bool] = None
+    contentCachingParentCapabilitiesId: str | None = None
+    imports: bool | None = None
+    namespaces: bool | None = None
+    personalContent: bool | None = None
+    queryParameters: bool | None = None
+    sharedContent: bool | None = None
+    prioritization: bool | None = None
 
 
 class ComputerContentCachingParentLocalNetwork(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    contentCachingParentLocalNetworkId: Optional[str] = None
-    speed: Optional[int] = None
-    wired: Optional[bool] = None
+    contentCachingParentLocalNetworkId: str | None = None
+    speed: int | None = None
+    wired: bool | None = None
 
 
 class ComputerContentCachingParentDetails(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    contentCachingParentDetailsId: Optional[str] = None
-    acPower: Optional[bool] = None
-    cacheSizeBytes: Optional[int] = None
-    capabilities: Optional[ComputerContentCachingParentCapabilities] = None
-    portable: Optional[bool] = None
-    localNetwork: Optional[List[ComputerContentCachingParentLocalNetwork]] = None
+    contentCachingParentDetailsId: str | None = None
+    acPower: bool | None = None
+    cacheSizeBytes: int | None = None
+    capabilities: ComputerContentCachingParentCapabilities | None = None
+    portable: bool | None = None
+    localNetwork: list[ComputerContentCachingParentLocalNetwork] | None = None
 
 
 class ComputerContentCachingParent(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    contentCachingParentId: Optional[str] = None
-    address: Optional[str] = None
-    alerts: Optional[ComputerContentCachingParentAlert] = None
-    details: Optional[ComputerContentCachingParentDetails] = None
-    guid: Optional[str] = None
-    healthy: Optional[bool] = None
-    port: Optional[int] = None
-    version: Optional[str] = None
+    contentCachingParentId: str | None = None
+    address: str | None = None
+    alerts: ComputerContentCachingParentAlert | None = None
+    details: ComputerContentCachingParentDetails | None = None
+    guid: str | None = None
+    healthy: bool | None = None
+    port: int | None = None
+    version: str | None = None
 
 
 class ComputerContentCachingAlert(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    cacheBytesLimit: Optional[int] = None
-    className: Optional[str] = None
-    pathPreventingAccess: Optional[str] = None
-    postDate: Optional[datetime] = None
-    reservedVolumeBytes: Optional[int] = None
-    resource: Optional[str] = None
+    cacheBytesLimit: int | None = None
+    className: str | None = None
+    pathPreventingAccess: str | None = None
+    postDate: datetime | None = None
+    reservedVolumeBytes: int | None = None
+    resource: str | None = None
 
 
 class ComputerContentCachingCacheDetail(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    computerContentCachingCacheDetailsId: Optional[str] = None
-    categoryName: Optional[str] = None
-    diskSpaceBytesUsed: Optional[int] = None
+    computerContentCachingCacheDetailsId: str | None = None
+    categoryName: str | None = None
+    diskSpaceBytesUsed: int | None = None
 
 
 class ComputerContentCachingDataMigrationErrorUserInfo(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    key: Optional[str] = None
-    value: Optional[str] = None
+    key: str | None = None
+    value: str | None = None
 
 
 class ComputerContentCachingDataMigrationError(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    code: Optional[int] = None
-    domain: Optional[str] = None
-    userInfo: Optional[List[ComputerContentCachingDataMigrationErrorUserInfo]] = None
+    code: int | None = None
+    domain: str | None = None
+    userInfo: list[ComputerContentCachingDataMigrationErrorUserInfo] | None = None
 
 
 class ComputerContentCachingRegistrationStatus(str, Enum):
@@ -624,43 +623,43 @@ class ComputerContentCachingTetheratorStatus(str, Enum):
 class ComputerContentCaching(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    computerContentCachingInformationId: Optional[str] = None
-    parents: Optional[List[ComputerContentCachingParent]] = None
-    alerts: Optional[List[ComputerContentCachingAlert]] = None
-    activated: Optional[bool] = None
-    active: Optional[bool] = None
-    actualCacheBytesUsed: Optional[int] = None
-    cacheDetails: Optional[List[ComputerContentCachingCacheDetail]] = None
-    cacheBytesFree: Optional[int] = None
-    cacheBytesLimit: Optional[int] = None
-    cacheStatus: Optional[str] = None
-    cacheBytesUsed: Optional[int] = None
-    dataMigrationCompleted: Optional[bool] = None
-    dataMigrationProgressPercentage: Optional[int] = None
-    dataMigrationError: Optional[ComputerContentCachingDataMigrationError] = None
-    maxCachePressureLast1HourPercentage: Optional[int] = None
-    personalCacheBytesFree: Optional[int] = None
-    personalCacheBytesLimit: Optional[int] = None
-    personalCacheBytesUsed: Optional[int] = None
-    port: Optional[int] = None
-    publicAddress: Optional[str] = None
-    registrationError: Optional[str] = None
-    registrationResponseCode: Optional[int] = None
-    registrationStarted: Optional[datetime] = None
-    registrationStatus: Optional[ComputerContentCachingRegistrationStatus] = None
-    restrictedMedia: Optional[bool] = None
-    serverGuid: Optional[str] = None
-    startupStatus: Optional[str] = None
-    tetheratorStatus: Optional[ComputerContentCachingTetheratorStatus] = None
-    totalBytesAreSince: Optional[datetime] = None
-    totalBytesDropped: Optional[int] = None
-    totalBytesImported: Optional[int] = None
-    totalBytesReturnedToChildren: Optional[int] = None
-    totalBytesReturnedToClients: Optional[int] = None
-    totalBytesReturnedToPeers: Optional[int] = None
-    totalBytesStoredFromOrigin: Optional[int] = None
-    totalBytesStoredFromParents: Optional[int] = None
-    totalBytesStoredFromPeers: Optional[int] = None
+    computerContentCachingInformationId: str | None = None
+    parents: list[ComputerContentCachingParent] | None = None
+    alerts: list[ComputerContentCachingAlert] | None = None
+    activated: bool | None = None
+    active: bool | None = None
+    actualCacheBytesUsed: int | None = None
+    cacheDetails: list[ComputerContentCachingCacheDetail] | None = None
+    cacheBytesFree: int | None = None
+    cacheBytesLimit: int | None = None
+    cacheStatus: str | None = None
+    cacheBytesUsed: int | None = None
+    dataMigrationCompleted: bool | None = None
+    dataMigrationProgressPercentage: int | None = None
+    dataMigrationError: ComputerContentCachingDataMigrationError | None = None
+    maxCachePressureLast1HourPercentage: int | None = None
+    personalCacheBytesFree: int | None = None
+    personalCacheBytesLimit: int | None = None
+    personalCacheBytesUsed: int | None = None
+    port: int | None = None
+    publicAddress: str | None = None
+    registrationError: str | None = None
+    registrationResponseCode: int | None = None
+    registrationStarted: datetime | None = None
+    registrationStatus: ComputerContentCachingRegistrationStatus | None = None
+    restrictedMedia: bool | None = None
+    serverGuid: str | None = None
+    startupStatus: str | None = None
+    tetheratorStatus: ComputerContentCachingTetheratorStatus | None = None
+    totalBytesAreSince: datetime | None = None
+    totalBytesDropped: int | None = None
+    totalBytesImported: int | None = None
+    totalBytesReturnedToChildren: int | None = None
+    totalBytesReturnedToClients: int | None = None
+    totalBytesReturnedToPeers: int | None = None
+    totalBytesStoredFromOrigin: int | None = None
+    totalBytesStoredFromParents: int | None = None
+    totalBytesStoredFromPeers: int | None = None
 
 
 # Computer Group Membership Model
@@ -669,9 +668,9 @@ class ComputerContentCaching(BaseModel):
 class ComputerGroupMembership(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    groupId: Optional[str] = None
-    groupName: Optional[str] = None
-    smartGroup: Optional[bool] = None
+    groupId: str | None = None
+    groupName: str | None = None
+    smartGroup: bool | None = None
 
 
 # Computer Inventory Model
@@ -682,31 +681,29 @@ class Computer(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[str] = None
-    udid: Optional[str] = None
-    general: Optional[ComputerGeneral] = Field(default_factory=ComputerGeneral)
-    diskEncryption: Optional[ComputerDiskEncryption] = None
-    purchasing: Optional[ComputerPurchase] = None
-    applications: Optional[List[ComputerApplication]] = None
-    storage: Optional[ComputerStorage] = None
-    userAndLocation: Optional[ComputerUserAndLocation] = Field(
-        default_factory=ComputerUserAndLocation
-    )
-    configurationProfiles: Optional[List[ComputerConfigurationProfile]] = None
-    printers: Optional[List[ComputerPrinter]] = None
-    services: Optional[List[ComputerService]] = None
-    hardware: Optional[ComputerHardware] = None
-    localUserAccounts: Optional[List[ComputerLocalUserAccount]] = None
-    certificates: Optional[List[ComputerCertificate]] = None
-    attachments: Optional[List[ComputerAttachment]] = None
-    plugins: Optional[List[ComputerPlugin]] = None
-    packageReceipts: Optional[ComputerPackageReceipts] = None
-    fonts: Optional[List[ComputerFont]] = None
-    security: Optional[ComputerSecurity] = None
-    operatingSystem: Optional[ComputerOperatingSystem] = None
-    licensedSoftware: Optional[List[ComputerLicensedSoftware]] = None
-    ibeacons: Optional[List[ComputeriBeacon]] = None
-    softwareUpdates: Optional[List[ComputerSoftwareUpdate]] = None
-    extensionAttributes: Optional[List[ComputerExtensionAttribute]] = None
-    contentCaching: Optional[ComputerContentCaching] = None
-    groupMemberships: Optional[List[ComputerGroupMembership]] = None
+    id: str | None = None
+    udid: str | None = None
+    general: ComputerGeneral | None = Field(default_factory=ComputerGeneral)
+    diskEncryption: ComputerDiskEncryption | None = None
+    purchasing: ComputerPurchase | None = None
+    applications: list[ComputerApplication] | None = None
+    storage: ComputerStorage | None = None
+    userAndLocation: ComputerUserAndLocation | None = Field(default_factory=ComputerUserAndLocation)
+    configurationProfiles: list[ComputerConfigurationProfile] | None = None
+    printers: list[ComputerPrinter] | None = None
+    services: list[ComputerService] | None = None
+    hardware: ComputerHardware | None = None
+    localUserAccounts: list[ComputerLocalUserAccount] | None = None
+    certificates: list[ComputerCertificate] | None = None
+    attachments: list[ComputerAttachment] | None = None
+    plugins: list[ComputerPlugin] | None = None
+    packageReceipts: ComputerPackageReceipts | None = None
+    fonts: list[ComputerFont] | None = None
+    security: ComputerSecurity | None = None
+    operatingSystem: ComputerOperatingSystem | None = None
+    licensedSoftware: list[ComputerLicensedSoftware] | None = None
+    ibeacons: list[ComputeriBeacon] | None = None
+    softwareUpdates: list[ComputerSoftwareUpdate] | None = None
+    extensionAttributes: list[ComputerExtensionAttribute] | None = None
+    contentCaching: ComputerContentCaching | None = None
+    groupMemberships: list[ComputerGroupMembership] | None = None

@@ -1,5 +1,3 @@
-from typing import List, Optional
-
 from pydantic import ConfigDict
 
 from .. import BaseModel
@@ -32,11 +30,11 @@ class ClassicComputerGroupMember(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[int] = None
-    name: Optional[str] = None
-    mac_address: Optional[str] = None
-    alt_mac_address: Optional[str] = None
-    serial_number: Optional[str] = None
+    id: int | None = None
+    name: str | None = None
+    mac_address: str | None = None
+    alt_mac_address: str | None = None
+    serial_number: str | None = None
 
 
 class ClassicComputerGroup(ClassicApiModel):
@@ -62,12 +60,12 @@ class ClassicComputerGroup(ClassicApiModel):
     _xml_array_item_names = _XML_ARRAY_ITEM_NAMES
     _xml_write_fields = {"name", "is_smart", "site", "criteria"}
 
-    id: Optional[int] = None
-    name: Optional[str] = None
-    is_smart: Optional[bool] = None
-    site: Optional[ClassicSite] = None
-    criteria: Optional[List[ClassicCriterion]] = None
-    computers: Optional[List[ClassicComputerGroupMember]] = None
+    id: int | None = None
+    name: str | None = None
+    is_smart: bool | None = None
+    site: ClassicSite | None = None
+    criteria: list[ClassicCriterion] | None = None
+    computers: list[ClassicComputerGroupMember] | None = None
 
 
 class ClassicComputerGroupMembershipUpdate(ClassicApiModel):
@@ -80,5 +78,5 @@ class ClassicComputerGroupMembershipUpdate(ClassicApiModel):
     _xml_root_name = "computer_group"
     _xml_array_item_names = _XML_ARRAY_ITEM_NAMES
 
-    computer_additions: Optional[List[ClassicComputerGroupMember]] = None
-    computer_deletions: Optional[List[ClassicComputerGroupMember]] = None
+    computer_additions: list[ClassicComputerGroupMember] | None = None
+    computer_deletions: list[ClassicComputerGroupMember] | None = None

@@ -4,7 +4,7 @@ import logging
 import math
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import TYPE_CHECKING, Callable, Iterator, Union
+from typing import TYPE_CHECKING, Callable, Iterator
 
 import httpx
 
@@ -142,7 +142,7 @@ class JCDS2:
         logger.debug(part_resp)
         return {"PartNumber": part_number, "ETag": part_resp["ETag"]}
 
-    async def upload_file(self, file_path: Union[str, Path]) -> None:
+    async def upload_file(self, file_path: str | Path) -> None:
         """
         Upload a file to the JCDS and create the package object.
 
@@ -158,7 +158,7 @@ class JCDS2:
 
         :param file_path: The path to the file to upload. Will raise ``FileNotFoundError`` if the path
             to the file's location does not exist.
-        :type file_path: Union[str, Path]
+        :type file_path: str | Path
         """
         if not BOTO3_IS_INSTALLED:
             raise ImportError("The 'aws' extra dependency is required.")
@@ -240,7 +240,7 @@ class JCDS2:
         with open(temp_dir + f"/chunk_{str(index).zfill(9)}", "wb") as fobj:
             fobj.write(content)
 
-    async def download_file(self, file_name: str, download_path: Union[str, Path]) -> None:
+    async def download_file(self, file_name: str, download_path: str | Path) -> None:
         """
         Download a file from the JCDS by filename.
 
@@ -250,7 +250,7 @@ class JCDS2:
         :param download_path: The path to download the file to. If the provided path is directory
             the file name will be appended to it. Will raise `FileExistsError` if the path is to a
             file location that already exists.
-        :type download_path: Union[str, Path]
+        :type download_path: str | Path
         """
         if not isinstance(download_path, Path):
             download_path = Path(download_path)

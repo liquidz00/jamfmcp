@@ -6,12 +6,8 @@ from typing import (
     Any,
     BinaryIO,
     Callable,
-    Dict,
     Iterable,
     Iterator,
-    Optional,
-    Type,
-    Union,
 )
 from urllib.parse import urlunparse
 
@@ -35,7 +31,7 @@ class JamfProClient:
         server: str,
         credentials: CredentialsProvider,
         port: int = 443,
-        session_config: Optional[SessionConfig] = None,
+        session_config: SessionConfig | None = None,
     ):
         """
         The base client class for interacting with the Jamf Pro APIs.
@@ -86,7 +82,7 @@ class JamfProClient:
             pass
 
     @staticmethod
-    def _parse_cookie_file(cookie_file: Union[str, Path]) -> dict[str, str]:
+    def _parse_cookie_file(cookie_file: str | Path) -> dict[str, str]:
         """Parse a cookies file and return a dictionary of key value pairs."""
         cookies = {}
         with open(cookie_file, "r") as fp:
@@ -97,7 +93,7 @@ class JamfProClient:
         return cookies
 
     @staticmethod
-    def _load_ca_cert_bundle(ca_cert_bundle_path: Union[str, Path]):
+    def _load_ca_cert_bundle(ca_cert_bundle_path: str | Path):
         """
         Create a copy of the certifi trust store and append the passed CA cert bundle in a
         temporary file.
@@ -209,8 +205,8 @@ class JamfProClient:
         self,
         method: str,
         resource_path: str,
-        data: Optional[Union[str, ClassicApiModel]] = None,
-        override_headers: Optional[dict] = None,
+        data: str | ClassicApiModel | None = None,
+        override_headers: dict | None = None,
     ) -> httpx.Response:
         """
         Perform a request to the Classic API.
@@ -230,7 +226,7 @@ class JamfProClient:
         :param override_headers: A dictionary of key-value pairs that will be set as
             headers for the request. You cannot override the ``Authorization`` or
             ``Content-Type`` headers.
-        :type override_headers: Dict[str, str]
+        :type override_headers: dict[str, str]
 
         :return: `httpx Response <https://www.python-httpx.org/api/#response>`_ object
         :rtype: httpx.Response
@@ -273,10 +269,10 @@ class JamfProClient:
         self,
         method: str,
         resource_path: str,
-        query_params: Optional[Dict[str, str]] = None,
-        data: Optional[Union[dict, BaseModel]] = None,
-        files: Optional[dict[str, tuple[str, BinaryIO, str]]] = None,
-        override_headers: Optional[Dict[str, str]] = None,
+        query_params: dict[str, str] | None = None,
+        data: dict | BaseModel | None = None,
+        files: dict[str, tuple[str, BinaryIO, str]] | None = None,
+        override_headers: dict[str, str] | None = None,
     ) -> httpx.Response:
         """
         Perform a request to the Pro API.
@@ -290,20 +286,20 @@ class JamfProClient:
         :type resource_path: str
 
         :param query_params: Query string parameters to be included with the request URL string.
-        :type query_params: Dict[str, str]
+        :type query_params: dict[str, str]
 
         :param data: If the request is a ``POST``, ``PUT``, or ``PATCH``, the dictionary
             or ``BaseModel`` that is being sent.
-        :type data: dict | BaseModel
+        :type data: dict | BaseModel | None
 
         :param files: If the request is a ``POST``, a dictionary with a single ``files`` key,
             and a tuple containing the filename, file-like object to upload, and mime type.
-        :type files: Optional[dict[str, tuple[str, BinaryIO, str]]]
+        :type files: dict[str, tuple[str, BinaryIO, str]] | None
 
         :param override_headers: A dictionary of key-value pairs that will be set as
             headers for the request. You cannot override the ``Authorization`` or
             ``Content-Type`` headers.
-        :type override_headers: Dict[str, str]
+        :type override_headers: dict[str, str]
 
         :return: `httpx Response <https://www.python-httpx.org/api/#response>`_ object
         :rtype: httpx.Response
@@ -363,10 +359,10 @@ class JamfProClient:
         self,
         handler: Callable,
         arguments: Iterable[Any],
-        return_model: Optional[Type[BaseModel]] = None,
-        max_concurrency: Optional[int] = None,
-        return_exceptions: Optional[bool] = None,
-    ) -> Iterator[Union[Any, Exception]]:
+        return_model: type[BaseModel] | None = None,
+        max_concurrency: int | None = None,
+        return_exceptions: bool | None = None,
+    ) -> Iterator[Any | Exception]:
         """
         An interface for performing concurrent API operations.
 

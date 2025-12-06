@@ -5,12 +5,8 @@ import string
 from typing import (
     TYPE_CHECKING,
     Callable,
-    Dict,
     Iterable,
     Iterator,
-    List,
-    Optional,
-    Union,
 )
 
 from defusedxml.ElementTree import fromstring
@@ -47,12 +43,11 @@ VALID_COMPUTER_SUBSETS = (
     "configurationprofiles",
 )  #: Valid subsets for the :meth:`~ClassicApi.list_computers` operation.
 
-CategoryId = Union[int, ClassicCategory, ClassicCategoriesItem]
-ComputerId = Union[int, ClassicComputer, ClassicComputersItem]
-AdvancedComputerSearchId = Union[
-    int, ClassicAdvancedComputerSearch, ClassicAdvancedComputerSearchesItem
-]
-PackageId = Union[int, ClassicPackage, ClassicPackageItem]
+CategoryId = int | ClassicCategory | ClassicCategoriesItem
+ComputerId = int | ClassicComputer | ClassicComputersItem
+AdvancedComputerSearchId = int | ClassicAdvancedComputerSearch | ClassicAdvancedComputerSearchesItem
+
+PackageId = int | ClassicPackage | ClassicPackageItem
 
 
 def parse_response_id(xml: str) -> int:
@@ -73,7 +68,7 @@ class ClassicApi:
         self.concurrent_api_requests = concurrent_requests_method
 
     @staticmethod
-    async def _parse_json_response(response: httpx.Response) -> Dict:
+    async def _parse_json_response(response: httpx.Response) -> dict:
         """
         Parse JSON response, ignoring Content-Type header.
 
@@ -83,12 +78,12 @@ class ClassicApi:
         :param response: The httpx Response object
         :type response: httpx.Response
         :return: Parsed JSON data
-        :rtype: Dict
+        :rtype: dict
         """
         return response.json()
 
     @staticmethod
-    def _parse_id(model: Union[int, object]) -> int:
+    def _parse_id(model: int | object) -> int:
         """If the model has an ``id`` attribute return that value (most Classic API models have this
         as top-level field).If the model is a ``ClassicComputer`` return the nested value.
         """
@@ -101,12 +96,12 @@ class ClassicApi:
 
     # /categories APIs
 
-    async def list_all_categories(self) -> List[ClassicCategoriesItem]:
+    async def list_all_categories(self) -> list[ClassicCategoriesItem]:
         """
         Returns a list of all categories.
 
         :return: List of categories.
-        :rtype: List[ClassicCategoriesItem]
+        :rtype: list[ClassicCategoriesItem]
         """
         resp = await self.api_request(method="get", resource_path="categories")
         response_json = await self._parse_json_response(resp)
@@ -117,7 +112,7 @@ class ClassicApi:
         Returns a single category record using the ID.
 
         :param category: A category ID or supported Classic API model.
-        :type category: Union[int, ClassicCategory, ClassicCategoriesItem]
+        :type category: int | ClassicCategory | ClassicCategoriesItem
 
         :return: Category.
         :rtype: ClassicCategory
@@ -128,17 +123,17 @@ class ClassicApi:
         return ClassicCategory(**response_json["category"])
 
     async def update_category_by_id(
-        self, category: CategoryId, data: Union[str, ClassicCategory]
+        self, category: CategoryId, data: str | ClassicCategory
     ) -> None:
         """
         Update a single category record using the ID.
 
         :param category: A category ID or supported Classic API model.
-        :type category: Union[int, ClassicCategory, ClassicCategoriesItem]
+        :type category: int | ClassicCategory | ClassicCategoriesItem
 
         :param data: Can be an XML string or a
             :class:`~jamfsdk.models.classic.categories.ClassicCategory` object.
-        :type data: Union[str, ClassicCategory]
+        :type data: str | ClassicCategory
         """
         category_id = ClassicApi._parse_id(category)
         await self.api_request(
@@ -150,18 +145,18 @@ class ClassicApi:
         Delete a single category record using the ID.
 
         :param category: A category ID or supported Classic API model.
-        :type category: Union[int, ClassicCategory, ClassicCategoriesItem]
+        :type category: int | ClassicCategory | ClassicCategoriesItem
         """
         category_id = ClassicApi._parse_id(category)
         await self.api_request(method="delete", resource_path=f"categories/id/{category_id}")
 
-    async def create_category(self, data: Union[str, ClassicCategory]) -> int:
+    async def create_category(self, data: str | ClassicCategory) -> int:
         """
         Create a new category.
 
         :param data: Can be an XML string or a
             :class:`~jamfsdk.models.classic.categories.ClassicCategory` object.
-        :type data: Union[str, ClassicCategory]
+        :type data: str | ClassicCategory
 
         :return: ID of the new category.
         :rtype: int
@@ -172,7 +167,7 @@ class ClassicApi:
 
     # /computers APIs
 
-    async def list_all_computers(self, subsets: Iterable[str] = None) -> List[ClassicComputersItem]:
+    async def list_all_computers(self, subsets: Iterable[str] = None) -> list[ClassicComputersItem]:
         """
         Returns a list of all computers.
 
@@ -182,7 +177,7 @@ class ClassicApi:
         :type subsets: Iterable
 
         :return: List of computers.
-        :rtype: List[~jamfsdk.models.classic.computers.ClassicComputersItem]
+        :rtype: list[~jamfsdk.models.classic.computers.ClassicComputersItem]
         """
         if subsets:
             if not all(i.lower() in ("basic",) for i in subsets):
@@ -202,7 +197,7 @@ class ClassicApi:
         Returns a single computer record using the ID.
 
         :param computer: A computer ID or supported Classic API model.
-        :type computer: Union[int, ClassicComputer, ClassicComputersItem]
+        :type computer: int | ClassicComputer | ClassicComputersItem
 
         :param subsets: (optional) This operation accepts subset values to limit the
             details returned with the computer record. The following subset values are
@@ -226,7 +221,7 @@ class ClassicApi:
         return ClassicComputer(**response_json["computer"])
 
     async def get_computers(
-        self, computers: List[ComputerId] = None, subsets: Iterable[str] = None
+        self, computers: list[ComputerId] = None, subsets: Iterable[str] = None
     ) -> Iterator[ClassicComputer]:
         """
         Returns all requested computer records by their IDs. This is a wrapper to the concurrent
@@ -235,7 +230,7 @@ class ClassicApi:
         the full list of computer IDs.
 
         :param computers: (optional) A list of computer IDs or supported Classic API models.
-        :type computers: List[Union[int, ClassicComputer, ClassicComputersItem]]
+        :type computers: list[int | ClassicComputer | ClassicComputersItem]
 
         :param subsets: (optional) This operation accepts subset values to limit the
             details returned with the computer record. The following subset values are
@@ -255,7 +250,7 @@ class ClassicApi:
         )
 
     async def update_computer_by_id(
-        self, computer: ComputerId, data: Union[str, ClassicComputer]
+        self, computer: ComputerId, data: str | ClassicComputer
     ) -> None:
         """
         Update a single computer record using the ID.
@@ -265,7 +260,7 @@ class ClassicApi:
             Not all fields in a computer record can be updated.
 
         :param computer: A computer ID or supported Classic API model.
-        :type computer: Union[int, ClassicComputer, ClassicComputersItem]
+        :type computer: int | ClassicComputer | ClassicComputersItem
 
         :param data: Can be an XML string or a
             :class:`~jamfsdk.models.classic.computers.ClassicComputer` object.
@@ -279,7 +274,7 @@ class ClassicApi:
         Delete a single computer record using the ID.
 
         :param computer: A computer ID or supported Classic API model.
-        :type computer: Union[int, ClassicComputer, ClassicComputersItem]
+        :type computer: int | ClassicComputer | ClassicComputersItem
         """
         computer_id = ClassicApi._parse_id(computer)
         await self.api_request(method="delete", resource_path=f"computers/id/{computer_id}")
@@ -356,7 +351,7 @@ class ClassicApi:
 
     # /computergroups APIs
 
-    async def create_computer_group(self, data: Union[str, ClassicComputerGroup]) -> int:
+    async def create_computer_group(self, data: str | ClassicComputerGroup) -> int:
         """
         Create a new computer group.
 
@@ -370,7 +365,7 @@ class ClassicApi:
 
         :param data: Can be an XML string or a
             :class:`~jamfsdk.models.classic.computer_groups.ClassicComputerGroup` object.
-        :type data: Union[str, ClassicComputerGroup]
+        :type data: str | ClassicComputerGroup
 
         :return: ID of the new computer group.
         :rtype: int
@@ -379,14 +374,14 @@ class ClassicApi:
         response_text = resp.text
         return parse_response_id(response_text)
 
-    async def list_all_computer_groups(self) -> List[ClassicComputerGroup]:
+    async def list_all_computer_groups(self) -> list[ClassicComputerGroup]:
         """
         Returns a list of all computer groups.
 
         Only ``id``, ``name`` and ``is_smart`` are populated.
 
         :return: List of computer groups.
-        :rtype: List[~jamfsdk.models.classic.computer_groups.ClassicComputerGroup]
+        :rtype: list[~jamfsdk.models.classic.computer_groups.ClassicComputerGroup]
         """
         resp = await self.api_request(method="get", resource_path="computergroups")
         response_json = await self._parse_json_response(resp)
@@ -409,7 +404,7 @@ class ClassicApi:
         return ClassicComputerGroup(**response_json["computer_group"])
 
     async def update_smart_computer_group_by_id(
-        self, computer_group_id: int, data: Union[str, ClassicComputerGroup]
+        self, computer_group_id: int, data: str | ClassicComputerGroup
     ) -> None:
         """
         Update a smart computer group.
@@ -426,7 +421,7 @@ class ClassicApi:
 
         :param data: Can be an XML string or a
             :class:`~jamfsdk.models.classic.computer_groups.ClassicComputerGroup` object.
-        :type data: Union[str, ClassicComputerGroup]
+        :type data: str | ClassicComputerGroup
         """
         await self.api_request(
             method="put",
@@ -437,8 +432,8 @@ class ClassicApi:
     async def update_static_computer_group_membership_by_id(
         self,
         computer_group_id: int,
-        computers_to_add: Iterable[Union[int, ClassicComputerGroupMember]] = None,
-        computers_to_remove: Iterable[Union[int, ClassicComputerGroupMember]] = None,
+        computers_to_add: Iterable[int | ClassicComputerGroupMember] = None,
+        computers_to_remove: Iterable[int | ClassicComputerGroupMember] = None,
     ) -> None:
         """
         Update the membership of a static computer group.
@@ -451,11 +446,11 @@ class ClassicApi:
 
         :param computers_to_add: An array of computer IDs, or ``ClassicComputerGroupMember``
             objects to add to the static group.
-        :type computers_to_add: Iterable[Union[int, ClassicComputerGroupMember]]
+        :type computers_to_add: Iterable[int | ClassicComputerGroupMember]
 
         :param computers_to_remove: An array of computer IDs, or ``ClassicComputerGroupMember``
             objects to remove from the static group.
-        :type computers_to_remove: Iterable[Union[int, ClassicComputerGroupMember]]
+        :type computers_to_remove: Iterable[int | ClassicComputerGroupMember]
         """
         group_update = ClassicComputerGroupMembershipUpdate()
 
@@ -482,7 +477,7 @@ class ClassicApi:
     # /advancedcomputersearches APIs
 
     async def create_advanced_computer_search(
-        self, data: Union[str, ClassicAdvancedComputerSearch]
+        self, data: str | ClassicAdvancedComputerSearch
     ) -> int:
         """
         Create a new advanced computer search.
@@ -490,7 +485,7 @@ class ClassicApi:
         :param data: Can be an XML string or a
             :class:`~jamfsdk.models.classic.advanced_computer_searches.ClassicAdvancedComputerSearch`
             object.
-        :type data: Union[str, ClassicAdvancedComputerSearch]
+        :type data: str | ClassicAdvancedComputerSearch
 
         :return: ID of the new computer group.
         :rtype: int
@@ -503,12 +498,12 @@ class ClassicApi:
 
     async def list_all_advanced_computer_searches(
         self,
-    ) -> List[ClassicAdvancedComputerSearchesItem]:
+    ) -> list[ClassicAdvancedComputerSearchesItem]:
         """
         Returns a list of all advanced computer searches.
 
         :return: List of advanced computer searches.
-        :rtype: List[ClassicAdvancedComputerSearchesItem]
+        :rtype: list[ClassicAdvancedComputerSearchesItem]
         """
         resp = await self.api_request(method="get", resource_path="advancedcomputersearches")
         response_json = await self._parse_json_response(resp)
@@ -530,7 +525,7 @@ class ClassicApi:
         Results are calculated on each call to this operation.
 
         :param advanced_search: An advanced computer search ID or supported Classic API model.
-        :type advanced_search: Union[int, ClassicAdvancedComputerSearch, ClassicAdvancedComputerSearchesItem]
+        :type advanced_search: int | ClassicAdvancedComputerSearch | ClassicAdvancedComputerSearchesItem
 
         :return: Advanced computer search.
         :rtype: ~jamfsdk.models.classic.advanced_computer_searches.ClassicAdvancedComputerSearch
@@ -546,19 +541,19 @@ class ClassicApi:
     async def update_advanced_computer_search_by_id(
         self,
         advanced_search: AdvancedComputerSearchId,
-        data: Union[str, ClassicAdvancedComputerSearch],
+        data: str | ClassicAdvancedComputerSearch,
         return_updated: bool = False,
-    ) -> Optional[ClassicAdvancedComputerSearch]:
+    ) -> ClassicAdvancedComputerSearch | None:
         """
         Update an advanced computer search using the ID.
 
         :param advanced_search: An advanced computer search ID or supported Classic API model.
-        :type advanced_search: Union[int, ClassicAdvancedComputerSearch, ClassicAdvancedComputerSearchesItem]
+        :type advanced_search: int | ClassicAdvancedComputerSearch | ClassicAdvancedComputerSearchesItem
 
         :param data: Can be an XML string or a
             :class:`~jamfsdk.models.classic.advanced_computer_searches.ClassicAdvancedComputerSearch`
             object.
-        :type data: Union[str, ClassicAdvancedComputerSearch]
+        :type data: str | ClassicAdvancedComputerSearch
 
         :param return_updated: If ``True`` the :meth:`~jamfsdk.clients.classic_api.ClassicApi.get_advanced_computer_search_by_id`
             operation will be called after the update operation to return the updated results.
@@ -583,7 +578,7 @@ class ClassicApi:
         Delete an advanced computer search using the ID.
 
         :param advanced_search: An advanced computer search ID or supported Classic API model.
-        :type advanced_search: Union[int, ClassicAdvancedComputerSearch, ClassicAdvancedComputerSearchesItem]
+        :type advanced_search: int | ClassicAdvancedComputerSearch | ClassicAdvancedComputerSearchesItem
         """
         advanced_search_id = ClassicApi._parse_id(advanced_search)
         await self.api_request(
@@ -593,7 +588,7 @@ class ClassicApi:
 
     # /packages APIs
 
-    async def create_package(self, data: Union[str, ClassicPackage]) -> int:
+    async def create_package(self, data: str | ClassicPackage) -> int:
         """
         Create a new package.
 
@@ -603,7 +598,7 @@ class ClassicApi:
 
         :param data: Can be an XML string or a
             :class:`~jamfsdk.models.classic.computer_groups.ClassicPackage` object.
-        :type data: Union[str, ClassicPackage]
+        :type data: str | ClassicPackage
 
         :return: ID of the new package.
         :rtype: int
@@ -612,12 +607,12 @@ class ClassicApi:
         response_text = resp.text
         return parse_response_id(response_text)
 
-    async def list_all_packages(self) -> List[ClassicPackageItem]:
+    async def list_all_packages(self) -> list[ClassicPackageItem]:
         """
         Returns a list of all packages.
 
         :return: List of packages.
-        :rtype: List[~jamfsdk.models.classic.packages.ClassicPackageItem]
+        :rtype: list[~jamfsdk.models.classic.packages.ClassicPackageItem]
         """
         resp = await self.api_request(method="get", resource_path="packages")
         response_json = await self._parse_json_response(resp)
@@ -628,7 +623,7 @@ class ClassicApi:
         Returns a single package record using the ID.
 
         :param package: A package ID or supported Classic API model.
-        :type package: Union[int, ClassicPackage, ClassicPackageItem]
+        :type package: int | ClassicPackage | ClassicPackageItem
 
         :return: Package.
         :rtype: ~jamfsdk.models.classic.packages.ClassicPackage
@@ -647,7 +642,7 @@ class ClassicApi:
             This operation *WILL* delete an associated JCDS file.
 
         :param package: A package ID or supported Classic API model.
-        :type package: Union[int, ClassicPackage, ClassicPackageItem]
+        :type package: int | ClassicPackage | ClassicPackageItem
         """
         package_id = ClassicApi._parse_id(package)
         await self.api_request(method="delete", resource_path=f"packages/id/{package_id}")

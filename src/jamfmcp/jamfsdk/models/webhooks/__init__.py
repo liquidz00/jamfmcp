@@ -17,3 +17,23 @@ from .webhooks import (
     SmartGroupMobileDeviceMembershipChange,
     SmartGroupUserMembershipChange,
 )
+
+__all__ = [
+    "ComputerAdded",
+    "ComputerCheckIn",
+    "ComputerInventoryCompleted",
+    "ComputerPolicyFinished",
+    "ComputerPushCapabilityChanged",
+    "DeviceAddedToDep",
+    "JssShutdown",
+    "JssStartup",
+    "MobileDeviceCheckIn",
+    "MobileDeviceEnrolled",
+    "MobileDevicePushSent",
+    "MobileDeviceUnEnrolled",
+    "PushSent",
+    "RestApiOperation",
+    "SmartGroupComputerMembershipChange",
+    "SmartGroupMobileDeviceMembershipChange",
+    "SmartGroupUserMembershipChange",
+]

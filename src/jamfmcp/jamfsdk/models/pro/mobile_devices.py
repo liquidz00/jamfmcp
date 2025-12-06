@@ -1,6 +1,5 @@
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional
 
 from pydantic import ConfigDict
 
@@ -23,97 +22,97 @@ class MobileDeviceExtensionAttributeType(str, Enum):
 class MobileDeviceExtensionAttribute(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    id: Optional[str] = None
-    name: Optional[str] = None
-    type: Optional[MobileDeviceExtensionAttributeType] = None
-    value: Optional[List[str]] = None
-    extensionAttributeCollectionAllowed: Optional[bool] = None
-    inventoryDisplay: Optional[str] = None
+    id: str | None = None
+    name: str | None = None
+    type: MobileDeviceExtensionAttributeType | None = None
+    value: list[str] | None = None
+    extensionAttributeCollectionAllowed: bool | None = None
+    inventoryDisplay: str | None = None
 
 
 class MobileDeviceHardware(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    capacityMb: Optional[int] = None
-    availableSpaceMb: Optional[int] = None
-    usedSpacePercentage: Optional[int] = None
-    batteryLevel: Optional[int] = None
-    serialNumber: Optional[str] = None
-    wifiMacAddress: Optional[str] = None
-    bluetoothMacAddress: Optional[str] = None
-    modemFirmwareVersion: Optional[str] = None
-    model: Optional[str] = None
-    modelIdentifier: Optional[str] = None
-    modelNumber: Optional[str] = None
-    bluetoothLowEnergyCapable: Optional[bool] = None
-    deviceId: Optional[str] = None
-    extensionAttributes: Optional[List[MobileDeviceExtensionAttribute]] = None
+    capacityMb: int | None = None
+    availableSpaceMb: int | None = None
+    usedSpacePercentage: int | None = None
+    batteryLevel: int | None = None
+    serialNumber: str | None = None
+    wifiMacAddress: str | None = None
+    bluetoothMacAddress: str | None = None
+    modemFirmwareVersion: str | None = None
+    model: str | None = None
+    modelIdentifier: str | None = None
+    modelNumber: str | None = None
+    bluetoothLowEnergyCapable: bool | None = None
+    deviceId: str | None = None
+    extensionAttributes: list[MobileDeviceExtensionAttribute] | None = None
 
 
 class MobileDeviceUserAndLocation(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    username: Optional[str] = None
-    realName: Optional[str] = None
-    emailAddress: Optional[str] = None
-    position: Optional[str] = None
-    phoneNumber: Optional[str] = None
-    departmentId: Optional[str] = None
-    buildingId: Optional[str] = None
-    room: Optional[str] = None
-    building: Optional[str] = None
-    department: Optional[str] = None
-    extensionAttributes: Optional[List[MobileDeviceExtensionAttribute]] = None
+    username: str | None = None
+    realName: str | None = None
+    emailAddress: str | None = None
+    position: str | None = None
+    phoneNumber: str | None = None
+    departmentId: str | None = None
+    buildingId: str | None = None
+    room: str | None = None
+    building: str | None = None
+    department: str | None = None
+    extensionAttributes: list[MobileDeviceExtensionAttribute] | None = None
 
 
 class MobileDevicePurchasing(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    purchased: Optional[bool] = None
-    leased: Optional[bool] = None
-    poNumber: Optional[str] = None
-    vendor: Optional[str] = None
-    appleCareId: Optional[str] = None
-    purchasePrice: Optional[str] = None
-    purchasingAccount: Optional[str] = None
-    poDate: Optional[datetime] = None
-    warrantyExpiresDate: Optional[datetime] = None
-    leaseExpiresDate: Optional[datetime] = None
-    lifeExpectancy: Optional[int] = None
-    purchasingContact: Optional[str] = None
-    extensionAttributes: Optional[List[MobileDeviceExtensionAttribute]] = None
+    purchased: bool | None = None
+    leased: bool | None = None
+    poNumber: str | None = None
+    vendor: str | None = None
+    appleCareId: str | None = None
+    purchasePrice: str | None = None
+    purchasingAccount: str | None = None
+    poDate: datetime | None = None
+    warrantyExpiresDate: datetime | None = None
+    leaseExpiresDate: datetime | None = None
+    lifeExpectancy: int | None = None
+    purchasingContact: str | None = None
+    extensionAttributes: list[MobileDeviceExtensionAttribute] | None = None
 
 
 class MobileDeviceApplication(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    identifier: Optional[str] = None
-    name: Optional[str] = None
-    version: Optional[str] = None
-    shortVersion: Optional[str] = None
-    managementStatus: Optional[str] = None
-    validationStatus: Optional[bool] = None
-    bundleSize: Optional[str] = None
-    dynamicSize: Optional[str] = None
+    identifier: str | None = None
+    name: str | None = None
+    version: str | None = None
+    shortVersion: str | None = None
+    managementStatus: str | None = None
+    validationStatus: bool | None = None
+    bundleSize: str | None = None
+    dynamicSize: str | None = None
 
 
 class MobileDeviceCertificate(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    commonName: Optional[str] = None
-    identity: Optional[bool] = None
-    expirationDate: Optional[datetime] = None
+    commonName: str | None = None
+    identity: bool | None = None
+    expirationDate: datetime | None = None
 
 
 class MobileDeviceProfile(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    displayName: Optional[str] = None
-    version: Optional[str] = None
-    uuid: Optional[str] = None
-    identifier: Optional[str] = None
-    removable: Optional[bool] = None
-    lastInstalled: Optional[datetime] = None
+    displayName: str | None = None
+    version: str | None = None
+    uuid: str | None = None
+    identifier: str | None = None
+    removable: bool | None = None
+    lastInstalled: datetime | None = None
 
 
 class MobileDeviceUserProfile(MobileDeviceProfile):
@@ -121,7 +120,7 @@ class MobileDeviceUserProfile(MobileDeviceProfile):
 
     model_config = ConfigDict(extra="allow")
 
-    username: Optional[str] = None
+    username: str | None = None
 
 
 class MobileDeviceOwnershipType(str, Enum):
@@ -135,37 +134,37 @@ class MobileDeviceOwnershipType(str, Enum):
 class MobileDeviceEnrollmentMethodPrestage(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    mobileDevicePrestageId: Optional[str] = None
-    profileName: Optional[str] = None
+    mobileDevicePrestageId: str | None = None
+    profileName: str | None = None
 
 
 class MobileDeviceGeneral(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    udid: Optional[str] = None
-    displayName: Optional[str] = None
-    assetTag: Optional[str] = None
-    siteId: Optional[str] = None
-    lastInventoryUpdateDate: Optional[datetime] = None
-    osVersion: Optional[str] = None
-    osRapidSecurityResponse: Optional[str] = None
-    osBuild: Optional[str] = None
-    osSupplementalBuildVersion: Optional[str] = None
-    softwareUpdateDeviceId: Optional[str] = None
-    ipAddress: Optional[str] = None
-    managed: Optional[bool] = None
-    supervised: Optional[bool] = None
-    deviceOwnershipType: Optional[MobileDeviceOwnershipType] = None
-    enrollmentMethodPrestage: Optional[MobileDeviceEnrollmentMethodPrestage] = None
-    enrollmentSessionTokenValid: Optional[bool] = None
-    lastEnrolledDate: Optional[datetime] = None
-    mdmProfileExpirationDate: Optional[datetime] = None
-    timeZone: Optional[str] = None
-    declarativeDeviceManagementEnabled: Optional[bool] = None
-    extensionAttributes: Optional[List[MobileDeviceExtensionAttribute]] = None
-    airPlayPassword: Optional[str] = None
-    locales: Optional[str] = None
-    languages: Optional[str] = None
+    udid: str | None = None
+    displayName: str | None = None
+    assetTag: str | None = None
+    siteId: str | None = None
+    lastInventoryUpdateDate: datetime | None = None
+    osVersion: str | None = None
+    osRapidSecurityResponse: str | None = None
+    osBuild: str | None = None
+    osSupplementalBuildVersion: str | None = None
+    softwareUpdateDeviceId: str | None = None
+    ipAddress: str | None = None
+    managed: bool | None = None
+    supervised: bool | None = None
+    deviceOwnershipType: MobileDeviceOwnershipType | None = None
+    enrollmentMethodPrestage: MobileDeviceEnrollmentMethodPrestage | None = None
+    enrollmentSessionTokenValid: bool | None = None
+    lastEnrolledDate: datetime | None = None
+    mdmProfileExpirationDate: datetime | None = None
+    timeZone: str | None = None
+    declarativeDeviceManagementEnabled: bool | None = None
+    extensionAttributes: list[MobileDeviceExtensionAttribute] | None = None
+    airPlayPassword: str | None = None
+    locales: str | None = None
+    languages: str | None = None
 
 
 class MobileDeviceSecurityLostModeLocation(BaseModel):
@@ -173,13 +172,13 @@ class MobileDeviceSecurityLostModeLocation(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    lastLocationUpdate: Optional[datetime] = None
-    lostModeLocationHorizontalAccuracyMeters: Optional[int] = None
-    lostModeLocationVerticalAccuracyMeters: Optional[int] = None
-    lostModeLocationAltitudeMeters: Optional[int] = None
-    lostModeLocationSpeedMetersPerSecond: Optional[int] = None
-    lostModeLocationCourseDegrees: Optional[int] = None
-    lostModeLocationTimestamp: Optional[str] = None
+    lastLocationUpdate: datetime | None = None
+    lostModeLocationHorizontalAccuracyMeters: int | None = None
+    lostModeLocationVerticalAccuracyMeters: int | None = None
+    lostModeLocationAltitudeMeters: int | None = None
+    lostModeLocationSpeedMetersPerSecond: int | None = None
+    lostModeLocationCourseDegrees: int | None = None
+    lostModeLocationTimestamp: str | None = None
 
 
 class MobileDeviceSecurity(BaseModel):
@@ -187,23 +186,23 @@ class MobileDeviceSecurity(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    dataProtected: Optional[bool] = None
-    blockLevelEncryptionCapable: Optional[bool] = None
-    fileLevelEncryptionCapable: Optional[bool] = None
-    passcodePresent: Optional[bool] = None
-    passcodeCompliant: Optional[bool] = None
-    passcodeCompliantWithProfile: Optional[bool] = None
-    hardwareEncryption: Optional[int] = None
-    activationLockEnabled: Optional[bool] = None
-    jailBreakDetected: Optional[bool] = None
-    passcodeLockGracePeriodEnforcedSeconds: Optional[int] = None
-    personalDeviceProfileCurrent: Optional[bool] = None
-    lostModeEnabled: Optional[bool] = None
-    lostModePersistent: Optional[bool] = None
-    lostModeMessage: Optional[str] = None
-    lostModePhoneNumber: Optional[str] = None
-    lostModeFootnote: Optional[str] = None
-    lostModeLocation: Optional[MobileDeviceSecurityLostModeLocation] = None
+    dataProtected: bool | None = None
+    blockLevelEncryptionCapable: bool | None = None
+    fileLevelEncryptionCapable: bool | None = None
+    passcodePresent: bool | None = None
+    passcodeCompliant: bool | None = None
+    passcodeCompliantWithProfile: bool | None = None
+    hardwareEncryption: int | None = None
+    activationLockEnabled: bool | None = None
+    jailBreakDetected: bool | None = None
+    passcodeLockGracePeriodEnforcedSeconds: int | None = None
+    personalDeviceProfileCurrent: bool | None = None
+    lostModeEnabled: bool | None = None
+    lostModePersistent: bool | None = None
+    lostModeMessage: str | None = None
+    lostModePhoneNumber: str | None = None
+    lostModeFootnote: str | None = None
+    lostModeLocation: MobileDeviceSecurityLostModeLocation | None = None
 
 
 class MobileDeviceEbook(BaseModel):
@@ -211,11 +210,11 @@ class MobileDeviceEbook(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    author: Optional[str] = None
-    title: Optional[str] = None
-    version: Optional[str] = None
-    kind: Optional[str] = None
-    managementState: Optional[str] = None
+    author: str | None = None
+    title: str | None = None
+    version: str | None = None
+    kind: str | None = None
+    managementState: str | None = None
 
 
 class MobileDeviceNetwork(BaseModel):
@@ -223,23 +222,23 @@ class MobileDeviceNetwork(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    cellularTechnology: Optional[str] = None
-    voiceRoamingEnabled: Optional[bool] = None
-    imei: Optional[str] = None
-    iccid: Optional[str] = None
-    meid: Optional[str] = None
-    eid: Optional[str] = None
-    carrierSettingsVersion: Optional[str] = None
-    currentCarrierNetwork: Optional[str] = None
-    currentMobileCountryCode: Optional[str] = None
-    currentMobileNetworkCode: Optional[str] = None
-    homeCarrierNetwork: Optional[str] = None
-    homeMobileCountryCode: Optional[str] = None
-    homeMobileNetworkCode: Optional[str] = None
-    dataRoamingEnabled: Optional[bool] = None
-    roaming: Optional[bool] = None
-    personalHotspotEnabled: Optional[bool] = None
-    phoneNumber: Optional[str] = None
+    cellularTechnology: str | None = None
+    voiceRoamingEnabled: bool | None = None
+    imei: str | None = None
+    iccid: str | None = None
+    meid: str | None = None
+    eid: str | None = None
+    carrierSettingsVersion: str | None = None
+    currentCarrierNetwork: str | None = None
+    currentMobileCountryCode: str | None = None
+    currentMobileNetworkCode: str | None = None
+    homeCarrierNetwork: str | None = None
+    homeMobileCountryCode: str | None = None
+    homeMobileNetworkCode: str | None = None
+    dataRoamingEnabled: bool | None = None
+    roaming: bool | None = None
+    personalHotspotEnabled: bool | None = None
+    phoneNumber: str | None = None
 
 
 class MobileDeviceServiceSubscription(BaseModel):
@@ -247,22 +246,22 @@ class MobileDeviceServiceSubscription(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    carrierSettingsVersion: Optional[str] = None
-    currentCarrierNetwork: Optional[str] = None
-    currentMobileCountryCode: Optional[str] = None
-    currentMobileNetworkCode: Optional[str] = None
-    subscriberCarrierNetwork: Optional[str] = None
-    eid: Optional[str] = None
-    iccid: Optional[str] = None
-    imei: Optional[str] = None
-    dataPreferred: Optional[bool] = None
-    roaming: Optional[bool] = None
-    voicePreferred: Optional[bool] = None
-    label: Optional[str] = None
-    labelId: Optional[str] = None
-    meid: Optional[str] = None
-    phoneNumber: Optional[str] = None
-    slot: Optional[str] = None
+    carrierSettingsVersion: str | None = None
+    currentCarrierNetwork: str | None = None
+    currentMobileCountryCode: str | None = None
+    currentMobileNetworkCode: str | None = None
+    subscriberCarrierNetwork: str | None = None
+    eid: str | None = None
+    iccid: str | None = None
+    imei: str | None = None
+    dataPreferred: bool | None = None
+    roaming: bool | None = None
+    voicePreferred: bool | None = None
+    label: str | None = None
+    labelId: str | None = None
+    meid: str | None = None
+    phoneNumber: str | None = None
+    slot: str | None = None
 
 
 class ProvisioningProfile(BaseModel):
@@ -270,9 +269,9 @@ class ProvisioningProfile(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    displayName: Optional[str] = None
-    uuid: Optional[str] = None
-    expirationDate: Optional[datetime] = None
+    displayName: str | None = None
+    uuid: str | None = None
+    expirationDate: datetime | None = None
 
 
 class SharedUser(BaseModel):
@@ -280,9 +279,9 @@ class SharedUser(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    managedAppleId: Optional[str] = None
-    loggedIn: Optional[bool] = None
-    dataToSync: Optional[bool] = None
+    managedAppleId: str | None = None
+    loggedIn: bool | None = None
+    dataToSync: bool | None = None
 
 
 class MobileDevice(BaseModel):
@@ -290,20 +289,20 @@ class MobileDevice(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    mobileDeviceId: Optional[str] = None
-    deviceType: Optional[str] = None
-    hardware: Optional[MobileDeviceHardware] = None
-    userAndLocation: Optional[MobileDeviceUserAndLocation] = None
-    purchasing: Optional[MobileDevicePurchasing] = None
-    applications: Optional[List[MobileDeviceApplication]] = None
-    certificates: Optional[List[MobileDeviceCertificate]] = None
-    profiles: Optional[List[MobileDeviceProfile]] = None
-    userProfiles: Optional[List[MobileDeviceUserProfile]] = None
-    extensionAttributes: Optional[List[MobileDeviceExtensionAttribute]] = None
-    general: Optional[MobileDeviceGeneral] = None
-    security: Optional[MobileDeviceSecurity] = None
-    ebooks: Optional[List[MobileDeviceEbook]] = None
-    network: Optional[MobileDeviceNetwork] = None
-    serviceSubscriptions: Optional[List[MobileDeviceServiceSubscription]] = None
-    provisioningProfiles: Optional[List[ProvisioningProfile]] = None
-    sharedUsers: Optional[List[SharedUser]] = None
+    mobileDeviceId: str | None = None
+    deviceType: str | None = None
+    hardware: MobileDeviceHardware | None = None
+    userAndLocation: MobileDeviceUserAndLocation | None = None
+    purchasing: MobileDevicePurchasing | None = None
+    applications: list[MobileDeviceApplication] | None = None
+    certificates: list[MobileDeviceCertificate] | None = None
+    profiles: list[MobileDeviceProfile] | None = None
+    userProfiles: list[MobileDeviceUserProfile] | None = None
+    extensionAttributes: list[MobileDeviceExtensionAttribute] | None = None
+    general: MobileDeviceGeneral | None = None
+    security: MobileDeviceSecurity | None = None
+    ebooks: list[MobileDeviceEbook] | None = None
+    network: MobileDeviceNetwork | None = None
+    serviceSubscriptions: list[MobileDeviceServiceSubscription] | None = None
+    provisioningProfiles: list[ProvisioningProfile] | None = None
+    sharedUsers: list[SharedUser] | None = None
